@@ -149,7 +149,7 @@ export default function Navbar() {
               initial: { opacity: 0, y: 10, scale: 0.95 }
             }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 top-full mt-2 bg-white rounded-lg shadow-lg p-4 min-w-[200px] pointer-events-none"
+            className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg p-4 min-w-[200px] max-w-xs origin-top-right z-50"
           >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden">
