@@ -31,9 +31,19 @@ const AuthPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    fullName: '',
+    dateOfBirth: '',
+    phone: '',
+    academicRegion: '',
+    class: '',
+    relationship: '',
+    country: '',
+    region: '',
+    subjectSpecialization: '',
+    qualification: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -49,18 +59,206 @@ const AuthPage = () => {
     }
   };
 
+  // Helper function to validate username based on role
+  const validateUsernameField = (value: string): string | null => {
+    if (!value.trim()) {
+      if (selectedRole === 'student' && authMode === 'login') {
+        return 'Student ID or email is required';
+      } else if (selectedRole === 'student' && authMode === 'signup') {
+        return 'Student ID is required';
+      } else if (selectedRole === 'teacher') {
+        return 'Email is required';
+      } else if (selectedRole === 'parent') {
+        return 'Student ID is required';
+      } else if (selectedRole === 'admin') {
+        return 'Email is required';
+      }
+      return 'This field is required';
+    }
+
+    // Validate format based on role
+    if (authMode === 'login') {
+      if (selectedRole === 'teacher' || selectedRole === 'admin') {
+        // Must be email format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+          return 'Please enter a valid email address';
+        }
+      } else if (selectedRole === 'parent') {
+        // Must be student ID format (alphanumeric, typically)
+        // You can adjust this regex based on your student ID format requirements
+        if (!/^[A-Za-z0-9]+$/.test(value.trim())) {
+          return 'Please enter a valid student ID';
+        }
+      } else if (selectedRole === 'student') {
+        // Can be either email or student ID
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+        const isStudentID = /^[A-Za-z0-9]+$/.test(value.trim());
+        if (!isEmail && !isStudentID) {
+          return 'Please enter a valid student ID or email address';
+        }
+      }
+    } else {
+      // signup mode
+      if (selectedRole === 'teacher' || selectedRole === 'admin') {
+        // Must be email format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+          return 'Please enter a valid email address';
+        }
+      } else if (selectedRole === 'student' || selectedRole === 'parent') {
+        // Must be student ID format
+        if (!/^[A-Za-z0-9]+$/.test(value.trim())) {
+          return 'Please enter a valid student ID';
+        }
+      }
+    }
+
+    return null; // No error
+  };
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = authMode === 'login' ? 'Username or email is required' : 'Username is required';
+    // Validate student sign-up specific fields
+    if (authMode === 'signup' && selectedRole === 'student') {
+      // Full name validation
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = 'Full name is required';
+      } else if (formData.fullName.trim().length < 2) {
+        newErrors.fullName = 'Full name must be at least 2 characters';
+      }
+
+      // Date of birth validation
+      if (!formData.dateOfBirth) {
+        newErrors.dateOfBirth = 'Date of birth is required';
+      } else {
+        const birthDate = new Date(formData.dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
+        
+        if (isNaN(birthDate.getTime())) {
+          newErrors.dateOfBirth = 'Please enter a valid date';
+        } else if (actualAge < 5) {
+          newErrors.dateOfBirth = 'You must be at least 5 years old';
+        } else if (actualAge > 100) {
+          newErrors.dateOfBirth = 'Please enter a valid date of birth';
+        }
+      }
+
+      // Phone validation
+      if (!formData.phone.trim()) {
+        newErrors.phone = 'Phone number is required';
+      } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.phone.trim())) {
+        newErrors.phone = 'Please enter a valid phone number';
+      } else if (formData.phone.trim().replace(/\D/g, '').length < 10) {
+        newErrors.phone = 'Phone number must be at least 10 digits';
+      }
+
+      // Academic region validation
+      if (!formData.academicRegion.trim()) {
+        newErrors.academicRegion = 'Academic region is required';
+      }
+
+      // Class validation
+      if (!formData.class.trim()) {
+        newErrors.class = 'Class is required';
+      }
     }
 
-    if (authMode === 'signup') {
+    // Validate parent sign-up specific fields
+    if (authMode === 'signup' && selectedRole === 'parent') {
+      // Full name validation
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = 'Full name is required';
+      } else if (formData.fullName.trim().length < 2) {
+        newErrors.fullName = 'Full name must be at least 2 characters';
+      }
+
+      // Email validation
       if (!formData.email.trim()) {
         newErrors.email = 'Email is required';
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         newErrors.email = 'Please enter a valid email address';
+      }
+
+      // Phone validation
+      if (!formData.phone.trim()) {
+        newErrors.phone = 'Phone number is required';
+      } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.phone.trim())) {
+        newErrors.phone = 'Please enter a valid phone number';
+      } else if (formData.phone.trim().replace(/\D/g, '').length < 10) {
+        newErrors.phone = 'Phone number must be at least 10 digits';
+      }
+
+      // Student ID validation (username field for parent)
+      if (!formData.username.trim()) {
+        newErrors.username = 'Student ID is required';
+      } else if (!/^[A-Za-z0-9]+$/.test(formData.username.trim())) {
+        newErrors.username = 'Please enter a valid student ID';
+      }
+
+      // Relationship validation
+      if (!formData.relationship.trim()) {
+        newErrors.relationship = 'Relationship is required';
+      } else if (formData.relationship.trim().length < 2) {
+        newErrors.relationship = 'Relationship must be at least 2 characters';
+      }
+    }
+
+    // Validate teacher sign-up specific fields
+    if (authMode === 'signup' && selectedRole === 'teacher') {
+      // Full name validation
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = 'Full name is required';
+      } else if (formData.fullName.trim().length < 2) {
+        newErrors.fullName = 'Full name must be at least 2 characters';
+      }
+
+      // Email validation
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+
+      // Phone validation
+      if (!formData.phone.trim()) {
+        newErrors.phone = 'Phone number is required';
+      } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.phone.trim())) {
+        newErrors.phone = 'Please enter a valid phone number';
+      } else if (formData.phone.trim().replace(/\D/g, '').length < 10) {
+        newErrors.phone = 'Phone number must be at least 10 digits';
+      }
+
+      // Country validation
+      if (!formData.country.trim()) {
+        newErrors.country = 'Country is required';
+      }
+
+      // Region validation
+      if (!formData.region.trim()) {
+        newErrors.region = 'Region is required';
+      }
+
+      // Subject specialization validation
+      if (!formData.subjectSpecialization.trim()) {
+        newErrors.subjectSpecialization = 'Subject specialization is required';
+      }
+
+      // Qualification validation
+      if (!formData.qualification.trim()) {
+        newErrors.qualification = 'Qualification is required';
+      } else if (formData.qualification.trim().length < 2) {
+        newErrors.qualification = 'Qualification must be at least 2 characters';
+      }
+    }
+
+    // Validate username field based on role (skip for student, parent, and teacher signup)
+    if (!(authMode === 'signup' && (selectedRole === 'student' || selectedRole === 'parent' || selectedRole === 'teacher'))) {
+      const usernameError = validateUsernameField(formData.username);
+      if (usernameError) {
+        newErrors.username = usernameError;
       }
     }
 
@@ -152,6 +350,40 @@ const AuthPage = () => {
   };
 
   const currentRole = roleConfig[selectedRole];
+
+  // Helper function to get username field label based on role and auth mode
+  const getUsernameLabel = (): string => {
+    if (authMode === 'signup') {
+      if (selectedRole === 'student') return 'Student ID';
+      if (selectedRole === 'teacher') return 'Email';
+      if (selectedRole === 'parent') return 'Student ID';
+      if (selectedRole === 'admin') return 'Email';
+    } else {
+      // login mode
+      if (selectedRole === 'student') return 'Student ID or Email';
+      if (selectedRole === 'teacher') return 'Email';
+      if (selectedRole === 'parent') return 'Student ID';
+      if (selectedRole === 'admin') return 'Email';
+    }
+    return 'Username';
+  };
+
+  // Helper function to get username field placeholder based on role and auth mode
+  const getUsernamePlaceholder = (): string => {
+    if (authMode === 'signup') {
+      if (selectedRole === 'student') return 'Enter student ID';
+      if (selectedRole === 'teacher') return 'Enter your email';
+      if (selectedRole === 'parent') return 'Enter student ID';
+      if (selectedRole === 'admin') return 'Enter your email';
+    } else {
+      // login mode
+      if (selectedRole === 'student') return 'Enter student ID or email';
+      if (selectedRole === 'teacher') return 'Enter your email';
+      if (selectedRole === 'parent') return 'Enter student ID';
+      if (selectedRole === 'admin') return 'Enter your email';
+    }
+    return 'Enter your username';
+  };
 
   // Track initial mount for student animation
   useEffect(() => {
@@ -313,7 +545,646 @@ const AuthPage = () => {
                   </div>
                 )}
 
-                {authMode === 'signup' && (
+                {/* Student Sign-Up Specific Fields */}
+                {authMode === 'signup' && selectedRole === 'student' && (
+                  <>
+                    {/* Personal Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50">
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Personal Information</h3>
+                      
+                      <div>
+                        <label htmlFor="fullName" className="block text-blue-200 text-sm font-medium mb-2">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your full name"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.fullName ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                          />
+                          {errors.fullName && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.fullName && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.fullName}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="dateOfBirth" className="block text-blue-200 text-sm font-medium mb-2">
+                          Date of Birth
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="date"
+                            id="dateOfBirth"
+                            name="dateOfBirth"
+                            value={formData.dateOfBirth}
+                            onChange={handleInputChange}
+                            required
+                            max={new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0]}
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.dateOfBirth ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors [color-scheme:dark]`}
+                          />
+                          {errors.dateOfBirth && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.dateOfBirth && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.dateOfBirth}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Contact Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50">
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Contact Information</h3>
+                      
+                      <div>
+                        <label htmlFor="email" className="block text-blue-200 text-sm font-medium mb-2">
+                          Email
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your email"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.email ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                          />
+                          {errors.email && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.email && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="phone" className="block text-blue-200 text-sm font-medium mb-2">
+                          Phone
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your phone number"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.phone ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                          />
+                          {errors.phone && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.phone && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.phone}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Academic Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50">
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Academic Information</h3>
+                      
+                      <div>
+                        <label htmlFor="academicRegion" className="block text-blue-200 text-sm font-medium mb-2">
+                          Academic Region
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="academicRegion"
+                            name="academicRegion"
+                            value={formData.academicRegion}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your academic region"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.academicRegion ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                          />
+                          {errors.academicRegion && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.academicRegion && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.academicRegion}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label htmlFor="class" className="block text-blue-200 text-sm font-medium mb-2">
+                          Class
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="class"
+                            name="class"
+                            value={formData.class}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your class"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.class ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                          />
+                          {errors.class && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.class && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.class}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Parent Sign-Up Specific Fields */}
+                {authMode === 'signup' && selectedRole === 'parent' && (
+                  <>
+                    {/* Parent Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in">
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Parent Information</h3>
+                      
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="fullName" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your full name"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.fullName ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.fullName && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.fullName && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.fullName}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="email" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Email
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your email"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.email ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.email && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.email && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="phone" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Phone
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your phone number"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.phone ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.phone && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.phone && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.phone}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Student Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in" style={{ animationDelay: '100ms' }}>
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Student Information</h3>
+                      
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="username" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Student ID
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter student ID"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.username ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.username && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.username && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.username}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="relationship" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Relationship
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="relationship"
+                            name="relationship"
+                            value={formData.relationship}
+                            onChange={handleInputChange}
+                            required
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.relationship ? 'border-red-500' : 'border-blue-500'
+                            } text-white focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80 appearance-none cursor-pointer`}
+                          >
+                            <option value="" className="bg-slate-800">Select relationship</option>
+                            <option value="Mother" className="bg-slate-800">Mother</option>
+                            <option value="Father" className="bg-slate-800">Father</option>
+                            <option value="Guardian" className="bg-slate-800">Guardian</option>
+                            <option value="Other" className="bg-slate-800">Other</option>
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {errors.relationship && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.relationship && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.relationship}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Teacher Sign-Up Specific Fields */}
+                {authMode === 'signup' && selectedRole === 'teacher' && (
+                  <>
+                    {/* Personal Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in">
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Personal Information</h3>
+                      
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="fullName" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your full name"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.fullName ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.fullName && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.fullName && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.fullName}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="email" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Email
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your email"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.email ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.email && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.email && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="phone" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Phone
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your phone number"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.phone ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.phone && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.phone && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.phone}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Location Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in" style={{ animationDelay: '100ms' }}>
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Location Information</h3>
+                      
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="country" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Country
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="country"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your country"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.country ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.country && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.country && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.country}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="region" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Region
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="region"
+                            name="region"
+                            value={formData.region}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your region"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.region ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.region && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.region && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.region}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Professional Information Section */}
+                    <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in" style={{ animationDelay: '200ms' }}>
+                      <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Professional Information</h3>
+                      
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="subjectSpecialization" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Subject Specialization
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="subjectSpecialization"
+                            name="subjectSpecialization"
+                            value={formData.subjectSpecialization}
+                            onChange={handleInputChange}
+                            required
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.subjectSpecialization ? 'border-red-500' : 'border-blue-500'
+                            } text-white focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80 appearance-none cursor-pointer`}
+                          >
+                            <option value="" className="bg-slate-800">Select subject specialization</option>
+                            <option value="English" className="bg-slate-800">English</option>
+                            <option value="Mathematics" className="bg-slate-800">Mathematics</option>
+                            <option value="Environmental Studies" className="bg-slate-800">Environmental Studies</option>
+                            <option value="Social Studies" className="bg-slate-800">Social Studies</option>
+                            <option value="Art and Craft" className="bg-slate-800">Art and Craft</option>
+                            <option value="Physical and Health Education" className="bg-slate-800">Physical and Health Education</option>
+                            <option value="General Science" className="bg-slate-800">General Science</option>
+                            <option value="Signs" className="bg-slate-800">Signs</option>
+                            <option value="Physics" className="bg-slate-800">Physics</option>
+                            <option value="Chemistry" className="bg-slate-800">Chemistry</option>
+                            <option value="Biology" className="bg-slate-800">Biology</option>
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {errors.subjectSpecialization && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.subjectSpecialization && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.subjectSpecialization}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="qualification" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Qualification
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="qualification"
+                            name="qualification"
+                            value={formData.qualification}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter your qualification"
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.qualification ? 'border-red-500' : 'border-blue-500'
+                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
+                          />
+                          {errors.qualification && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.qualification && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.qualification}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Email field for other signup roles (not student, parent, or teacher) */}
+                {authMode === 'signup' && selectedRole !== 'parent' && selectedRole !== 'student' && selectedRole !== 'teacher' && (
                   <div>
                     <label htmlFor="email" className="block text-blue-200 text-sm font-medium mb-2">
                       Email
@@ -325,7 +1196,7 @@ const AuthPage = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required={authMode === 'signup'}
+                        required={true}
                         placeholder="Enter your email"
                         className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
                           errors.email ? 'border-red-500' : 'border-blue-500'
@@ -346,36 +1217,39 @@ const AuthPage = () => {
                   </div>
                 )}
 
-                <div>
-                  <label htmlFor="username" className="block text-blue-200 text-sm font-medium mb-2">
-                    {authMode === 'login' ? 'Username or Email' : 'Username'}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your username"
-                      className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
-                        errors.username ? 'border-red-500' : 'border-blue-500'
-                      } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
-                    />
+                {/* Username/Student ID field - hidden for student, parent, and teacher signup */}
+                {!(authMode === 'signup' && (selectedRole === 'student' || selectedRole === 'parent' || selectedRole === 'teacher')) && (
+                  <div>
+                    <label htmlFor="username" className="block text-blue-200 text-sm font-medium mb-2">
+                      {getUsernameLabel()}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={selectedRole === 'teacher' || selectedRole === 'admin' ? 'email' : 'text'}
+                        id="username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleInputChange}
+                        required
+                        placeholder={getUsernamePlaceholder()}
+                        className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                          errors.username ? 'border-red-500' : 'border-blue-500'
+                        } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                      />
+                      {errors.username && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <XCircle className="w-5 h-5 text-red-500" />
+                        </div>
+                      )}
+                    </div>
                     {errors.username && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <XCircle className="w-5 h-5 text-red-500" />
-                      </div>
+                      <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.username}
+                      </p>
                     )}
                   </div>
-                  {errors.username && (
-                    <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.username}
-                    </p>
-                  )}
-                </div>
+                )}
 
                 <div>
                   <label htmlFor="password" className="block text-blue-200 text-sm font-medium mb-2">
@@ -485,7 +1359,7 @@ const AuthPage = () => {
                       if (newAuthMode === 'signup' && selectedRole === 'admin') {
                         setSelectedRole('student');
                       }
-                      setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+                      setFormData({ username: '', email: '', password: '', confirmPassword: '', fullName: '', dateOfBirth: '', phone: '', academicRegion: '', class: '', relationship: '', country: '', region: '', subjectSpecialization: '', qualification: '' });
                       setErrors({});
                     }}
                     className="text-white font-semibold hover:underline underline-offset-2 transition-colors hover:text-blue-300"
