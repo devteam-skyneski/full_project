@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { ScrollAnimator } from './components/ScrollAnimator';
 import { 
   ChevronDown, 
   Phone, 
@@ -31,6 +33,7 @@ import './dashboard.css';
 export default function ParentDashboard() {
   const [monthOpen, setMonthOpen] = useState(false);
   const [todayOpen, setTodayOpen] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const sectionsRef = useRef<{ [key: string]: HTMLElement | null }>({});
 
   // Navbar items for FloatingDock
@@ -452,11 +455,11 @@ export default function ParentDashboard() {
         {/* SECTION 2: PERFORMANCE */}
         <section 
           id="performance" 
-          className="dashboard-section performance-section"
+          className="dashboard-section performance-section py-16"
           ref={(el) => { sectionsRef.current['performance'] = el; }}
         >
-          <div className="max-w-[1920px] mx-auto px-6 py-4 h-full flex items-center">
-            <div className="bg-white rounded-2xl p-6 shadow-sm dashboard-card w-full h-[calc(100vh-120px)] flex flex-col justify-center">
+          <div className="max-w-[1920px] mx-auto px-6 py-4">
+            <div className="bg-white rounded-2xl p-8 shadow-sm dashboard-card w-full">
               {/* Subject-wise Performance */}
               <div className="w-full">
                 <h2 className="text-2xl font-bold text-[#1A1A1A] mb-4 flex items-center gap-2">
@@ -468,11 +471,12 @@ export default function ParentDashboard() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={[
-                        { name: 'Math', score: 92, color: '#6C5CE7' },
-                        { name: 'Science', score: 88, color: '#0984E3' },
-                        { name: 'English', score: 85, color: '#00B894' },
-                        { name: 'History', score: 72, color: '#FDCB6E' },
-                        { name: 'Computer', score: 95, color: '#E17055' },
+                        { name: 'Python', score: 92, color: '#6C5CE7' },
+                        { name: 'Java', score: 88, color: '#0984E3' },
+                        { name: 'JavaScript', score: 85, color: '#00B894' },
+                        { name: 'React', score: 88, color: '#FDCB6E' },
+                        { name: 'HTML/CSS', score: 95, color: '#E17055' },
+                        { name: 'C++', score: 82, color: '#A0AEC0' },
                       ]}
                       margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                     >
@@ -498,11 +502,12 @@ export default function ParentDashboard() {
                       />
                       <Bar dataKey="score" radius={[8, 8, 0, 0]}>
                         {[
-                          { name: 'Math', score: 92, color: '#6C5CE7' },
-                          { name: 'Science', score: 88, color: '#0984E3' },
-                          { name: 'English', score: 85, color: '#00B894' },
-                          { name: 'History', score: 72, color: '#FDCB6E' },
-                          { name: 'Computer', score: 95, color: '#E17055' },
+                          { name: 'Python', score: 92, color: '#6C5CE7' },
+                          { name: 'Java', score: 88, color: '#0984E3' },
+                          { name: 'JavaScript', score: 85, color: '#00B894' },
+                          { name: 'React', score: 88, color: '#FDCB6E' },
+                          { name: 'HTML/CSS', score: 95, color: '#E17055' },
+                          { name: 'C++', score: 82, color: '#A0AEC0' },
                         ].map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -517,26 +522,36 @@ export default function ParentDashboard() {
                 </div>
 
                 {/* Remarks Section */}
-                <div className="grid grid-cols-5 gap-3 mt-4">
-                  <div className="flex flex-col items-center p-3 bg-[#6C5CE7]/5 rounded-lg border border-[#6C5CE7]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Math</span>
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  <div className="flex flex-col items-center p-4 bg-[#6C5CE7]/5 rounded-lg border border-[#6C5CE7]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Python</span>
                     <span className="text-xs text-[#00B894] font-medium">Excellent</span>
+                    <p className="text-xs text-gray-500 mt-1">Strong in Data Structures</p>
                   </div>
-                  <div className="flex flex-col items-center p-3 bg-[#0984E3]/5 rounded-lg border border-[#0984E3]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Science</span>
+                  <div className="flex flex-col items-center p-4 bg-[#0984E3]/5 rounded-lg border border-[#0984E3]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Java</span>
+                    <span className="text-xs text-[#00B894] font-medium">Very Good</span>
+                    <p className="text-xs text-gray-500 mt-1">OOP concepts mastered</p>
+                  </div>
+                  <div className="flex flex-col items-center p-4 bg-[#00B894]/5 rounded-lg border border-[#00B894]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">JavaScript</span>
                     <span className="text-xs text-[#00B894] font-medium">Good</span>
+                    <p className="text-xs text-gray-500 mt-1">Strong DOM manipulation</p>
                   </div>
-                  <div className="flex flex-col items-center p-3 bg-[#00B894]/5 rounded-lg border border-[#00B894]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">English</span>
-                    <span className="text-xs text-[#00B894] font-medium">Good</span>
+                  <div className="flex flex-col items-center p-4 bg-[#FDCB6E]/5 rounded-lg border border-[#FDCB6E]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">React</span>
+                    <span className="text-xs text-[#00B894] font-medium">Very Good</span>
+                    <p className="text-xs text-gray-500 mt-1">Component patterns</p>
                   </div>
-                  <div className="flex flex-col items-center p-3 bg-[#FDCB6E]/5 rounded-lg border border-[#FDCB6E]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">History</span>
-                    <span className="text-xs text-[#E17055] font-medium">Needs Improvement</span>
-                  </div>
-                  <div className="flex flex-col items-center p-3 bg-[#E17055]/5 rounded-lg border border-[#E17055]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Computer</span>
+                  <div className="flex flex-col items-center p-4 bg-[#E17055]/5 rounded-lg border border-[#E17055]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">HTML/CSS</span>
                     <span className="text-xs text-[#00B894] font-medium">Excellent</span>
+                    <p className="text-xs text-gray-500 mt-1">Responsive design expert</p>
+                  </div>
+                  <div className="flex flex-col items-center p-4 bg-[#A0AEC0]/5 rounded-lg border border-[#A0AEC0]/20">
+                    <span className="text-sm font-semibold text-[#2D3436] mb-1">C++</span>
+                    <span className="text-xs text-[#00B894] font-medium">Good</span>
+                    <p className="text-xs text-gray-500 mt-1">Algorithm implementation</p>
                   </div>
                 </div>
               </div>
@@ -566,9 +581,109 @@ export default function ParentDashboard() {
           ref={(el) => { sectionsRef.current['feedback'] = el; }}
         >
           <div className="max-w-[1920px] mx-auto px-6 py-4">
-            <div className="bg-white rounded-2xl p-8 shadow-sm dashboard-card">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] mb-4">Feedback</h2>
-              <p className="text-base text-[#6B7280]">Feedback form coming soon...</p>
+            <div className="bg-white rounded-2xl shadow-sm dashboard-card">
+              {/* Import and use the Feedback component */}
+              <div className="feedback-section">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                  {/* Left side - Feedback Form */}
+                  <div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Feedback & Suggestions</h2>
+                    <p className="text-gray-600 mb-8">
+                      Share your thoughts to help us improve your child's learning experience
+                    </p>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Parent's Name</label>
+                        <input
+                          type="text"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Your name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Student's Name</label>
+                        <input
+                          type="text"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Student's name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Class/Grade</label>
+                        <input
+                          type="text"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Class/Grade"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Feedback Category</label>
+                        <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                          <option value="">Select a category</option>
+                          <option value="teaching">Teaching</option>
+                          <option value="communication">Communication</option>
+                          <option value="infrastructure">Infrastructure</option>
+                          <option value="others">Others</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Your feedback message"
+                        ></textarea>
+                      </div>
+                      <button className="w-full bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors">
+                        Submit Feedback
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right side - Feedback Summary */}
+                  <div>
+                    <div className="bg-gray-50 rounded-xl p-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-6">Feedback Summary</h3>
+                      {/* Chart will be added here */}
+                      <div className="aspect-square max-w-md mx-auto mb-8 bg-white rounded-lg p-4">
+                        <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
+                            <span>Teaching (40%)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                            <span>Communication (30%)</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                            <span>Infrastructure (20%)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-indigo-400"></div>
+                            <span>Others (10%)</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Recent Comments */}
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Recent Comments</h4>
+                        <div className="space-y-4">
+                          <div className="bg-white p-4 rounded-lg">
+                            <p className="text-gray-700">The math classes are great!</p>
+                          </div>
+                          <div className="bg-white p-4 rounded-lg">
+                            <p className="text-gray-700">Would love more updates about homework</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
