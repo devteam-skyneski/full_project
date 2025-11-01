@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+// use native <img> for local logo to avoid Next.js image validation errors when file missing
 import Link from "next/link";
 import {
   Home,
@@ -102,11 +102,10 @@ export default function Navbar() {
         {/* Logo: place your image at public/teacher-logo.png */}
         <div className="w-10 h-10 rounded-lg overflow-hidden bg-transparent">
           {logoAvailable ? (
-            <Image
+            // use native img so missing file doesn't cause Next's image validation error
+            <img
               src="/teacher-logo.png"
               alt="EduLearn logo"
-              width={40}
-              height={40}
               className="object-cover w-full h-full"
               onError={() => setLogoAvailable(false)}
             />
