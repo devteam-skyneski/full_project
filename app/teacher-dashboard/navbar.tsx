@@ -125,7 +125,7 @@ export default function Navbar() {
         >
           {/* Profile Icon */}
           <motion.div
-            className="w-8 h-8 bg-white flex items-center justify-center rounded-full text-black shadow-md"
+            className="w-8 h-8 bg-white flex items-center justify-center rounded-full text-black"
             animate={{ scale: isClicked ? 1.2 : 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 10 }}
           >
@@ -147,7 +147,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg py-3 shadow-lg z-50"
+              className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg py-3 z-50"
             >
               {/* Profile Header */}
               <div className="flex items-center gap-3 px-4 pb-3 border-b border-gray-100">
