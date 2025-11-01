@@ -116,20 +116,58 @@ export default function Navbar() {
       {/* Right Section - Profile */}
       <div className="relative" ref={dropdownRef}>
         <motion.div
-          whileHover={{ y: -7 }}
+          initial={false}
+          whileHover="hover"
+          animate="initial"
           onClick={() => {
             setOpen(!open);
             setIsClicked(!isClicked);
           }}
-          className="relative flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-full hover:bg-gray-200 transition-all cursor-pointer"
+          className="relative flex items-center gap-3 px-3 py-2 rounded-full cursor-pointer group"
         >
           {/* Profile Icon */}
           <motion.div
-            className="w-8 h-8 bg-white flex items-center justify-center rounded-full text-black"
+            className="w-8 h-8 bg-white flex items-center justify-center rounded-full text-black border-2 border-transparent transition-colors group-hover:border-blue-500"
             animate={{ scale: isClicked ? 1.2 : 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 10 }}
           >
-            <User size={18} />
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={username ?? 'User avatar'}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <User size={18} />
+            )}
+          </motion.div>
+
+          {/* Hover Card */}
+          <motion.div
+            variants={{
+              hover: { opacity: 1, y: 0, scale: 1 },
+              initial: { opacity: 0, y: 10, scale: 0.95 }
+            }}
+            transition={{ duration: 0.2 }}
+            className="absolute left-0 top-full mt-2 bg-white rounded-lg shadow-lg p-4 min-w-[200px] pointer-events-none"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={username ?? 'User avatar'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  username?.charAt(0).toUpperCase() || 'T'
+                )}
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">{username ?? 'Teacher'}</h3>
+                <p className="text-sm text-gray-500">Teacher</p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Dropdown Arrow */}
