@@ -2,31 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Search, 
-  Bell, 
-  Mail, 
   ChevronDown, 
   Phone, 
   MoreVertical,
-  Home
+  Mail,
+  Home,
 } from 'lucide-react';
 import './dashboard.css';
+import ParentNavbar from './navbar';
+import Assignments from './sections/Assignments';
+import Attendance from './sections/Attendance';
+import Exams from './sections/Exams';
+import Results from './sections/Results';
 
 export default function ParentDashboard() {
-  const [languageOpen, setLanguageOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
   const [todayOpen, setTodayOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest('.dropdown-container')) {
-        setLanguageOpen(false);
         setMonthOpen(false);
         setTodayOpen(false);
-        setUserMenuOpen(false);
       }
     };
 
@@ -43,79 +42,15 @@ export default function ParentDashboard() {
   ];
 
   return (
-    <div className="h-screen bg-[#F8F9FA] parent-dashboard overflow-hidden flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-6 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between max-w-[1920px] mx-auto">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full px-4 py-2.5 pr-10 bg-gray-50 rounded-lg border-none text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5D5FEF]/20"
-            />
-          </div>
-
-          {/* Right side icons */}
-          <div className="flex items-center gap-6 ml-8 header-icons">
-            {/* Language Dropdown */}
-            <div className="relative dropdown-container">
-              <button
-                onClick={() => setLanguageOpen(!languageOpen)}
-                className="flex items-center gap-2 text-sm text-gray-700 hover:text-[#5D5FEF] transition-colors"
-              >
-                ENG
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              {languageOpen && (
-                <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[100px] z-50 dropdown-menu">
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>ENG</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>ES</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>FR</button>
-                </div>
-              )}
-            </div>
-
-            {/* Mail Icon */}
-            <button className="text-gray-600 hover:text-[#5D5FEF] transition-colors">
-              <Mail className="w-5 h-5" />
-            </button>
-
-            {/* Bell Icon */}
-            <button className="text-gray-600 hover:text-[#5D5FEF] transition-colors">
-              <Bell className="w-5 h-5" />
-            </button>
-
-            {/* User Profile */}
-            <div className="relative dropdown-container">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-medium">
-                  GS
-                </div>
-                <span className="text-sm font-medium text-gray-700">Grace Stanley</span>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </button>
-              {userMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[200px] z-50 dropdown-menu">
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setUserMenuOpen(false)}>Profile</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setUserMenuOpen(false)}>Settings</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-500" onClick={() => setUserMenuOpen(false)}>Logout</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#F8F9FA] parent-dashboard">
+      {/* Navbar */}
+      <ParentNavbar />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden max-w-[1920px] mx-auto px-6 py-4" style={{ height: 'calc(100vh - 64px)' }}>
-        <div className="grid grid-cols-3 gap-4 h-full dashboard-grid">
+      <main className="max-w-[1920px] mx-auto px-6 py-4 mt-20">
+        <div className="grid grid-cols-3 gap-4 dashboard-grid">
           {/* Left Column */}
-          <div className="col-span-2 flex flex-col gap-4 h-full overflow-hidden">
+          <div className="col-span-2 flex flex-col gap-4">
             {/* Greeting Section */}
             <div className="bg-white rounded-2xl p-6 shadow-sm dashboard-card" style={{ height: '180px' }}>
               <div className="flex items-start justify-between h-full">
@@ -185,7 +120,7 @@ export default function ParentDashboard() {
             </div>
 
             {/* Performance Section - Simplified as per image */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1 flex flex-col overflow-hidden" style={{ minHeight: '0' }}>
+            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card">
               <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-[#1A1A1A]">Performance</h2>
                 <div className="relative dropdown-container">
@@ -209,8 +144,8 @@ export default function ParentDashboard() {
               </div>
 
               {/* The best lessons - Simplified layout */}
-              <div className="flex-1 flex flex-col" style={{ minHeight: '0' }}>
-                <div className="flex items-end justify-between mb-4 flex-shrink-0">
+              <div>
+                <div className="flex items-end justify-between mb-4">
                   <div>
                     <div className="text-5xl font-bold text-[#1A1A1A] mb-1 leading-none">95.4</div>
                     <div className="text-base text-[#1A1A1A]">Introduction to programming</div>
@@ -312,9 +247,9 @@ export default function ParentDashboard() {
           </div>
 
           {/* Right Column - Calendar & Events */}
-          <div className="flex flex-col gap-4 h-full overflow-hidden">
+          <div className="flex flex-col gap-4">
             {/* Calendar Section */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1 flex flex-col overflow-hidden" style={{ minHeight: '0' }}>
+            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card">
               <div className="flex items-center justify-between mb-2 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-[#1A1A1A]">Calendar</h2>
                 <div className="relative dropdown-container">
@@ -337,7 +272,7 @@ export default function ParentDashboard() {
               <p className="text-sm text-[#6B7280] mb-3 flex-shrink-0">6 events today</p>
 
               {/* Timeline */}
-              <div className="relative pl-4 flex-1 overflow-y-auto" style={{ minHeight: '0' }}>
+              <div className="relative pl-4">
                 {/* Timeline line */}
                 <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
 
@@ -440,6 +375,12 @@ export default function ParentDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Sections */}
+      <Assignments />
+      <Attendance />
+      <Exams />
+      <Results />
     </div>
   );
 }
