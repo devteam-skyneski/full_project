@@ -2,37 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Search, 
-  Bell, 
-  Mail, 
   ChevronDown, 
   Phone, 
   MoreVertical,
-  Home
+  Mail,
+  Home,
 } from 'lucide-react';
+import Lottie from 'lottie-react';
+import parentAnimation from '../../login(animations)/Parenting.json';
+import {
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Cell,
+  LabelList,
+} from 'recharts';
 import './dashboard.css';
+import ParentNavbar from './navbar';
+import Assignments from './sections/Assignments';
+import Attendance from './sections/Attendance';
+import Exams from './sections/Exams';
+import Results from './sections/Results';
 
 export default function ParentDashboard() {
-  const [languageOpen, setLanguageOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
   const [todayOpen, setTodayOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest('.dropdown-container')) {
-        setLanguageOpen(false);
         setMonthOpen(false);
         setTodayOpen(false);
-        setUserMenuOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Performance bar chart data - matching second image
+  const performanceData = [
+    { name: 'Algorithms structures', score: 85.3 },
+    { name: 'Object program.', score: 64.7 },
+    { name: 'Database program.', score: 84.2 },
+    { name: 'Web develop.', score: 45.6 },
+    { name: 'Mobile application', score: 43.5 },
+    { name: 'Machine learning', score: 74.4 },
+  ];
 
   // Calendar events - matching exact times from image
   const calendarEvents = [
@@ -43,149 +63,43 @@ export default function ParentDashboard() {
   ];
 
   return (
-    <div className="h-screen bg-[#F8F9FA] parent-dashboard overflow-hidden flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-6 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between max-w-[1920px] mx-auto">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full px-4 py-2.5 pr-10 bg-gray-50 rounded-lg border-none text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#5D5FEF]/20"
-            />
-          </div>
-
-          {/* Right side icons */}
-          <div className="flex items-center gap-6 ml-8 header-icons">
-            {/* Language Dropdown */}
-            <div className="relative dropdown-container">
-              <button
-                onClick={() => setLanguageOpen(!languageOpen)}
-                className="flex items-center gap-2 text-sm text-gray-700 hover:text-[#5D5FEF] transition-colors"
-              >
-                ENG
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              {languageOpen && (
-                <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[100px] z-50 dropdown-menu">
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>ENG</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>ES</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setLanguageOpen(false)}>FR</button>
-                </div>
-              )}
-            </div>
-
-            {/* Mail Icon */}
-            <button className="text-gray-600 hover:text-[#5D5FEF] transition-colors">
-              <Mail className="w-5 h-5" />
-            </button>
-
-            {/* Bell Icon */}
-            <button className="text-gray-600 hover:text-[#5D5FEF] transition-colors">
-              <Bell className="w-5 h-5" />
-            </button>
-
-            {/* User Profile */}
-            <div className="relative dropdown-container">
-              <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-medium">
-                  GS
-                </div>
-                <span className="text-sm font-medium text-gray-700">Grace Stanley</span>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </button>
-              {userMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[200px] z-50 dropdown-menu">
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setUserMenuOpen(false)}>Profile</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => setUserMenuOpen(false)}>Settings</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-500" onClick={() => setUserMenuOpen(false)}>Logout</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#F8F9FA] parent-dashboard">
+      {/* Navbar */}
+      <ParentNavbar />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden max-w-[1920px] mx-auto px-6 py-4" style={{ height: 'calc(100vh - 64px)' }}>
-        <div className="grid grid-cols-3 gap-4 h-full dashboard-grid">
+      <main className="max-w-[1920px] mx-auto px-6 py-4 mt-20">
+        <div className="grid grid-cols-3 gap-4 dashboard-grid">
           {/* Left Column */}
-          <div className="col-span-2 flex flex-col gap-4 h-full overflow-hidden">
+          <div className="col-span-2 flex flex-col gap-4">
             {/* Greeting Section */}
             <div className="bg-white rounded-2xl p-6 shadow-sm dashboard-card" style={{ height: '180px' }}>
               <div className="flex items-start justify-between h-full">
                 <div className="flex-1 pr-6">
-                  <h1 className="text-[36px] font-bold text-[#1A1A1A] mb-2 leading-tight">Hello Grace!</h1>
+                  <h1 className="text-[36px] font-bold text-[#1A1A1A] mb-2 leading-tight">Hello Parent!</h1>
                   <p className="text-base text-[#1A1A1A] mb-3 leading-relaxed">
-                    You have 3 new tasks. It is a lot of work for today! So let&apos;s start!
+                    Your have 3 new updates. Stay informed about your child progress and activities!
                   </p>
                   <a 
                     href="#" 
                     className="text-[#5D5FEF] underline hover:text-[#4C4ED8] transition-colors text-base font-medium"
                   >
-                    review it
+              
                   </a>
                 </div>
-                {/* 3D Character Illustration */}
-                <div className="w-56 h-56 flex-shrink-0 greeting-illustration">
-                  <svg viewBox="0 0 400 400" className="w-full h-full">
-                    <defs>
-                      <linearGradient id="deskGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#5D5FEF" />
-                        <stop offset="100%" stopColor="#4C4ED8" />
-                      </linearGradient>
-                      <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#FEE3CC" />
-                        <stop offset="100%" stopColor="#FBD5B8" />
-                      </linearGradient>
-                      <filter id="shadow">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-                        <feOffset dx="2" dy="2" result="offsetblur" />
-                        <feComponentTransfer>
-                          <feFuncA type="linear" slope="0.3" />
-                        </feComponentTransfer>
-                        <feMerge>
-                          <feMergeNode />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </filter>
-                    </defs>
-                    <rect x="50" y="280" width="300" height="20" fill="url(#deskGrad)" rx="4" filter="url(#shadow)" />
-                    <rect x="80" y="250" width="60" height="80" fill="#5D5FEF" rx="8" filter="url(#shadow)" />
-                    <rect x="75" y="320" width="70" height="8" fill="#4C4ED8" rx="4" />
-                    <rect x="80" y="240" width="60" height="15" fill="#5D5FEF" rx="4" />
-                    <circle cx="200" cy="140" r="35" fill="url(#skinGrad)" filter="url(#shadow)" />
-                    <rect x="175" y="175" width="50" height="80" fill="#FFFFFF" rx="4" filter="url(#shadow)" />
-                    <rect x="165" y="250" width="70" height="60" fill="#5D5FEF" rx="6" filter="url(#shadow)" />
-                    <ellipse cx="200" cy="110" rx="40" ry="25" fill="#8B4513" filter="url(#shadow)" />
-                    <rect x="170" y="120" width="60" height="15" fill="#654321" rx="2" />
-                    <ellipse cx="200" cy="125" rx="35" ry="8" fill="#A0522D" />
-                    <rect x="160" y="240" width="80" height="8" fill="#D1D5DB" rx="2" filter="url(#shadow)" />
-                    <rect x="162" y="220" width="76" height="22" fill="#E5E7EB" rx="2" filter="url(#shadow)" />
-                    <rect x="165" y="223" width="70" height="16" fill="#1A1A1A" rx="1" />
-                    <rect x="168" y="226" width="64" height="10" fill="#3B82F6" opacity="0.3" />
-                    <ellipse cx="195" cy="248" rx="8" ry="10" fill="url(#skinGrad)" />
-                    <ellipse cx="240" cy="200" rx="8" ry="18" fill="url(#skinGrad)" />
-                    <line x1="245" y1="185" x2="245" y2="205" stroke="#FBD5B8" strokeWidth="3" strokeLinecap="round" />
-                    <line x1="250" y1="190" x2="250" y2="200" stroke="#FBD5B8" strokeWidth="3" strokeLinecap="round" />
-                    <circle cx="245" cy="183" r="2" fill="#FBD5B8" />
-                    <circle cx="250" cy="188" r="2" fill="#FBD5B8" />
-                    <rect x="313" y="275" width="14" height="20" fill="#8B4513" rx="2" />
-                    <ellipse cx="320" cy="260" rx="18" ry="25" fill="#22C55E" filter="url(#shadow)" />
-                    <ellipse cx="315" cy="265" rx="12" ry="18" fill="#16A34A" />
-                    <ellipse cx="325" cy="265" rx="12" ry="18" fill="#16A34A" />
-                  </svg>
+                {/* Lottie Parent Animation */}
+                <div className="w-56 h-56 flex-shrink-0 greeting-illustration flex items-center justify-center">
+                  <Lottie
+                    animationData={parentAnimation}
+                    loop={true}
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Performance Section - Simplified as per image */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1 flex flex-col overflow-hidden" style={{ minHeight: '0' }}>
+            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card">
               <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-[#1A1A1A]">Performance</h2>
                 <div className="relative dropdown-container">
@@ -208,76 +122,55 @@ export default function ParentDashboard() {
                 </div>
               </div>
 
-              {/* The best lessons - Simplified layout */}
-              <div className="flex-1 flex flex-col" style={{ minHeight: '0' }}>
-                <div className="flex items-end justify-between mb-4 flex-shrink-0">
-                  <div>
-                    <div className="text-5xl font-bold text-[#1A1A1A] mb-1 leading-none">95.4</div>
-                    <div className="text-base text-[#1A1A1A]">Introduction to programming</div>
-                  </div>
-                  {/* Two progress indicators to the right */}
-                  <div className="flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <div className="relative w-16 h-16 mb-1">
-                        <svg className="w-16 h-16 transform -rotate-90">
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="#E5E7EB"
-                            strokeWidth="6"
-                            fill="none"
-                          />
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="#5D5FEF"
-                            strokeWidth="6"
-                            fill="none"
-                            strokeDasharray={`${2 * Math.PI * 28}`}
-                            strokeDashoffset={`${2 * Math.PI * 28 * (1 - 96 / 100)}`}
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-[10px] font-semibold text-[#1A1A1A]">96%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="relative w-16 h-16 mb-1">
-                        <svg className="w-16 h-16 transform -rotate-90">
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="#E5E7EB"
-                            strokeWidth="6"
-                            fill="none"
-                          />
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="#A5A6F6"
-                            strokeWidth="6"
-                            fill="none"
-                            strokeDasharray={`${2 * Math.PI * 28}`}
-                            strokeDashoffset={`${2 * Math.PI * 28 * (1 - 89 / 100)}`}
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-[10px] font-semibold text-[#1A1A1A]">89%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
-                    All lessons
-                  </button>
+              {/* Performance Score */}
+              <div className="flex items-end justify-between mb-6">
+                <div>
+                  <div className="text-5xl font-bold text-[#1A1A1A] mb-1 leading-none">95.4</div>
+                  <div className="text-base text-[#1A1A1A]">Introduction to programming.</div>
                 </div>
+                <button className="px-4 py-2 bg-[#5D5FEF] text-white rounded-lg text-sm font-medium hover:bg-[#4C4ED8] transition-colors">
+                  All lessons
+                </button>
+              </div>
+
+              {/* Horizontal Bar Chart */}
+              <div className="mt-6">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={performanceData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <XAxis
+                      type="number"
+                      domain={[0, 100]}
+                      tick={{ fontSize: 12, fill: '#6B7280' }}
+                      axisLine={{ stroke: '#E5E7EB' }}
+                      tickLine={{ stroke: '#E5E7EB' }}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tick={{ fontSize: 12, fill: '#1A1A1A' }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={140}
+                    />
+                    <Bar
+                      dataKey="score"
+                      radius={[0, 8, 8, 0]}
+                    >
+                      {performanceData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill="#5D5FEF" />
+                      ))}
+                      <LabelList
+                        dataKey="score"
+                        position="right"
+                        style={{ fill: '#1A1A1A', fontSize: '12px', fontWeight: '500' }}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
@@ -312,9 +205,9 @@ export default function ParentDashboard() {
           </div>
 
           {/* Right Column - Calendar & Events */}
-          <div className="flex flex-col gap-4 h-full overflow-hidden">
+          <div className="flex flex-col gap-4">
             {/* Calendar Section */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1 flex flex-col overflow-hidden" style={{ minHeight: '0' }}>
+            <div className="bg-white rounded-2xl p-5 shadow-sm dashboard-card">
               <div className="flex items-center justify-between mb-2 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-[#1A1A1A]">Calendar</h2>
                 <div className="relative dropdown-container">
@@ -337,7 +230,7 @@ export default function ParentDashboard() {
               <p className="text-sm text-[#6B7280] mb-3 flex-shrink-0">6 events today</p>
 
               {/* Timeline */}
-              <div className="relative pl-4 flex-1 overflow-y-auto" style={{ minHeight: '0' }}>
+              <div className="relative pl-4">
                 {/* Timeline line */}
                 <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
 
@@ -440,6 +333,12 @@ export default function ParentDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Sections */}
+      <Assignments />
+      <Attendance />
+      <Exams />
+      <Results />
     </div>
   );
 }
