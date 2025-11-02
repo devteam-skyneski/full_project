@@ -468,16 +468,16 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['performance'] = el; }}
         >
-          <div className="w-full px-4 py-4 h-full">
-            <div className="grid grid-cols-2 gap-4 h-full">
+          <div className="w-full px-3 py-2 h-full">
+            <div className="grid grid-cols-2 gap-3 h-full">
               {/* Left Half - Subject Performance (unchanged) */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm dashboard-card overflow-y-auto">
-                <h2 className="text-2xl font-bold text-[#1A1A1A] mb-4 flex items-center gap-2">
+              <div className="bg-white rounded-2xl p-4 shadow-sm dashboard-card overflow-y-auto">
+                <h2 className="text-xl font-bold text-[#1A1A1A] mb-2 flex items-center gap-2">
                   📊 Subject Performance
                 </h2>
                 
                 {/* Bar Chart - Horizontal */}
-                <div className="h-[300px] mb-4">
+                <div className="h-[220px] mb-2">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={[
@@ -494,25 +494,25 @@ export default function ParentDashboard() {
                       <XAxis 
                         type="number"
                         domain={[0, 100]}
-                        tick={{ fill: '#636E72', fontSize: 11, fontWeight: 500 }}
+                        tick={{ fill: '#636E72', fontSize: 10, fontWeight: 500 }}
                         axisLine={{ stroke: '#DFE6E9' }}
                         tickLine={{ stroke: '#DFE6E9' }}
                       />
                       <YAxis 
                         type="category"
                         dataKey="name"
-                        tick={{ fill: '#1A1A1A', fontSize: 12, fontWeight: 500 }}
+                        tick={{ fill: '#1A1A1A', fontSize: 11, fontWeight: 500 }}
                         axisLine={false}
                         tickLine={false}
-                        width={100}
+                        width={90}
                       />
                       <Tooltip 
                         contentStyle={{ 
                           backgroundColor: '#fff', 
                           border: '1px solid #DFE6E9', 
                           borderRadius: '8px',
-                          fontSize: '14px',
-                          padding: '8px 12px'
+                          fontSize: '12px',
+                          padding: '6px 10px'
                         }}
                         formatter={(value: number) => `${value}%`}
                       />
@@ -530,7 +530,7 @@ export default function ParentDashboard() {
                         <LabelList 
                           dataKey="score" 
                           position="right" 
-                          style={{ fill: '#2D3436', fontSize: '12px', fontWeight: '600' }}
+                          style={{ fill: '#2D3436', fontSize: '11px', fontWeight: '600' }}
                         />
                       </Bar>
                     </BarChart>
@@ -538,112 +538,112 @@ export default function ParentDashboard() {
                 </div>
 
                 {/* Remarks Section */}
-                <div className="grid grid-cols-3 gap-4 mt-4">
-                  <div className="flex flex-col items-center p-4 bg-[#6C5CE7]/5 rounded-lg border border-[#6C5CE7]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Python</span>
-                    <span className="text-xs text-[#00B894] font-medium">Excellent</span>
-                    <p className="text-xs text-gray-500 mt-1">Strong in Data Structures</p>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  <div className="flex flex-col items-center p-2 bg-[#6C5CE7]/5 rounded-lg border border-[#6C5CE7]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">Python</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Excellent</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Strong in Data Structures</p>
                   </div>
-                  <div className="flex flex-col items-center p-4 bg-[#0984E3]/5 rounded-lg border border-[#0984E3]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">Java</span>
-                    <span className="text-xs text-[#00B894] font-medium">Very Good</span>
-                    <p className="text-xs text-gray-500 mt-1">OOP concepts mastered</p>
+                  <div className="flex flex-col items-center p-2 bg-[#0984E3]/5 rounded-lg border border-[#0984E3]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">Java</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Very Good</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">OOP concepts mastered</p>
                   </div>
-                  <div className="flex flex-col items-center p-4 bg-[#00B894]/5 rounded-lg border border-[#00B894]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">JavaScript</span>
-                    <span className="text-xs text-[#00B894] font-medium">Good</span>
-                    <p className="text-xs text-gray-500 mt-1">Strong DOM manipulation</p>
+                  <div className="flex flex-col items-center p-2 bg-[#00B894]/5 rounded-lg border border-[#00B894]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">JavaScript</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Good</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Strong DOM manipulation</p>
                   </div>
-                  <div className="flex flex-col items-center p-4 bg-[#FDCB6E]/5 rounded-lg border border-[#FDCB6E]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">React</span>
-                    <span className="text-xs text-[#00B894] font-medium">Very Good</span>
-                    <p className="text-xs text-gray-500 mt-1">Component patterns</p>
+                  <div className="flex flex-col items-center p-2 bg-[#FDCB6E]/5 rounded-lg border border-[#FDCB6E]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">React</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Very Good</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Component patterns</p>
                   </div>
-                  <div className="flex flex-col items-center p-4 bg-[#E17055]/5 rounded-lg border border-[#E17055]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">HTML/CSS</span>
-                    <span className="text-xs text-[#00B894] font-medium">Excellent</span>
-                    <p className="text-xs text-gray-500 mt-1">Responsive design expert</p>
+                  <div className="flex flex-col items-center p-2 bg-[#E17055]/5 rounded-lg border border-[#E17055]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">HTML/CSS</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Excellent</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Responsive design expert</p>
                   </div>
-                  <div className="flex flex-col items-center p-4 bg-[#A0AEC0]/5 rounded-lg border border-[#A0AEC0]/20">
-                    <span className="text-sm font-semibold text-[#2D3436] mb-1">C++</span>
-                    <span className="text-xs text-[#00B894] font-medium">Good</span>
-                    <p className="text-xs text-gray-500 mt-1">Algorithm implementation</p>
+                  <div className="flex flex-col items-center p-2 bg-[#A0AEC0]/5 rounded-lg border border-[#A0AEC0]/20">
+                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">C++</span>
+                    <span className="text-[10px] text-[#00B894] font-medium">Good</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Algorithm implementation</p>
                   </div>
                 </div>
               </div>
 
               {/* Right Half - Report Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm dashboard-card overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-[#1A1A1A]">Report Card</h2>
+              <div className="bg-white rounded-2xl p-4 shadow-sm dashboard-card overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-xl font-bold text-[#1A1A1A]">Report Card</h2>
                   <button 
                     onClick={() => {
                       // PDF download functionality would go here
                       window.print();
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#5D5FEF] text-white rounded-lg hover:bg-[#4C4ED8] transition-colors text-sm font-medium"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#5D5FEF] text-white rounded-lg hover:bg-[#4C4ED8] transition-colors text-xs font-medium"
                   >
-                    <Download className="w-4 h-4" />
+                    <Download className="w-3.5 h-3.5" />
                     Download PDF
                   </button>
                 </div>
 
                 {/* Congratulatory Message */}
-                <div className="text-center mb-6">
-                  <p className="text-base text-[#1A1A1A] leading-relaxed">
+                <div className="text-center mb-3">
+                  <p className="text-xs text-[#1A1A1A] leading-tight">
                     Congratulations, Sarah! Your hard work and dedication have paid off. Here&apos;s a detailed overview of your academic performance this semester.
                   </p>
                 </div>
 
                 {/* Academic Performance Section */}
-                <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                  <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">Academic Performance</h3>
-                  <p className="text-sm text-gray-600 mb-4">Semester 1, 2024</p>
-                  <div className="text-4xl font-bold text-[#5D5FEF]">Overall Grade: A</div>
+                <div className="bg-gray-50 rounded-xl p-3 mb-3">
+                  <h3 className="text-sm font-bold text-[#1A1A1A] mb-1">Academic Performance</h3>
+                  <p className="text-xs text-gray-600 mb-2">Semester 1, 2024</p>
+                  <div className="text-2xl font-bold text-[#5D5FEF]">Overall Grade: A</div>
                 </div>
 
                 {/* Subject-wise Performance Table */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold text-[#1A1A1A] mb-4">Subject-wise Performance</h3>
+                <div className="mb-3">
+                  <h3 className="text-sm font-bold text-[#1A1A1A] mb-2">Subject-wise Performance</h3>
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b-2 border-gray-300">
-                          <th className="text-left py-3 px-4 font-bold text-[#1A1A1A]">SUBJECT</th>
-                          <th className="text-left py-3 px-4 font-bold text-[#1A1A1A]">GRADE</th>
-                          <th className="text-left py-3 px-4 font-bold text-[#1A1A1A]">MARKS</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">SUBJECT</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">GRADE</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">MARKS</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">Python</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">A</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">92/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">Python</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">92/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">Java</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">A-</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">88/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">Java</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">JavaScript</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">B+</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">85/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">JavaScript</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B+</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">85/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">React</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">A-</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">88/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">React</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">HTML/CSS</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">A</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">95/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">HTML/CSS</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">95/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-3 px-4 text-[#1A1A1A] font-medium">C++</td>
-                          <td className="py-3 px-4 font-bold text-blue-600">B</td>
-                          <td className="py-3 px-4 text-[#1A1A1A]">82/100</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">C++</td>
+                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B</td>
+                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">82/100</td>
                         </tr>
                       </tbody>
                     </table>
@@ -651,9 +651,9 @@ export default function ParentDashboard() {
                 </div>
 
                 {/* Overall Remarks Section */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold text-[#1A1A1A] mb-3">Overall Remarks</h3>
-                  <p className="text-base text-[#1A1A1A] leading-relaxed">
+                <div className="mb-0">
+                  <h3 className="text-sm font-bold text-[#1A1A1A] mb-1.5">Overall Remarks</h3>
+                  <p className="text-xs text-[#1A1A1A] leading-tight">
                     Sarah has shown significant improvement throughout the semester. Her dedication to learning and consistent effort are commendable. Keep up the great work!
                   </p>
                 </div>
