@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Eye, EyeOff, GraduationCap, Users, UserCog, Shield, Loader2, CheckCircle2, XCircle, AlertCircle, Mail, User, Lock, Phone, Calendar, MapPin, BookOpen, School, UserCheck } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Lottie from 'lottie-react';
 import studentAnimation from '../../login(animations)/Student.json';
@@ -35,9 +34,13 @@ const AuthPage = () => {
   const [selectedRole, setSelectedRole] = useState<Role>(() => {
     // Restore last selected role from localStorage
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('lastSelectedRole');
-      if (saved && ['student', 'parent', 'teacher', 'admin'].includes(saved)) {
-        return saved as Role;
+      try {
+        const saved = localStorage.getItem('lastSelectedRole');
+        if (saved && ['student', 'parent', 'teacher', 'admin'].includes(saved)) {
+          return saved as Role;
+        }
+      } catch (error) {
+        console.error('Failed to load last selected role from localStorage:', error);
       }
     }
     return 'student';
@@ -74,7 +77,7 @@ const AuthPage = () => {
   });
 
   // Helper function to calculate password strength
-  const calculatePasswordStrength = (password: string): number => {
+  const calculatePasswordStrength = useCallback((password: string): number => {
     let strength = 0;
     if (password.length >= 6) strength += 1;
     if (password.length >= 8) strength += 1;
@@ -83,10 +86,10 @@ const AuthPage = () => {
     if (/[0-9]/.test(password)) strength += 1;
     if (/[^A-Za-z0-9]/.test(password)) strength += 1;
     return Math.min(strength, 4); // Max 4 levels
-  };
+  }, []);
 
   // Helper function to calculate form progress
-  const calculateFormProgress = (): number => {
+  const calculateFormProgress = useCallback((): number => {
     if (authMode !== 'signup') return 0;
     
     let totalFields = 0;
@@ -109,7 +112,8 @@ const AuthPage = () => {
         }
       });
     } else if (selectedRole === 'teacher') {
-      const requiredFields = ['fullName', 'email', 'country', 'phone', 'region', 'subjectSpecialization', 'qualification', 'username', 'password', 'confirmPassword'];
+      // For teacher, username is not shown (email is used as username)
+      const requiredFields = ['fullName', 'email', 'country', 'phone', 'region', 'subjectSpecialization', 'qualification', 'password', 'confirmPassword'];
       totalFields = requiredFields.length;
       requiredFields.forEach(field => {
         if (formData[field as keyof typeof formData]?.toString().trim()) {
@@ -119,49 +123,58 @@ const AuthPage = () => {
     }
 
     return totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
-  };
+  }, [authMode, selectedRole, formData]);
 
   // Update password strength when password changes
   useEffect(() => {
     if (authMode === 'signup') {
       setPasswordStrength(calculatePasswordStrength(formData.password));
     }
-  }, [formData.password, authMode]);
+  }, [formData.password, authMode, calculatePasswordStrength]);
 
   // Update form progress when form data changes
   useEffect(() => {
     if (authMode === 'signup') {
       setFormProgress(calculateFormProgress());
     }
-  }, [formData, authMode, selectedRole]);
+  }, [formData, authMode, selectedRole, calculateFormProgress]);
 
   // Auto-save form data to localStorage
   useEffect(() => {
     if (authMode === 'signup' && typeof window !== 'undefined') {
-      const saveData = {
-        ...formData,
-        role: selectedRole,
-        timestamp: Date.now()
-      };
-      localStorage.setItem('signupFormData', JSON.stringify(saveData));
+      try {
+        const saveData = {
+          ...formData,
+          role: selectedRole,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('signupFormData', JSON.stringify(saveData));
+      } catch (error) {
+        console.error('Failed to save form data to localStorage:', error);
+      }
     }
   }, [formData, authMode, selectedRole]);
 
   // Load saved form data on mount (signup mode)
   useEffect(() => {
     if (authMode === 'signup' && typeof window !== 'undefined') {
-      const saved = localStorage.getItem('signupFormData');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          // Only restore if saved less than 24 hours ago
-          if (data.timestamp && Date.now() - data.timestamp < 24 * 60 * 60 * 1000 && data.role === selectedRole) {
-            const { role, timestamp, ...formDataToRestore } = data;
-            setFormData(prev => ({ ...prev, ...formDataToRestore }));
+      try {
+        const saved = localStorage.getItem('signupFormData');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            // Only restore if saved less than 24 hours ago
+            if (data.timestamp && Date.now() - data.timestamp < 24 * 60 * 60 * 1000 && data.role === selectedRole) {
+              const { role, timestamp, ...formDataToRestore } = data;
+              setFormData(prev => ({ ...prev, ...formDataToRestore }));
+            }
+          } catch (e) {
+            // Invalid data, ignore
+            console.error('Failed to parse saved form data:', e);
           }
-        } catch (e) {
-          // Invalid data, ignore
         }
+      } catch (error) {
+        console.error('Failed to load form data from localStorage:', error);
       }
     }
   }, [authMode, selectedRole]);
@@ -169,22 +182,31 @@ const AuthPage = () => {
   // Load remembered user data on mount (for login)
   useEffect(() => {
     if (authMode === 'login' && typeof window !== 'undefined') {
-      const remembered = localStorage.getItem('rememberedUser');
-      if (remembered) {
-        try {
-          const data = JSON.parse(remembered);
-          setFormData(prev => ({
-            ...prev,
-            username: data.username || '',
-          }));
-          if (data.role) {
-            setSelectedRole(data.role as Role);
-            localStorage.setItem('lastSelectedRole', data.role);
+      try {
+        const remembered = localStorage.getItem('rememberedUser');
+        if (remembered) {
+          try {
+            const data = JSON.parse(remembered);
+            setFormData(prev => ({
+              ...prev,
+              username: data.username || '',
+            }));
+            if (data.role) {
+              setSelectedRole(data.role as Role);
+              try {
+                localStorage.setItem('lastSelectedRole', data.role);
+              } catch (error) {
+                console.error('Failed to save last selected role to localStorage:', error);
+              }
+            }
+            setRememberMe(true);
+          } catch (e) {
+            // Invalid data, ignore
+            console.error('Failed to parse remembered user data:', e);
           }
-          setRememberMe(true);
-        } catch (e) {
-          // Invalid data, ignore
         }
+      } catch (error) {
+        console.error('Failed to load remembered user from localStorage:', error);
       }
     }
   }, [authMode]);
@@ -552,28 +574,50 @@ const AuthPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Store user data in sessionStorage (in production, use proper auth state management)
+      // For teacher signup, use email as username since username field is not shown
+      const username = (authMode === 'signup' && selectedRole === 'teacher') 
+        ? formData.email 
+        : formData.username;
+      
       const userData = {
         role: selectedRole,
-        username: formData.username,
+        username: username,
         email: formData.email,
         isAuthenticated: true,
       };
-      sessionStorage.setItem('user', JSON.stringify(userData));
+      
+      try {
+        sessionStorage.setItem('user', JSON.stringify(userData));
+      } catch (error) {
+        console.error('Failed to save user data to sessionStorage:', error);
+      }
       
       // If Remember Me is checked, also store in localStorage
       if (authMode === 'login' && rememberMe && typeof window !== 'undefined') {
-        localStorage.setItem('rememberedUser', JSON.stringify({
-          username: formData.username,
-          role: selectedRole,
-        }));
+        try {
+          localStorage.setItem('rememberedUser', JSON.stringify({
+            username: formData.username,
+            role: selectedRole,
+          }));
+        } catch (error) {
+          console.error('Failed to save remembered user to localStorage:', error);
+        }
       } else if (authMode === 'login' && !rememberMe && typeof window !== 'undefined') {
         // Clear remembered user if unchecked
-        localStorage.removeItem('rememberedUser');
+        try {
+          localStorage.removeItem('rememberedUser');
+        } catch (error) {
+          console.error('Failed to remove remembered user from localStorage:', error);
+        }
       }
       
       // Clear saved form data on successful submission
       if (authMode === 'signup' && typeof window !== 'undefined') {
-        localStorage.removeItem('signupFormData');
+        try {
+          localStorage.removeItem('signupFormData');
+        } catch (error) {
+          console.error('Failed to remove signup form data from localStorage:', error);
+        }
       }
       
       // Redirect to respective dashboard based on role
@@ -794,7 +838,11 @@ const AuthPage = () => {
                           setSelectedRole(role);
                           // Save selected role to localStorage
                           if (typeof window !== 'undefined') {
-                            localStorage.setItem('lastSelectedRole', role);
+                            try {
+                              localStorage.setItem('lastSelectedRole', role);
+                            } catch (error) {
+                              console.error('Failed to save last selected role to localStorage:', error);
+                            }
                           }
                           setErrors({}); // Clear errors when changing role
                         }}
@@ -1791,6 +1839,10 @@ const AuthPage = () => {
                       Confirm Password
                     </label>
                     <div className="relative">
+                      {/* Lock icon */}
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-300">
+                        <Lock className="w-5 h-5" />
+                      </div>
                       <input
                         type={showPassword ? 'text' : 'password'}
                         id="confirmPassword"
@@ -1799,9 +1851,9 @@ const AuthPage = () => {
                         onChange={handleInputChange}
                         required={authMode === 'signup'}
                         placeholder="Confirm your password"
-                        className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
-                          errors.confirmPassword ? 'border-red-500' : 'border-blue-500'
-                        } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                        className={`w-full pl-11 pr-10 py-3 bg-slate-800 border-b-2 ${
+                          errors.confirmPassword ? 'border-red-500' : formData.confirmPassword && formData.password === formData.confirmPassword ? 'border-green-500' : 'border-blue-500'
+                        } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-200`}
                       />
                       {errors.confirmPassword ? (
                         <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -1947,9 +1999,7 @@ const AuthPage = () => {
                   key={selectedRole}
                   className="animate-fade-in transition-transform duration-75 ease-out"
                   style={{ 
-                    transform: selectedRole === 'student' || selectedRole === 'teacher' || selectedRole === 'parent' || selectedRole === 'admin'
-                      ? 'none' 
-                      : parallaxTransform.illustration 
+                    transform: parallaxTransform.illustration
                   }}
                 >
                   {selectedRole === 'student' && <StudentIllustration isInitialMount={isInitialMount} />}
