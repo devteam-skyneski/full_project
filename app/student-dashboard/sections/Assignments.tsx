@@ -155,7 +155,7 @@ function FileUploadModal({
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+        className="backdrop-blur-xl bg-white/20 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-white/30"
         onClick={(e) => e.stopPropagation()}
       >
         <div 
@@ -165,14 +165,13 @@ function FileUploadModal({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl backdrop-blur-md bg-white/20 border border-white/30"
               >
                 {subjectEmojis[assignment.subject] || "📝"}
               </div>
               <div>
                 <h3 className="text-2xl font-bold">Submit Assignment</h3>
-                <p className="text-blue-100 text-sm mt-1">{assignment.subject} • {assignment.subjectId}</p>
+                <p className="text-white text-sm mt-1">{assignment.subject} • {assignment.subjectId}</p>
               </div>
             </div>
             <button
@@ -193,34 +192,33 @@ function FileUploadModal({
               >
                 ✓
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 Successfully Submitted!
               </h3>
-              <p className="text-gray-600 text-center">
+              <p className="text-white text-center">
                 Your assignment has been submitted. Check your email for confirmation.
               </p>
             </div>
           ) : (
             <>
               <div 
-                className="mb-6 p-5 rounded-xl border border-blue-200"
-                style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)' }}
+                className="mb-6 p-5 rounded-xl backdrop-blur-md bg-blue-500/20 border border-blue-400/30"
               >
-                <h4 className="font-semibold text-gray-800 mb-2">{assignment.title}</h4>
-                <p className="text-sm text-gray-700 mb-3">{assignment.description}</p>
-                <div className="flex items-center gap-2 text-sm text-blue-700 font-medium">
+                <h4 className="font-semibold text-white mb-2">{assignment.title}</h4>
+                <p className="text-sm text-white mb-3">{assignment.description}</p>
+                <div className="flex items-center gap-2 text-sm text-white font-medium">
                   <span>🕐</span>
                   <span>Due: {assignment.dueDate}, {assignment.year}</span>
                 </div>
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-800 mb-3">
+                <label className="block text-sm font-semibold text-white mb-3">
                   Upload Files
                 </label>
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
+                  className="border-2 border-dashed border-blue-400/50 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500/70 hover:bg-blue-500/20 backdrop-blur-sm transition-all duration-300"
                 >
                   <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl"
@@ -228,10 +226,10 @@ function FileUploadModal({
                   >
                     ⬆️
                   </div>
-                  <p className="text-gray-700 mb-1 font-medium">
+                  <p className="text-white mb-1 font-medium">
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-white">
                     PDF, DOC, DOCX, ZIP, RAR (Max 10MB per file)
                   </p>
                   <input
@@ -246,31 +244,30 @@ function FileUploadModal({
 
                 {files.length > 0 && (
                   <div className="mt-4 space-y-2">
-                    <p className="text-sm font-semibold text-gray-800 mb-2">
+                    <p className="text-sm font-semibold text-white mb-2">
                       Selected Files ({files.length})
                     </p>
                     {files.map((file, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 rounded-lg border border-blue-200"
-                        style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)' }}
+                        className="flex items-center justify-between p-3 rounded-lg backdrop-blur-md bg-blue-500/20 border border-blue-400/30"
                       >
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
+                          <div className="w-10 h-10 backdrop-blur-md bg-blue-500/20 rounded-lg flex items-center justify-center text-xl border border-blue-400/30">
                             📄
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-800 truncate">
+                            <p className="text-sm font-medium text-white truncate">
                               {file.name}
                             </p>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-white">
                               {formatFileSize(file.size)}
                             </p>
                           </div>
                         </div>
                         <button
                           onClick={() => handleRemoveFile(index)}
-                          className="p-1.5 hover:bg-red-100 rounded-lg text-red-600 transition text-xl leading-none"
+                          className="p-1.5 hover:bg-red-100 rounded-lg text-white transition text-xl leading-none"
                         >
                           ×
                         </button>
@@ -283,7 +280,7 @@ function FileUploadModal({
               <div className="flex gap-3">
                 <button
                   onClick={onClose}
-                  className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-medium"
+                  className="flex-1 px-4 py-3 bg-gray-100 text-white rounded-xl hover:bg-gray-200 transition font-medium"
                 >
                   Cancel
                 </button>
@@ -393,9 +390,10 @@ function TimelineCard({
       <VerticalTimelineElement
         position={position}
         contentStyle={{
-          background: "white",
+          background: "rgba(255, 255, 255, 0.2)",
+          backdropFilter: "blur(16px)",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-          border: "1px solid #e5e7eb",
+          border: "1px solid rgba(255, 255, 255, 0.3)",
           borderRadius: "0.75rem",
           position: 'relative',
         }}
@@ -427,25 +425,25 @@ function TimelineCard({
               {subjectEmojis[assignment.subject] || "📝"}
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-bold text-gray-800">{assignment.subject}</h3>
-              <p className="text-[10px] text-gray-600">ID: {assignment.subjectId}</p>
+              <h3 className="text-sm font-bold text-white">{assignment.subject}</h3>
+              <p className="text-[10px] text-white">ID: {assignment.subjectId}</p>
             </div>
           </div>
 
-          <h4 className="text-base font-semibold text-gray-800 mb-1">
+          <h4 className="text-base font-semibold text-white mb-1">
             {assignment.title}
           </h4>
 
-          <p className="text-xs text-gray-600 mb-2 line-clamp-2">
+          <p className="text-xs text-white mb-2 line-clamp-2">
             {assignment.description}
           </p>
 
           <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium mb-2 ${
             assignment.status === "graded"
-              ? "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
+              ? "text-white bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
               : assignment.status === "overdue"
-              ? "text-blue-700 bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300"
-              : "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
+              ? "text-white bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300"
+              : "text-white bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
           }`}>
             <span>{statusInfo.icon}</span>
             <span>
@@ -496,11 +494,11 @@ export default function Assignments() {
   return (
     <section id="assignments" className="py-20 min-h-screen">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-gray-800 mb-12 text-center">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">
           Assignments Timeline
         </h2>
         
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="backdrop-blur-xl bg-white/20 rounded-xl p-6 shadow-lg border border-white/30">
           <VerticalTimeline lineColor="#e5e7eb">
             {assignmentsData.map((assignment, index) => (
               <TimelineCard

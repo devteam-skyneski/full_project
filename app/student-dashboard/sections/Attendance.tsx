@@ -61,7 +61,7 @@ const Index = () => {
             return (
               <div
                 key={index}
-                className="bg-white border border-blue-200 rounded-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                className="backdrop-blur-xl bg-white/20 border border-white/30 rounded-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
               >
                 <div className="p-6 relative">
                   <div 
@@ -70,15 +70,15 @@ const Index = () => {
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <div 
-                        className={`h-12 w-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}
+                        className={`h-12 w-12 rounded-lg backdrop-blur-md bg-blue-500/40 border border-blue-400/50 flex items-center justify-center shadow-lg`}
                       >
                         <IconComponent className="text-white" size={24} strokeWidth={2.5} />
                       </div>
                     </div>
-                    <h3 className="text-sm text-gray-600 mb-2 uppercase tracking-wide font-semibold">
+                    <h3 className="text-sm text-white mb-2 uppercase tracking-wide font-semibold">
                       {stat.label}
                     </h3>
-                    <p className="text-4xl font-bold text-gray-800">{stat.value}</p>
+                    <p className="text-4xl font-bold text-white">{stat.value}</p>
                   </div>
                 </div>
               </div>
@@ -87,8 +87,8 @@ const Index = () => {
         </div>
 
         {/* Bar Graph Section */}
-        <div className="bg-white border border-blue-200 rounded-xl p-8 shadow-lg" ref={chartRef}>
-          <h2 className="text-3xl font-bold text-gray-800 mb-12 text-center">
+        <div className="backdrop-blur-xl bg-white/0 border border-white/30 rounded-xl p-8 shadow-lg" ref={chartRef}>
+          <h2 className="text-3xl font-bold text-white mb-12 text-center">
             Subject-wise Attendance
           </h2>
           
@@ -102,7 +102,7 @@ const Index = () => {
               {[100, 75, 50, 25, 0].map((value) => (
                 <div
                   key={value}
-                  className="absolute right-3 text-xs font-medium text-gray-600"
+                  className="absolute right-3 text-xs font-medium text-white"
                   style={{ bottom: `${value}%`, transform: 'translateY(50%)' }}
                 >
                   {value}%
@@ -132,7 +132,7 @@ const Index = () => {
                   {/* Percentage Label */}
                   <div className="mb-3 h-8 flex items-center">
                     <span 
-                      className="text-lg font-bold text-gray-800 transition-all duration-500"
+                      className="text-lg font-bold text-white transition-all duration-500"
                       style={{
                         opacity: isVisible ? 1 : 0,
                         transform: isVisible ? 'translateY(0)' : 'translateY(-10px)',
@@ -145,16 +145,12 @@ const Index = () => {
 
                   {/* Bar Container */}
                   <div 
-                    className="relative w-16 h-64 rounded-t-lg overflow-hidden shadow-inner"
-                    style={{
-                      background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)'
-                    }}
+                    className="relative w-16 h-64 rounded-t-lg overflow-hidden shadow-inner backdrop-blur-sm bg-blue-500/20 border border-blue-400/30"
                   >
                     {/* Attended Bar */}
                     <div
-                      className="absolute bottom-0 w-full transition-all duration-1000 ease-out rounded-t-lg shadow-lg"
+                      className="absolute bottom-0 w-full transition-all duration-1000 ease-out rounded-t-lg shadow-lg backdrop-blur-md bg-blue-600/80 border-t border-blue-500/50"
                       style={{
-                        background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
                         height: isVisible ? `${data.attended}%` : '0%',
                         transitionDelay: `${index * 150}ms`,
                       }}
@@ -163,7 +159,7 @@ const Index = () => {
 
                   {/* Subject Label */}
                   <div className="mt-6 text-center">
-                    <p className="text-sm font-semibold text-gray-700">
+                    <p className="text-sm font-semibold text-white">
                       {data.subject}
                     </p>
                   </div>

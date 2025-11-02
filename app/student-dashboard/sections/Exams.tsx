@@ -167,19 +167,19 @@ function ExamRow({
       <div
         className={`group relative overflow-hidden rounded-lg border transition-all duration-300 ${
           isActive
-            ? "bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 shadow-md"
-            : "bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm"
+            ? "backdrop-blur-xl bg-blue-500/20 border-blue-400/40 shadow-lg"
+            : "backdrop-blur-xl bg-white/20 border-white/30 hover:border-blue-400/50 hover:shadow-md"
         }`}
       >
         {/* Gradient overlay on hover for upcoming exams */}
         {!isActive && (
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50/0 to-blue-100/0 group-hover:from-blue-50/50 group-hover:to-blue-100/50 transition-all duration-300 pointer-events-none" />
+          <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 transition-all duration-300 pointer-events-none backdrop-blur-sm" />
         )}
 
         <div className="relative p-5 flex items-center gap-4">
           {/* Subject Icon */}
           <div className="flex-shrink-0">
-            <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-3xl shadow-lg">
+            <div className="w-16 h-16 rounded-lg backdrop-blur-md bg-blue-500/40 border border-blue-400/50 flex items-center justify-center text-3xl shadow-lg">
               {subjectIcons[exam.subject] || "📝"}
             </div>
           </div>
@@ -187,28 +187,28 @@ function ExamRow({
           {/* Exam Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
-              <h3 className="text-lg font-bold text-gray-800">{exam.title}</h3>
+              <h3 className="text-lg font-bold text-white">{exam.title}</h3>
               {isActive && (
-                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
+                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 text-white rounded-full text-xs font-semibold">
                   <AlertCircle className="w-3 h-3" />
                   Active
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600 mb-3">{exam.description}</p>
+            <p className="text-sm text-white mb-3">{exam.description}</p>
             
             {/* Exam Details */}
-            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-white">
               <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4 text-blue-600" />
+                <Calendar className="w-4 h-4 text-white" />
                 <span>{exam.date}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-white" />
                 <span>{exam.time}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-white" />
                 <span>Duration: {exam.duration}</span>
               </div>
             </div>
@@ -232,7 +232,7 @@ function ExamRow({
             {!isActive && (
               <button
                 onClick={handlePrepare}
-                className="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center gap-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border border-blue-300 hover:from-blue-200 hover:to-blue-300 hover:shadow-md"
+                className="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center gap-2 bg-gradient-to-r from-blue-100 to-blue-200 text-white border border-blue-300 hover:from-blue-200 hover:to-blue-300 hover:shadow-md"
               >
                 <BookOpen className="w-4 h-4" />
                 Prepare
@@ -262,8 +262,8 @@ function TabButton({
       onClick={onClick}
       className={`relative px-6 py-3 font-semibold text-sm transition-all duration-300 ${
         isActive
-          ? "text-blue-700"
-          : "text-gray-600 hover:text-blue-600"
+          ? "text-white"
+          : "text-white hover:text-white"
       }`}
     >
       {label}
@@ -271,8 +271,8 @@ function TabButton({
         <span
           className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
             isActive
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-100 text-gray-600"
+              ? "bg-blue-100 text-white"
+              : "bg-gray-100 text-white"
           }`}
         >
           {count}
@@ -311,18 +311,18 @@ export default function Exams() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="mb-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+          <h2 className="text-3xl font-bold text-white mb-2 text-center">
             Exams
           </h2>
-          <p className="text-center text-gray-600">
+          <p className="text-center text-white">
             Manage and take your scheduled examinations
           </p>
         </div>
 
         {/* Tabs */}
         <div className="mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="flex border-b border-gray-200">
+          <div className="backdrop-blur-xl bg-white/20 rounded-xl shadow-lg border border-white/30 overflow-hidden">
+            <div className="flex border-b border-white/20">
               <TabButton
                 label="All"
                 isActive={activeTab === "all"}
@@ -359,12 +359,12 @@ export default function Exams() {
               ) : (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="w-10 h-10 text-blue-600" />
+                    <Calendar className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2">
                     No Exams Found
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-white">
                     {activeTab === "active"
                       ? "You don't have any active exams at this time."
                       : activeTab === "upcoming"
