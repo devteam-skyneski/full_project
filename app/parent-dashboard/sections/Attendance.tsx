@@ -137,7 +137,7 @@ export function Attendance() {
     name: "Caleb White",
     id: "STU2023001",
     grade: "Grade 11",
-    imageUrl: "/student-profile.jpg",
+    imageUrl: "/teacher-logo.png", // Using existing image as fallback
     parentEmail: "parent@example.com"
   };
 

@@ -46,6 +46,8 @@ try {
 }
 
 export default function ParentDashboard() {
+  const [navHidden, setNavHidden] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
   const [monthOpen, setMonthOpen] = useState(false);
   const [todayOpen, setTodayOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -114,6 +116,43 @@ export default function ParentDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Navbar hide/show on scroll (hide on scroll DOWN, show on scroll UP)
+  useEffect(() => {
+    const container = scrollContainerRef.current || document.querySelector('.scroll-container');
+    if (!container) return;
+
+    let last = 0;
+    const onScroll = () => {
+      const st = (container as HTMLElement).scrollTop || 0;
+      // small threshold to avoid flicker
+      if (st > last + 10) {
+        // scrolling down -> hide
+        setNavHidden(true);
+      } else if (st < last - 10) {
+        // scrolling up -> show
+        setNavHidden(false);
+      }
+      last = st <= 0 ? 0 : st;
+      setLastScrollTop(last);
+    };
+
+    container.addEventListener('scroll', onScroll, { passive: true });
+    return () => container.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Logout handler: clear relevant local storage and redirect to /auth
+  const handleLogout = () => {
+    try {
+      // Clear remembered user and any auth tokens stored in localStorage
+      localStorage.removeItem('rememberedUser');
+      localStorage.removeItem('authToken');
+    } catch (e) {
+      // ignore
+    }
+    // Use location.assign to fully navigate to login
+    window.location.assign('/auth');
+  };
+
   // Performance bar chart data - matching second image
   const performanceData = [
     { name: 'Algorithms structures', score: 85.3 },
@@ -135,7 +174,7 @@ export default function ParentDashboard() {
   return (
     <div className="parent-dashboard">
       {/* Fixed Navbar with FloatingDock */}
-      <nav className="w-full bg-white shadow-sm py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 border-b border-gray-100">
+  <nav className={`w-full bg-white shadow-sm py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 border-b border-gray-100 fixed-navbar ${navHidden ? 'hidden' : ''}`}>
         {/* Left Section - Logo */}
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-[#6C5CE7] text-white flex items-center justify-center font-bold text-lg rounded-lg">
@@ -159,7 +198,7 @@ export default function ParentDashboard() {
           />
           
           {/* Profile Dropdown */}
-          <div className="relative profile-dropdown">
+                  <div className="relative profile-dropdown">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -194,11 +233,7 @@ export default function ParentDashboard() {
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors">
-                    <Bell className="w-4 h-4" />
-                    <span>Notifications</span>
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors">
+                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>

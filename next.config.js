@@ -6,7 +6,11 @@ const nextConfig = {
   devIndicators: {
     buildActivity: false,
   },
+  experimental: {
+    turbopack: {
+      root: process.cwd()
+    }
+  }
 }
 
 module.exports = nextConfig
-
