@@ -1,5 +1,3 @@
-"use client";
-// @ts-ignore - react-vertical-timeline-component doesn't have TypeScript types
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -9,40 +7,27 @@ import { useState, useRef, useEffect } from "react";
 import { Upload } from "lucide-react";
 
 const subjectEmojis: { [key: string]: string } = {
-  Algorithms: "🔢",
+  "Algorithms": "🔢",
   "Web Dev": "💻",
-  Database: "🗄️",
-  OOP: "📦",
-  Mobile: "📱",
-  ML: "🤖",
-  Mathematics: "🔢",
-  Physics: "⚛️",
-  Chemistry: "🧪",
-  Biology: "🧬",
-  English: "📚",
+  "Database": "🗄️",
+  "OOP": "📦",
+  "Mobile": "📱",
+  "ML": "🤖",
+  "Mathematics": "🔢",
+  "Physics": "⚛️",
+  "Chemistry": "🧪",
+  "Biology": "🧬",
+  "English": "📚",
   "Social Studies": "🌍",
 };
 
-interface Assignment {
-  id: string;
-  title: string;
-  subject: string;
-  subjectId: string;
-  description: string;
-  dueDate: string;
-  year: string;
-  status: "pending" | "graded" | "overdue";
-  grade?: string;
-}
-
-const assignmentsData: Assignment[] = [
+const assignmentsData = [
   {
     id: "A-01",
     title: "Sorting Algorithms Implementation",
     subject: "Algorithms",
     subjectId: "CS301",
-    description:
-      "Implement sorting algorithms and analyze time complexity with test cases.",
+    description: "Implement sorting algorithms and analyze time complexity with test cases.",
     dueDate: "Nov 5",
     year: "2024",
     status: "pending",
@@ -52,8 +37,7 @@ const assignmentsData: Assignment[] = [
     title: "Responsive Portfolio Website",
     subject: "Web Dev",
     subjectId: "CS401",
-    description:
-      "Build a responsive portfolio with About, Projects, and Contact sections.",
+    description: "Build a responsive portfolio with About, Projects, and Contact sections.",
     dueDate: "Nov 8",
     year: "2024",
     status: "pending",
@@ -85,8 +69,7 @@ const assignmentsData: Assignment[] = [
     title: "Mobile App Authentication",
     subject: "Mobile",
     subjectId: "CS501",
-    description:
-      "Develop authentication with login, registration, and password reset.",
+    description: "Develop authentication with login, registration, and password reset.",
     dueDate: "Oct 28",
     year: "2024",
     status: "overdue",
@@ -96,8 +79,7 @@ const assignmentsData: Assignment[] = [
     title: "Image Classification Model",
     subject: "ML",
     subjectId: "CS601",
-    description:
-      "Train ML model for image classification using TensorFlow.",
+    description: "Train ML model for image classification using TensorFlow.",
     dueDate: "Oct 25",
     year: "2024",
     status: "graded",
@@ -111,7 +93,7 @@ function FileUploadModal({
   onClose,
   onSuccess,
 }: {
-  assignment: Assignment;
+  assignment: typeof assignmentsData[0];
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
@@ -156,37 +138,41 @@ function FileUploadModal({
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    console.log("Modal is closed, isOpen:", isOpen);
+    return null;
+  }
+
+  console.log("Rendering modal for assignment:", assignment.title);
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      style={{ backdropFilter: "blur(4px)" }}
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+      style={{ backdropFilter: 'blur(4px)' }}
+      onClick={onClose}
     >
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
-        <div
+      <div 
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div 
           className="p-6 text-white"
-          style={{
-            background:
-              "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
-          }}
+          style={{ background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)' }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div
+              <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
               >
                 {subjectEmojis[assignment.subject] || "📝"}
               </div>
               <div>
                 <h3 className="text-2xl font-bold">Submit Assignment</h3>
-                <p className="text-blue-100 text-sm mt-1">
-                  {assignment.subject} • {assignment.subjectId}
-                </p>
+                <p className="text-blue-100 text-sm mt-1">{assignment.subject} • {assignment.subjectId}</p>
               </div>
             </div>
             <button
@@ -201,12 +187,9 @@ function FileUploadModal({
         <div className="flex-1 overflow-y-auto p-6">
           {showSuccess ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <div
+              <div 
                 className="w-20 h-20 rounded-full flex items-center justify-center mb-4 shadow-lg text-white text-4xl"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)",
-                }}
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)' }}
               >
                 ✓
               </div>
@@ -214,34 +197,23 @@ function FileUploadModal({
                 Successfully Submitted!
               </h3>
               <p className="text-gray-600 text-center">
-                Your assignment has been submitted. Check your email for
-                confirmation.
+                Your assignment has been submitted. Check your email for confirmation.
               </p>
             </div>
           ) : (
             <>
-              <div
+              <div 
                 className="mb-6 p-5 rounded-xl border border-blue-200"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)",
-                }}
+                style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)' }}
               >
-                <h4 className="font-semibold text-gray-800 mb-2">
-                  {assignment.title}
-                </h4>
-                <p className="text-sm text-gray-700 mb-3">
-                  {assignment.description}
-                </p>
+                <h4 className="font-semibold text-gray-800 mb-2">{assignment.title}</h4>
+                <p className="text-sm text-gray-700 mb-3">{assignment.description}</p>
                 <div className="flex items-center gap-2 text-sm text-blue-700 font-medium">
                   <span>🕐</span>
-                  <span>
-                    Due: {assignment.dueDate}, {assignment.year}
-                  </span>
+                  <span>Due: {assignment.dueDate}, {assignment.year}</span>
                 </div>
               </div>
 
-              {/* Upload section */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-800 mb-3">
                   Upload Files
@@ -250,12 +222,9 @@ function FileUploadModal({
                   onClick={() => fileInputRef.current?.click()}
                   className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
                 >
-                  <div
+                  <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)",
-                    }}
+                    style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)' }}
                   >
                     ⬆️
                   </div>
@@ -284,10 +253,7 @@ function FileUploadModal({
                       <div
                         key={index}
                         className="flex items-center justify-between p-3 rounded-lg border border-blue-200"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)",
-                        }}
+                        style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)' }}
                       >
                         <div className="flex items-center gap-3 flex-1">
                           <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
@@ -325,10 +291,7 @@ function FileUploadModal({
                   onClick={handleSubmit}
                   disabled={files.length === 0 || isSubmitting}
                   className="flex-1 px-4 py-3 text-white rounded-xl transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
-                  }}
+                  style={{ background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)' }}
                 >
                   {isSubmitting ? (
                     <>
@@ -356,7 +319,7 @@ function TimelineCard({
   index,
   onSubmitClick,
 }: {
-  assignment: Assignment;
+  assignment: typeof assignmentsData[0];
   index: number;
   onSubmitClick: () => void;
 }) {
@@ -379,60 +342,93 @@ function TimelineCard({
     };
   }, [index]);
 
-  const dateParts = assignment.dueDate.split(" ");
+  const getStatusInfo = () => {
+    switch (assignment.status) {
+      case "graded":
+        return {
+          gradient: "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
+          icon: "✓",
+          text: assignment.grade
+        };
+      case "overdue":
+        return {
+          gradient: "linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)",
+          icon: "⚠",
+          text: "Overdue"
+        };
+      default:
+        return {
+          gradient: "linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%)",
+          icon: "🕐",
+          text: "Pending"
+        };
+    }
+  };
+
+  const statusInfo = getStatusInfo();
+  const isLeft = index % 2 === 0;
+  const position = isLeft ? "left" : "right";
+
+  const dateParts = assignment.dueDate.split(' ');
+  const customIcon = (
+    <div className="flex flex-col items-center justify-center h-full w-full text-white px-1">
+      <div className="text-xs font-bold leading-tight">
+        {dateParts[0]}
+      </div>
+      <div className="text-[9px] leading-tight opacity-90">
+        {dateParts[1] || ''}
+      </div>
+    </div>
+  );
 
   return (
     <div
       ref={cardRef}
       className={`transition-all duration-700 ease-out ${
         inView
-          ? "opacity-100 translate-x-0"
-          : `opacity-0 ${index % 2 === 0 ? "-translate-x-20" : "translate-x-20"}`
+          ? `opacity-100 translate-x-0`
+          : `opacity-0 ${isLeft ? "-translate-x-20" : "translate-x-20"}`
       }`}
-      style={{ marginTop: index > 0 ? "-80px" : "0" }}
     >
       <VerticalTimelineElement
-        position={index % 2 === 0 ? "left" : "right"}
+        position={position}
         contentStyle={{
           background: "white",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
           border: "1px solid #e5e7eb",
           borderRadius: "0.75rem",
+          position: 'relative',
         }}
-        iconStyle={{
-          background:
-            assignment.status === "graded"
-              ? "#2563eb"
-              : assignment.status === "overdue"
-              ? "#1e40af"
-              : "#3b82f6",
-          color: "#fff",
-          width: "60px",
-          height: "60px",
-        }}
-        icon={
-          <div className="flex flex-col items-center justify-center h-full w-full text-white px-1">
-            <div className="text-xs font-bold leading-tight">
-              {dateParts[0]}
-            </div>
-            <div className="text-[9px] leading-tight opacity-90">
-              {dateParts[1] || ""}
-            </div>
-          </div>
+        contentArrowStyle={
+          index % 2 === 0
+            ? { 
+                borderRight: "12px solid #3b82f6",
+              }
+            : { 
+                borderLeft: "12px solid #3b82f6",
+              }
         }
+        date=""
+        iconStyle={{
+          background: assignment.status === "graded" 
+            ? "#2563eb"
+            : assignment.status === "overdue"
+            ? "#1e40af"
+            : "#3b82f6",
+          color: "#fff",
+          width: '60px',
+          height: '60px',
+        }}
+        icon={customIcon}
       >
         <div className="p-3">
-          <div className="flex items-center gap-2 mb-2 select-none">
+          <div className="flex items-center gap-2 mb-2">
             <div className="text-xl">
               {subjectEmojis[assignment.subject] || "📝"}
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-bold text-gray-800">
-                {assignment.subject}
-              </h3>
-              <p className="text-[10px] text-gray-600">
-                ID: {assignment.subjectId}
-              </p>
+              <h3 className="text-sm font-bold text-gray-800">{assignment.subject}</h3>
+              <p className="text-[10px] text-gray-600">ID: {assignment.subjectId}</p>
             </div>
           </div>
 
@@ -444,25 +440,31 @@ function TimelineCard({
             {assignment.description}
           </p>
 
-          <div
-            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium mb-2 ${
-              assignment.status === "graded"
-                ? "text-blue-700 bg-blue-50"
-                : assignment.status === "overdue"
-                ? "text-red-700 bg-red-50"
-                : "text-blue-700 bg-blue-50"
-            }`}
-          >
-            {assignment.status === "graded"
-              ? `Graded: ${assignment.grade}`
+          <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium mb-2 ${
+            assignment.status === "graded"
+              ? "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
               : assignment.status === "overdue"
-              ? "⚠ Overdue"
-              : "🕐 Pending"}
+              ? "text-blue-700 bg-gradient-to-r from-blue-100 to-blue-200 border-blue-300"
+              : "text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200"
+          }`}>
+            <span>{statusInfo.icon}</span>
+            <span>
+              {assignment.status === "graded"
+                ? `Graded: ${assignment.grade}`
+                : assignment.status === "overdue"
+                ? "Overdue"
+                : "Pending"}
+            </span>
           </div>
 
           {assignment.status !== "graded" && (
             <button
-              onClick={onSubmitClick}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("Button clicked!");
+                onSubmitClick();
+              }}
               className="w-full px-2 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-medium flex items-center justify-center gap-1.5 text-xs"
             >
               <Upload className="w-3 h-3" />
@@ -476,27 +478,28 @@ function TimelineCard({
 }
 
 export default function Assignments() {
-  const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(
-    null
-  );
+  const [selectedAssignment, setSelectedAssignment] = useState<typeof assignmentsData[0] | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-  const handleSubmitClick = (assignment: Assignment) => {
+  const handleSubmitClick = (assignment: typeof assignmentsData[0]) => {
+    console.log("Submit button clicked for:", assignment.title);
+    console.log("Setting modal state...");
     setSelectedAssignment(assignment);
     setIsUploadModalOpen(true);
+    console.log("Modal should be open now");
   };
 
   const handleUploadSuccess = () => {
-    // optional success logic
+    console.log("Assignment submitted successfully!");
   };
 
   return (
-    <section id="assignments" className="py-20 bg-gray-50">
+    <section id="assignments" className="py-20 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-12 text-center">
-          Assignments
+        <h2 className="text-4xl font-bold text-gray-800 mb-12 text-center">
+          Assignments Timeline
         </h2>
-
+        
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <VerticalTimeline lineColor="#e5e7eb">
             {assignmentsData.map((assignment, index) => (
@@ -509,6 +512,15 @@ export default function Assignments() {
             ))}
           </VerticalTimeline>
         </div>
+        
+        <style>{`
+          .vertical-timeline-element {
+            margin-bottom: 0 !important;
+          }
+          .vertical-timeline-element-content {
+            min-height: auto !important;
+          }
+        `}</style>
 
         {selectedAssignment && (
           <FileUploadModal
