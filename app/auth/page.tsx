@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Eye, EyeOff, GraduationCap, Users, UserCog, Shield, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, GraduationCap, Users, UserCog, Shield, Loader2, CheckCircle2, XCircle, AlertCircle, Mail, User, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Lottie from 'lottie-react';
@@ -13,19 +13,80 @@ import adminAnimation from '../../login(animations)/admin.json';
 type Role = 'student' | 'parent' | 'teacher' | 'admin';
 type AuthMode = 'login' | 'signup';
 
+// Country codes mapping
+const countryCodes: Record<string, string> = {
+  'India': '+91',
+  'Saudi Arabia': '+966',
+  'Nigeria': '+234',
+  'Egypt': '+20',
+  'South Africa': '+27',
+  'Kenya': '+254',
+  'Ghana': '+233',
+  'Morocco': '+212',
+  'Tanzania': '+255',
+  'Ethiopia': '+251',
+};
+
+const countries = Object.keys(countryCodes);
+
 const AuthPage = () => {
   const router = useRouter();
   const [authMode, setAuthMode] = useState<AuthMode>('login');
-  const [selectedRole, setSelectedRole] = useState<Role>('student');
+  const [selectedRole, setSelectedRole] = useState<Role>(() => {
+    // Restore last selected role from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lastSelectedRole');
+      if (saved && ['student', 'parent', 'teacher', 'admin'].includes(saved)) {
+        return saved as Role;
+      }
+    }
+    return 'student';
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const usernameInputRef = useRef<HTMLInputElement>(null);
   const [isInitialMount, setIsInitialMount] = useState(true);
   const [isTeacherInitialMount, setIsTeacherInitialMount] = useState(false);
   const [isParentInitialMount, setIsParentInitialMount] = useState(false);
   const [isAdminInitialMount, setIsAdminInitialMount] = useState(false);
+  
+  // Load remembered user data on mount (for login)
+  useEffect(() => {
+    if (authMode === 'login' && typeof window !== 'undefined') {
+      const remembered = localStorage.getItem('rememberedUser');
+      if (remembered) {
+        try {
+          const data = JSON.parse(remembered);
+          setFormData(prev => ({
+            ...prev,
+            username: data.username || '',
+          }));
+          if (data.role) {
+            setSelectedRole(data.role as Role);
+            localStorage.setItem('lastSelectedRole', data.role);
+          }
+          setRememberMe(true);
+        } catch (e) {
+          // Invalid data, ignore
+        }
+      }
+    }
+  }, [authMode]);
+
+  // Auto-focus on username field when login mode is active
+  useEffect(() => {
+    if (authMode === 'login' && usernameInputRef.current) {
+      // Small delay to ensure the input is rendered
+      setTimeout(() => {
+        usernameInputRef.current?.focus();
+      }, 100);
+    }
+  }, [authMode, selectedRole]);
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -45,10 +106,33 @@ const AuthPage = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [name]: value
+      };
+      
+      // Auto-update phone number with country code when country/academicRegion is selected
+      if (name === 'country' || name === 'academicRegion') {
+        if (value && countryCodes[value]) {
+          // If phone is empty or starts with a country code pattern, replace it with new country code
+          const currentPhone = prev.phone || '';
+          const countryCodePattern = /^\+?\d{1,4}\s*/;
+          if (!currentPhone.trim() || countryCodePattern.test(currentPhone)) {
+            updated.phone = countryCodes[value] + ' ';
+          }
+        } else if (!value) {
+          // If country is cleared, remove the country code from phone if it exists
+          const currentPhone = prev.phone || '';
+          const countryCodePattern = /^\+?\d{1,4}\s*/;
+          if (countryCodePattern.test(currentPhone)) {
+            updated.phone = '';
+          }
+        }
+      }
+      
+      return updated;
+    });
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
@@ -146,6 +230,13 @@ const AuthPage = () => {
         }
       }
 
+      // Email validation
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+
       // Phone validation
       if (!formData.phone.trim()) {
         newErrors.phone = 'Phone number is required';
@@ -180,6 +271,11 @@ const AuthPage = () => {
         newErrors.email = 'Email is required';
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         newErrors.email = 'Please enter a valid email address';
+      }
+
+      // Country validation
+      if (!formData.country.trim()) {
+        newErrors.country = 'Country is required';
       }
 
       // Phone validation
@@ -254,10 +350,40 @@ const AuthPage = () => {
       }
     }
 
+    // Validate login - ensure valid email when email is used
+    if (authMode === 'login') {
+      if (selectedRole === 'teacher' || selectedRole === 'admin') {
+        // Must use valid email for login
+        if (!formData.username.trim()) {
+          newErrors.username = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username.trim())) {
+          newErrors.username = 'Please enter a valid email address';
+        }
+      } else if (selectedRole === 'student') {
+        // Can use either email or student ID, but if email is provided, it must be valid
+        if (!formData.username.trim()) {
+          newErrors.username = 'Student ID or email is required';
+        } else {
+          const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username.trim());
+          const isStudentID = /^[A-Za-z0-9]+$/.test(formData.username.trim());
+          if (!isEmail && !isStudentID) {
+            newErrors.username = 'Please enter a valid student ID or email address';
+          }
+        }
+      } else if (selectedRole === 'parent') {
+        // Parent uses student ID for login
+        if (!formData.username.trim()) {
+          newErrors.username = 'Student ID is required';
+        } else if (!/^[A-Za-z0-9]+$/.test(formData.username.trim())) {
+          newErrors.username = 'Please enter a valid student ID';
+        }
+      }
+    }
+
     // Validate username field based on role (skip for student, parent, and teacher signup)
     if (!(authMode === 'signup' && (selectedRole === 'student' || selectedRole === 'parent' || selectedRole === 'teacher'))) {
       const usernameError = validateUsernameField(formData.username);
-      if (usernameError) {
+      if (usernameError && !newErrors.username) {
         newErrors.username = usernameError;
       }
     }
@@ -301,6 +427,17 @@ const AuthPage = () => {
         isAuthenticated: true,
       };
       sessionStorage.setItem('user', JSON.stringify(userData));
+      
+      // If Remember Me is checked, also store in localStorage
+      if (authMode === 'login' && rememberMe && typeof window !== 'undefined') {
+        localStorage.setItem('rememberedUser', JSON.stringify({
+          username: formData.username,
+          role: selectedRole,
+        }));
+      } else if (authMode === 'login' && !rememberMe && typeof window !== 'undefined') {
+        // Clear remembered user if unchecked
+        localStorage.removeItem('rememberedUser');
+      }
       
       // Redirect to respective dashboard based on role
       const dashboardRoutes = {
@@ -518,6 +655,10 @@ const AuthPage = () => {
                         type="button"
                         onClick={() => {
                           setSelectedRole(role);
+                          // Save selected role to localStorage
+                          if (typeof window !== 'undefined') {
+                            localStorage.setItem('lastSelectedRole', role);
+                          }
                           setErrors({}); // Clear errors when changing role
                         }}
                         className={`flex items-center justify-center gap-2 px-3 py-3 rounded-lg transition-all duration-300 transform ${
@@ -651,6 +792,47 @@ const AuthPage = () => {
                       </div>
 
                       <div>
+                        <label htmlFor="academicRegion" className="block text-blue-200 text-sm font-medium mb-2">
+                          Academic Region
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="academicRegion"
+                            name="academicRegion"
+                            value={formData.academicRegion}
+                            onChange={handleInputChange}
+                            required
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.academicRegion ? 'border-red-500' : 'border-blue-500'
+                            } text-white focus:outline-none focus:border-blue-400 transition-colors appearance-none cursor-pointer`}
+                          >
+                            <option value="" className="bg-slate-800">Select your country</option>
+                            {countries.map((country) => (
+                              <option key={country} value={country} className="bg-slate-800">
+                                {country}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {errors.academicRegion && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.academicRegion && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.academicRegion}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
                         <label htmlFor="phone" className="block text-blue-200 text-sm font-medium mb-2">
                           Phone
                         </label>
@@ -685,37 +867,6 @@ const AuthPage = () => {
                     {/* Academic Information Section */}
                     <div className="space-y-4 pb-2 border-b border-slate-700/50">
                       <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Academic Information</h3>
-                      
-                      <div>
-                        <label htmlFor="academicRegion" className="block text-blue-200 text-sm font-medium mb-2">
-                          Academic Region
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            id="academicRegion"
-                            name="academicRegion"
-                            value={formData.academicRegion}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="Enter your academic region"
-                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
-                              errors.academicRegion ? 'border-red-500' : 'border-blue-500'
-                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
-                          />
-                          {errors.academicRegion && (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                              <XCircle className="w-5 h-5 text-red-500" />
-                            </div>
-                          )}
-                        </div>
-                        {errors.academicRegion && (
-                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
-                            <AlertCircle className="w-3 h-3" />
-                            {errors.academicRegion}
-                          </p>
-                        )}
-                      </div>
 
                       <div>
                         <label htmlFor="class" className="block text-blue-200 text-sm font-medium mb-2">
@@ -816,6 +967,47 @@ const AuthPage = () => {
                           <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
                             <AlertCircle className="w-3 h-3" />
                             {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="country" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Country
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="country"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            required
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.country ? 'border-red-500' : 'border-blue-500'
+                            } text-white focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80 appearance-none cursor-pointer`}
+                          >
+                            <option value="" className="bg-slate-800">Select your country</option>
+                            {countries.map((country) => (
+                              <option key={country} value={country} className="bg-slate-800">
+                                {country}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {errors.country && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.country && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.country}
                           </p>
                         )}
                       </div>
@@ -1000,6 +1192,47 @@ const AuthPage = () => {
                       </div>
 
                       <div className="transform transition-all duration-300 hover:scale-[1.01]">
+                        <label htmlFor="country" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
+                          Country
+                        </label>
+                        <div className="relative">
+                          <select
+                            id="country"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            required
+                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                              errors.country ? 'border-red-500' : 'border-blue-500'
+                            } text-white focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80 appearance-none cursor-pointer`}
+                          >
+                            <option value="" className="bg-slate-800">Select your country</option>
+                            {countries.map((country) => (
+                              <option key={country} value={country} className="bg-slate-800">
+                                {country}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          {errors.country && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2 animate-fade-in">
+                              <XCircle className="w-5 h-5 text-red-500" />
+                            </div>
+                          )}
+                        </div>
+                        {errors.country && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.country}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
                         <label htmlFor="phone" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
                           Phone
                         </label>
@@ -1034,37 +1267,6 @@ const AuthPage = () => {
                     {/* Location Information Section */}
                     <div className="space-y-4 pb-2 border-b border-slate-700/50 animate-fade-in" style={{ animationDelay: '100ms' }}>
                       <h3 className="text-blue-200 text-xs font-semibold uppercase tracking-wider">Location Information</h3>
-                      
-                      <div className="transform transition-all duration-300 hover:scale-[1.01]">
-                        <label htmlFor="country" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
-                          Country
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            id="country"
-                            name="country"
-                            value={formData.country}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="Enter your country"
-                            className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
-                              errors.country ? 'border-red-500' : 'border-blue-500'
-                            } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-all duration-300 hover:border-blue-400/80`}
-                          />
-                          {errors.country && (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-fade-in">
-                              <XCircle className="w-5 h-5 text-red-500" />
-                            </div>
-                          )}
-                        </div>
-                        {errors.country && (
-                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
-                            <AlertCircle className="w-3 h-3" />
-                            {errors.country}
-                          </p>
-                        )}
-                      </div>
 
                       <div className="transform transition-all duration-300 hover:scale-[1.01]">
                         <label htmlFor="region" className="block text-blue-200 text-sm font-medium mb-2 transition-colors">
@@ -1224,7 +1426,16 @@ const AuthPage = () => {
                       {getUsernameLabel()}
                     </label>
                     <div className="relative">
+                      {/* Icon for email or user */}
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-300">
+                        {(selectedRole === 'teacher' || selectedRole === 'admin' || (selectedRole === 'student' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username.trim()))) ? (
+                          <Mail className="w-5 h-5" />
+                        ) : (
+                          <User className="w-5 h-5" />
+                        )}
+                      </div>
                       <input
+                        ref={usernameInputRef}
                         type={selectedRole === 'teacher' || selectedRole === 'admin' ? 'email' : 'text'}
                         id="username"
                         name="username"
@@ -1232,10 +1443,23 @@ const AuthPage = () => {
                         onChange={handleInputChange}
                         required
                         placeholder={getUsernamePlaceholder()}
-                        className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                        className={`w-full pl-11 pr-4 py-3 bg-slate-800 border-b-2 ${
                           errors.username ? 'border-red-500' : 'border-blue-500'
                         } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                        aria-label={getUsernameLabel()}
+                        aria-invalid={!!errors.username}
+                        aria-describedby={errors.username ? 'username-error' : undefined}
                       />
+                      {/* Show success indicator when field is valid */}
+                      {!errors.username && formData.username.trim() && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {((selectedRole === 'teacher' || selectedRole === 'admin') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username.trim())) || 
+                           (selectedRole === 'student' && (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.username.trim()) || /^[A-Za-z0-9]+$/.test(formData.username.trim()))) ||
+                           ((selectedRole === 'parent') && /^[A-Za-z0-9]+$/.test(formData.username.trim())) ? (
+                            <CheckCircle2 className="w-5 h-5 text-green-500" />
+                          ) : null}
+                        </div>
+                      )}
                       {errors.username && (
                         <div className="absolute right-3 top-1/2 -translate-y-1/2">
                           <XCircle className="w-5 h-5 text-red-500" />
@@ -1243,9 +1467,18 @@ const AuthPage = () => {
                       )}
                     </div>
                     {errors.username && (
-                      <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                      <p id="username-error" className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
                         <AlertCircle className="w-3 h-3" />
                         {errors.username}
+                      </p>
+                    )}
+                    {/* Helper text for login */}
+                    {authMode === 'login' && !errors.username && (
+                      <p className="text-blue-300/70 text-xs mt-1">
+                        {selectedRole === 'student' && 'Enter your Student ID or email address'}
+                        {selectedRole === 'teacher' && 'Enter your registered email address'}
+                        {selectedRole === 'admin' && 'Enter your admin email address'}
+                        {selectedRole === 'parent' && 'Enter your child\'s Student ID'}
                       </p>
                     )}
                   </div>
@@ -1256,6 +1489,10 @@ const AuthPage = () => {
                     Password
                   </label>
                   <div className="relative">
+                    {/* Lock icon */}
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-300">
+                      <Lock className="w-5 h-5" />
+                    </div>
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="password"
@@ -1264,21 +1501,24 @@ const AuthPage = () => {
                       onChange={handleInputChange}
                       required
                       placeholder="Enter your password"
-                      className={`w-full px-4 py-3 bg-slate-800 border-b-2 ${
+                      className={`w-full pl-11 pr-10 py-3 bg-slate-800 border-b-2 ${
                         errors.password ? 'border-red-500' : 'border-blue-500'
-                      } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors pr-10`}
+                      } text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 transition-colors`}
+                      aria-label="Password"
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? 'password-error' : undefined}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-blue-100 transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-blue-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
+                    <p id="password-error" className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-fade-in transition-all duration-200">
                       <AlertCircle className="w-3 h-3" />
                       {errors.password}
                     </p>
@@ -1322,18 +1562,41 @@ const AuthPage = () => {
                   </div>
                 )}
 
+                {/* Remember Me checkbox for login */}
                 {authMode === 'login' && (
-                  <div className="flex justify-end">
-                    <Link href="/forgot-password" className="text-blue-400 hover:text-blue-300 text-sm transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="rememberMe"
+                        name="rememberMe"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 bg-slate-800 border-slate-600 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                        aria-label="Remember me"
+                      />
+                      <label htmlFor="rememberMe" className="text-blue-200 text-sm cursor-pointer select-none">
+                        Remember me
+                      </label>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // TODO: Implement forgot password functionality
+                        alert('Forgot password functionality coming soon!');
+                      }}
+                      className="text-blue-300 hover:text-blue-100 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 rounded px-1"
+                    >
                       Forgot Password?
-                    </Link>
+                    </button>
                   </div>
                 )}
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all ${currentRole.accent} hover:opacity-90 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2`}
+                  className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all ${currentRole.accent} hover:opacity-90 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900`}
+                  aria-label={authMode === 'login' ? 'Login to your account' : 'Create new account'}
                 >
                   {isLoading ? (
                     <>
