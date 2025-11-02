@@ -42,6 +42,22 @@ export default function Feedback() {
     ],
   };
 
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: {
+          padding: 20,
+          font: {
+            size: 12
+          }
+        }
+      }
+    }
+  };
+
   return (
     <section id="feedback" className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -147,8 +163,8 @@ export default function Feedback() {
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Feedback Summary</h2>
             
             {/* Chart */}
-            <div className="mb-8 max-w-[300px] mx-auto">
-              <Pie data={chartData} options={{ plugins: { legend: { position: 'bottom' } } }} />
+            <div className="mb-8 max-w-[300px] h-[300px] mx-auto">
+              <Pie data={chartData} options={chartOptions} />
             </div>
 
             {/* Recent Comments */}
