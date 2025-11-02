@@ -24,7 +24,7 @@ import {
 import Navbar from './navbar'; 
 import SlideIn from './components/SlideIn';
 
-// ✅ NEW IMPORTS FOR SCROLLING SECTIONS
+
 import ScrollAnimator from './components/ScrollAnimator';   
 import Subjects from './sections/Subjects';      
 import Assignments from './sections/Assignments';
@@ -284,30 +284,12 @@ export default function StudentDashboard() {
             </div>
           </div>
         </div>
-        {/* === END OF EXISTING LAYOUT === */}
-
-        {/* === START OF NEW SCROLLING SECTIONS === */}
         
           <Subjects />
-        
-        
-        
           <Assignments />
-       
-
-       
-          <Results />
-       
-
-      
-          <Attendance />
-        
-
-        
           <Exams />
-        
-        
-        {/* === END OF NEW SCROLLING SECTIONS === */}
+          <Attendance />
+          <Results />
 
       </div>
     </div>
