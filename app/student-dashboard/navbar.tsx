@@ -151,7 +151,7 @@ export default function Navbar() {
   return (
     <nav
       className={`w-full py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 
-        backdrop-blur-md bg-white/70 border-b border-gray-200/50 shadow-sm
+        backdrop-blur-xl bg-white/10 border-b border-white/30 shadow-lg
         transition-all duration-500 ease-in-out
         ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
     >
@@ -160,7 +160,7 @@ export default function Navbar() {
         <div className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center font-bold text-lg rounded-lg shadow-md">
           S
         </div>
-        <h1 className="text-xl font-semibold text-gray-800">Student Portal</h1>
+        <h1 className="text-xl font-semibold text-white">Student Portal</h1>
       </div>
 
       {/* Right Section - Floating Dock */}

@@ -223,28 +223,28 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-200 flex-shrink-0 w-full">
+      <div className="backdrop-blur-xl bg-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-white/30 flex-shrink-0 w-full">
         {/* Subject Icon - Top Right */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-800 mb-1">{subject.name}</h3>
-            <p className="text-sm text-gray-600">{subject.code}</p>
+            <h3 className="text-xl font-bold text-white mb-1">{subject.name}</h3>
+            <p className="text-sm text-white">{subject.code}</p>
           </div>
           <div className="text-4xl">{subjectIcons[subject.name as keyof typeof subjectIcons]}</div>
         </div>
 
         {/* Teacher Info */}
         <div className="flex items-center gap-2 mb-3">
-          <User className="w-4 h-4 text-blue-600" />
-          <p className="text-sm text-gray-700">
+          <User className="w-4 h-4 text-white" />
+          <p className="text-sm text-white">
             <span className="font-semibold">Teacher:</span> {subject.teacher}
           </p>
         </div>
 
         {/* Notes Count */}
         <div className="flex items-center gap-2 mb-6">
-          <FileStack className="w-4 h-4 text-green-600" />
-          <p className="text-sm text-gray-700">
+          <FileStack className="w-4 h-4 text-white" />
+          <p className="text-sm text-white">
             <span className="font-semibold">Notes:</span> {subject.notesCount} files
           </p>
         </div>
@@ -270,19 +270,19 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
 
       {/* Notes Modal */}
       {showNotes && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="backdrop-blur-xl bg-white/20 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-white/30 shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b">
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
               <div>
-                <h3 className="text-2xl font-bold text-gray-800">{subject.name} - Notes</h3>
-                <p className="text-sm text-gray-600 mt-1">{subject.code}</p>
+                <h3 className="text-2xl font-bold text-white">{subject.name} - Notes</h3>
+                <p className="text-sm text-white mt-1">{subject.code}</p>
               </div>
               <button
                 onClick={() => setShowNotes(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition"
               >
-                <X className="w-6 h-6 text-gray-600" />
+                <X className="w-6 h-6 text-white" />
               </button>
             </div>
 
@@ -292,13 +292,13 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
                 {subject.notes.map((note) => (
                   <div
                     key={note.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                    className="flex items-center justify-between p-4 backdrop-blur-md bg-white/30 rounded-lg hover:bg-white/40 transition border border-white/20"
                   >
                     <div className="flex items-center gap-3 flex-1">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                      <FileText className="w-5 h-5 text-white" />
                       <div>
-                        <p className="font-semibold text-gray-800">{note.title}</p>
-                        <p className="text-xs text-gray-600">
+                        <p className="font-semibold text-white">{note.title}</p>
+                        <p className="text-xs text-white">
                           {note.size} • {note.date}
                         </p>
                       </div>
@@ -320,19 +320,19 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
 
       {/* Syllabus Modal */}
       {showSyllabus && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="backdrop-blur-xl bg-white/20 rounded-xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-white/30 shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b">
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
               <div>
-                <h3 className="text-2xl font-bold text-gray-800">{subject.name} - Syllabus</h3>
-                <p className="text-sm text-gray-600 mt-1">{subject.code}</p>
+                <h3 className="text-2xl font-bold text-white">{subject.name} - Syllabus</h3>
+                <p className="text-sm text-white mt-1">{subject.code}</p>
               </div>
               <button
                 onClick={() => setShowSyllabus(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition"
               >
-                <X className="w-6 h-6 text-gray-600" />
+                <X className="w-6 h-6 text-white" />
               </button>
             </div>
 
@@ -341,18 +341,18 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
               <div className="space-y-6">
                 {/* Course Objectives */}
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-2">Course Objectives</h4>
-                  <p className="text-gray-700">{subject.syllabus.objectives}</p>
+                  <h4 className="text-lg font-bold text-white mb-2">Course Objectives</h4>
+                  <p className="text-white">{subject.syllabus.objectives}</p>
                 </div>
 
                 {/* Topics Covered */}
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">Topics Covered</h4>
+                  <h4 className="text-lg font-bold text-white mb-3">Topics Covered</h4>
                   <ul className="space-y-2">
                     {subject.syllabus.topics.map((topic, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <span className="text-blue-600 font-bold mt-1">•</span>
-                        <span className="text-gray-700">{topic}</span>
+                        <span className="text-white font-bold mt-1">•</span>
+                        <span className="text-white">{topic}</span>
                       </li>
                     ))}
                   </ul>
@@ -360,8 +360,8 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
 
                 {/* Assessment Structure */}
                 <div>
-                  <h4 className="text-lg font-bold text-gray-800 mb-2">Assessment Structure</h4>
-                  <p className="text-gray-700">{subject.syllabus.assessments}</p>
+                  <h4 className="text-lg font-bold text-white mb-2">Assessment Structure</h4>
+                  <p className="text-white">{subject.syllabus.assessments}</p>
                 </div>
               </div>
             </div>
@@ -416,7 +416,7 @@ export default function Subjects() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Subjects Section - Top Left with Horizontal Scroll */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Subjects</h2>
+          <h2 className="text-3xl font-bold text-white mb-6">Subjects</h2>
           
           {/* Horizontal Scrollable Container */}
           <div className="relative">
@@ -424,10 +424,10 @@ export default function Subjects() {
             {canScrollLeft && (
               <button
                 onClick={() => scroll("left")}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all border border-gray-200 hover:bg-gray-50"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 backdrop-blur-md bg-white/30 rounded-full p-3 shadow-lg hover:shadow-xl transition-all border border-white/30 hover:bg-white/40"
                 aria-label="Scroll left"
               >
-                <ChevronLeft className="w-6 h-6 text-gray-700" />
+                <ChevronLeft className="w-6 h-6 text-white" />
               </button>
             )}
 
@@ -452,10 +452,10 @@ export default function Subjects() {
             {canScrollRight && (
               <button
                 onClick={() => scroll("right")}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all border border-gray-200 hover:bg-gray-50"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 backdrop-blur-md bg-white/30 rounded-full p-3 shadow-lg hover:shadow-xl transition-all border border-white/30 hover:bg-white/40"
                 aria-label="Scroll right"
               >
-                <ChevronRight className="w-6 h-6 text-gray-700" />
+                <ChevronRight className="w-6 h-6 text-white" />
               </button>
             )}
           </div>
@@ -471,9 +471,9 @@ export default function Subjects() {
         {/* Recent Tasks and Recent Practice Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Tasks - Left Side */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <Clock className="w-6 h-6 text-blue-600" />
+          <div className="backdrop-blur-xl bg-white/20 rounded-xl p-6 shadow-lg border border-white/30">
+            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+              <Clock className="w-6 h-6 text-white" />
               Recent Tasks
             </h3>
             
@@ -481,12 +481,12 @@ export default function Subjects() {
               {recentTasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition border border-gray-200"
+                  className="flex items-start gap-4 p-4 backdrop-blur-md bg-white/30 rounded-lg hover:bg-white/40 transition border border-white/20"
                 >
                   <div className={`mt-1 ${
-                    task.status === "completed" ? "text-green-600" : 
-                    task.status === "in-progress" ? "text-yellow-600" : 
-                    "text-gray-400"
+                    task.status === "completed" ? "text-white" : 
+                    task.status === "in-progress" ? "text-white" : 
+                    "text-white"
                   }`}>
                     {task.status === "completed" ? (
                       <CheckCircle2 className="w-5 h-5" />
@@ -497,20 +497,20 @@ export default function Subjects() {
                   
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-gray-800">{task.title}</h4>
+                      <h4 className="font-semibold text-white">{task.title}</h4>
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        task.priority === "high" ? "bg-red-100 text-red-700" :
-                        task.priority === "medium" ? "bg-yellow-100 text-yellow-700" :
-                        "bg-blue-100 text-blue-700"
+                        task.priority === "high" ? "bg-red-100 text-white" :
+                        task.priority === "medium" ? "bg-yellow-100 text-white" :
+                        "bg-blue-100 text-white"
                       }`}>
                         {task.priority}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">{task.subject}</p>
-                    <p className="text-xs text-gray-500">Due: {task.dueDate}</p>
+                    <p className="text-sm text-white mb-1">{task.subject}</p>
+                    <p className="text-xs text-white">Due: {task.dueDate}</p>
                     {task.status === "in-progress" && (
                       <div className="mt-2">
-                        <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                        <button className="text-xs text-white hover:text-white font-medium flex items-center gap-1">
                           <PlayCircle className="w-3 h-3" />
                           Continue
                         </button>
@@ -520,8 +520,8 @@ export default function Subjects() {
                   
                   <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                     task.status === "completed" ? "bg-green-100 text-green-700" :
-                    task.status === "in-progress" ? "bg-yellow-100 text-yellow-700" :
-                    "bg-gray-100 text-gray-700"
+                    task.status === "in-progress" ? "bg-yellow-100 text-white" :
+                    "bg-gray-100 text-white"
                   }`}>
                     {task.status === "completed" ? "Done" :
                      task.status === "in-progress" ? "In Progress" :
@@ -533,9 +533,9 @@ export default function Subjects() {
           </div>
 
           {/* Recent Practice - Right Side */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <PlayCircle className="w-6 h-6 text-green-600" />
+          <div className="backdrop-blur-xl bg-white/20 rounded-xl p-6 shadow-lg border border-white/30">
+            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+              <PlayCircle className="w-6 h-6 text-white" />
               Recent Practice
             </h3>
             
@@ -546,15 +546,15 @@ export default function Subjects() {
                 return (
                   <div
                     key={index}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
+                    className="p-4 backdrop-blur-md bg-white/30 rounded-lg border border-white/20 hover:bg-white/40 transition"
                   >
                     <div className="flex items-center gap-4 mb-3">
                       <div className="text-4xl">{practice.icon}</div>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-800 mb-1">{practice.subject}</h4>
-                        <p className="text-sm text-gray-600">
-                          <span className="font-bold text-blue-600">{practice.covered}</span> of{" "}
-                          <span className="text-gray-700">{practice.total}</span> topics covered
+                        <h4 className="font-semibold text-white mb-1">{practice.subject}</h4>
+                        <p className="text-sm text-white">
+                          <span className="font-bold text-white">{practice.covered}</span> of{" "}
+                          <span className="text-white">{practice.total}</span> topics covered
                         </p>
                       </div>
                     </div>
@@ -567,7 +567,7 @@ export default function Subjects() {
                       ></div>
                     </div>
                     
-                    <p className="text-xs text-gray-600 text-right">{percentage}% completed</p>
+                    <p className="text-xs text-white text-right">{percentage}% completed</p>
                   </div>
                 );
               })}

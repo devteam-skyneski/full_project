@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Eye, EyeOff, GraduationCap, Users, UserCog, Shield, Loader2, CheckCircle2, XCircle, AlertCircle, Mail, User, Lock, Phone, Calendar, MapPin, BookOpen, School, UserCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Lottie from 'lottie-react';
 import studentAnimation from '../../login(animations)/Student.json';
 import teacherAnimation from '../../login(animations)/Teacher.json';
@@ -30,7 +30,11 @@ const countries = Object.keys(countryCodes);
 
 const AuthPage = () => {
   const router = useRouter();
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const searchParams = useSearchParams();
+  const [authMode, setAuthMode] = useState<AuthMode>(() => {
+    const mode = searchParams.get('mode');
+    return mode === 'signup' ? 'signup' : 'login';
+  });
   const [selectedRole, setSelectedRole] = useState<Role>(() => {
     // Restore last selected role from localStorage
     if (typeof window !== 'undefined') {
@@ -693,6 +697,16 @@ const AuthPage = () => {
     }
     return 'Enter your username';
   };
+
+  // Sync authMode with URL parameter
+  useEffect(() => {
+    const mode = searchParams.get('mode');
+    if (mode === 'signup') {
+      setAuthMode('signup');
+    } else if (mode === 'login' || mode === null) {
+      setAuthMode('login');
+    }
+  }, [searchParams]);
 
   // Track initial mount for student animation
   useEffect(() => {

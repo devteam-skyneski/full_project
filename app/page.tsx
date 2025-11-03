@@ -103,7 +103,7 @@ const LandingNavbar = () => {
               Login
             </Link>
             <Link
-              href="/auth"
+              href="/auth?mode=signup"
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               Sign Up
@@ -159,7 +159,7 @@ const LandingNavbar = () => {
                   <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-blue-600 hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                     Login
                   </Link>
-                  <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                  <Link href="/auth?mode=signup" onClick={() => setIsMenuOpen(false)} className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                     Sign Up
                   </Link>
                 </div>
