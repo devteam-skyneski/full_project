@@ -298,7 +298,7 @@ export default function ParentDashboard() {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.15 }}
                       >
-                        You have 3 new tasks. It is a lot of work for today! So let&apos;s start!
+                        Your child has 3 new tasks today. Let&apos;s help them get started!
                       </motion.p>
                     </div>
                     {/* Parent Lottie Animation (big and visible) */}
