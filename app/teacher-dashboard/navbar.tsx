@@ -1,7 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
-// use native <img> for local logo to avoid Next.js image validation errors when file missing
 import Link from "next/link";
 import {
   Home,
@@ -39,13 +38,12 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Read username from common client-side storage locations (localStorage, cookie)
+  // Read username from common client-side storage locations
   useEffect(() => {
     try {
       const direct = localStorage.getItem('username');
       if (direct) {
         setUsername(direct);
-        // also check for an avatar key
         const av = localStorage.getItem('avatar') || localStorage.getItem('avatarUrl');
         if (av) setAvatarUrl(av);
         return;
@@ -57,7 +55,6 @@ export default function Navbar() {
           const parsed = JSON.parse(userJson);
           if (parsed && (parsed.name || parsed.username)) {
             setUsername(parsed.name || parsed.username);
-            // try common avatar fields
             const possibleAvatar = parsed.avatar || parsed.avatarUrl || parsed.image || parsed.photo || parsed.picture;
             if (possibleAvatar) setAvatarUrl(possibleAvatar);
             return;
@@ -95,14 +92,18 @@ export default function Navbar() {
     { title: "Announcements", icon: <Megaphone className="w-5 h-5" />, href: "/teacher-dashboard/announcements" },
   ];
 
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/login';
+  };
+
   return (
     <nav className="w-full bg-white py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 border-b border-gray-200">
       {/* Left Section */}
       <div className="flex items-center gap-2 select-none">
-        {/* Logo: place your image at public/teacher-logo.png */}
         <div className="w-10 h-10 rounded-full overflow-hidden bg-white ring-1 ring-gray-200">
           {logoAvailable ? (
-            // show the PNG/JPG directly; we copied your image to public/teacher-logo.png
             <img
               src="/teacher-logo.png"
               alt="EduLearn logo"
@@ -158,7 +159,7 @@ export default function Navbar() {
           <motion.div
             variants={{
               hover: { opacity: 1, y: 0, scale: 1 },
-              initial: { opacity: 0, y: 10, scale: 0.95 }
+              initial: { opacity: 0, y: 0, scale: 0.1 }
             }}
             transition={{ duration: 0.2 }}
             className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg p-4 min-w-[200px] max-w-xs origin-top-right z-50"
@@ -176,8 +177,8 @@ export default function Navbar() {
                 )}
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">{username ?? 'Teacher'}</h3>
-                <p className="text-sm text-gray-500">Teacher</p>
+                <h3 className="font-medium text-jetblack-900">{username ?? 'Teacher'}</h3>
+                <p className="text-sm text-jetblack-500">Teacher</p>
               </div>
             </div>
           </motion.div>
@@ -213,29 +214,39 @@ export default function Navbar() {
                   </div>
                 )}
                 <div>
-                  <Link href="/teacher/profile" className="text-sm font-semibold text-gray-800 hover:underline">
+                  <p className="text-sm font-semibold text-gray-800">
                     {username ?? 'Teacher'}
-                  </Link>
-                  <p className="text-xs text-gray-500">Teacher</p>
+                  </p>
+                  <p className="text-xs text-gray-500">Teacher Account</p>
                 </div>
               </div>
 
               {/* Dropdown Options */}
-              <Link
-                href="/teacher/profile"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  // Navigate to profile
+                }}
+                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 w-full text-left"
               >
                 <User size={16} /> Profile
-              </Link>
-              <Link
-                href="/teacher/notifications"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+              </button>
+              
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  // Navigate to notifications
+                }}
+                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 w-full text-left"
               >
                 <Bell size={16} /> Notifications
-              </Link>
+              </button>
+              
+              <div className="border-t border-gray-100 my-2"></div>
+              
               <button
-                onClick={() => alert("Logged out!")}
-                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 w-full text-left"
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-red-600 hover:text-red-700 w-full text-left"
               >
                 <LogOut size={16} /> Logout
               </button>

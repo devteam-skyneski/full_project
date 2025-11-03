@@ -527,37 +527,37 @@ export default function TeacherDashboard() {
                           {/* Left side - Card */}
                           <div className="w-1/2 pr-8">
                             <motion.div 
-                              className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300 rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer"
+                              className="bg-gradient-to-br from-blue-50 to-blue-200 border-2 border-blue-400 rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer"
                               whileHover={{ 
                                 scale: 1.03,
-                                boxShadow: "0 20px 25px -5px rgba(251, 146, 60, 0.2)",
+                                boxShadow: "0 20px 25px -5px rgba(60, 175, 251, 0.47)",
                                 transition: { duration: 0.2 }
                               }}
                             >
                               <div className="flex items-start justify-between mb-3">
                                 <div>
-                                  <h3 className="font-semibold text-gray-900 text-sm">Notes</h3>
-                                  <p className="text-xs text-gray-600 mt-0.5">ID: CS301</p>
+                                  <h3 className="font-semibold text-jetblack-900 text-sm">Notes</h3>
+                                  <p className="text-xs text-jetblack-600 mt-0.5">ID: CS301</p>
                                 </div>
-                                <span className="px-2 py-1 bg-orange-200 text-orange-700 text-xs font-medium rounded-full">
+                                <span className="px-2 py-1 bg-blue-200 text-blue-700 text-xs font-medium rounded-full">
                                   Pending
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-700 mb-3 font-medium">
+                              <p className="text-sm text-jetblack-700 mb-3 font-medium">
                                 Notes to Review
                               </p>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-600">Progress:</span>
-                                <div className="flex-1 bg-gray-300 rounded-full h-2 overflow-hidden">
+                                <span className="text-xs text-jetblack-600">Progress:</span>
+                                <div className="flex-1 bg-jetblack-300 rounded-full h-2 overflow-hidden">
                                   <motion.div 
-                                    className="bg-orange-500 h-2 rounded-full"
+                                    className="bg-blue-500 h-2 rounded-full"
                                     initial={{ width: 0 }}
                                     whileInView={{ width: `${(teacherData.pendingApprovals.notes / 10) * 100}%` }}
                                     viewport={{ amount: 0.3 }}
                                     transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
                                   />
                                 </div>
-                                <span className="text-xs text-gray-600 font-medium">{teacherData.pendingApprovals.notes}/10</span>
+                                <span className="text-xs text-jetblack-600 font-medium">{teacherData.pendingApprovals.notes}/10</span>
                               </div>
                             </motion.div>
                           </div>
