@@ -1,6 +1,7 @@
+
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Phone,
   Mail,
@@ -44,33 +45,36 @@ export default function StudentDashboard() {
     { name: 'Machine learning', score: 74.4 },
   ];
 
-  // Calendar events - Today, Tomorrow, Day after tomorrow
+  // Calendar events - 3 per day with dummy subjects and assignments
   const calendarEvents = [
-    { 
-      day: 'Today', 
-      title: 'Electronics lesson', 
-      duration: '9.45-10.30', 
-      lesson: '21 lesson', 
-      color: 'bg-blue-500',
-      isActive: true 
-    },
-    { 
-      day: 'Tomorrow', 
-      title: 'Robotics lesson', 
-      duration: '12.00-12.45', 
-      lesson: '23 lesson', 
-      color: 'bg-gray-200',
-      isActive: false 
-    },
-    { 
-      day: 'Day after tomorrow', 
-      title: 'C++ lesson', 
-      duration: '13.45-14.30', 
-      lesson: '21 lesson', 
-      color: 'bg-gray-200',
-      isActive: false 
-    },
+    // Today
+    { day: 'Today', subject: 'Mathematics', title: 'Assignment: Calculus Problem Set', duration: '09:00 - 09:45', color: 'bg-blue-500', isActive: true },
+    { day: 'Today', subject: 'Physics', title: 'Lab: Kinematics Measurements', duration: '10:15 - 11:00', color: 'bg-blue-500', isActive: true },
+    { day: 'Today', subject: 'English', title: 'Essay: Poetry Analysis Draft', duration: '12:00 - 12:45', color: 'bg-blue-500', isActive: true },
+    // Tomorrow
+    { day: 'Tomorrow', subject: 'Chemistry', title: 'Quiz Prep: Organic Reactions', duration: '09:30 - 10:15', color: 'bg-gray-200', isActive: false },
+    { day: 'Tomorrow', subject: 'Biology', title: 'Worksheet: Cell Structure', duration: '11:00 - 11:45', color: 'bg-gray-200', isActive: false },
+    { day: 'Tomorrow', subject: 'Social Studies', title: 'Reading: Modern Political Systems', duration: '14:00 - 14:45', color: 'bg-gray-200', isActive: false },
+    // Day after tomorrow
+    { day: 'Day after tomorrow', subject: 'Mathematics', title: 'Practice: Linear Algebra Problems', duration: '08:30 - 09:15', color: 'bg-gray-200', isActive: false },
+    { day: 'Day after tomorrow', subject: 'Physics', title: 'Assignment: Electric Circuits', duration: '10:00 - 10:45', color: 'bg-gray-200', isActive: false },
+    { day: 'Day after tomorrow', subject: 'English', title: 'Group Discussion: Shakespeare Acts', duration: '13:30 - 14:15', color: 'bg-gray-200', isActive: false },
   ];
+
+  // Calendar filter state and derived data
+  const [selectedDay, setSelectedDay] = useState<'Today' | 'Tomorrow' | 'In two days'>('Today');
+
+  const normalizeDay = (day: string): 'Today' | 'Tomorrow' | 'In two days' => {
+    if (day.toLowerCase().includes('today') && !day.toLowerCase().includes('tomorrow')) return 'Today';
+    if (day.toLowerCase().includes('tomorrow') && !day.toLowerCase().includes('after')) return 'Tomorrow';
+    return 'In two days';
+  };
+
+  const filteredCalendarEvents = useMemo(() => {
+    return calendarEvents
+      .filter((e) => normalizeDay(e.day) === selectedDay)
+      .slice(0, 3);
+  }, [calendarEvents, selectedDay]);
 
   // Upcoming events
   const upcomingEvents = [
@@ -229,18 +233,28 @@ export default function StudentDashboard() {
               {/* Calendar Section - SLIDES FROM RIGHT */}
               <SlideIn direction="right" delay={0}>
                 <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
-                  <div className="mb-4">
+                  <div className="mb-4 flex items-center justify-between gap-3">
                     <h3 className="text-xl font-semibold text-white">Calendar</h3>
+                    <div className="flex items-center gap-2">
+                      <label htmlFor="calendarDay" className="text-white text-xs">Day</label>
+                      <select
+                        id="calendarDay"
+                        value={selectedDay}
+                        onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'In two days')}
+                        className="text-sm text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1.5 focus:outline-none hover:bg-white/20 cursor-pointer"
+                      >
+                        <option value="Today" className="bg-blue-900">Today</option>
+                        <option value="Tomorrow" className="bg-blue-900">Tomorrow</option>
+                        <option value="In two days" className="bg-blue-900">In two days</option>
+                      </select>
+                    </div>
                   </div>
                   {/* Timeline */}
                   <div className="relative mt-6 pl-20">
                     <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-300"></div>
                     <div className="space-y-6">
-                      {calendarEvents.map((event, index) => (
+                      {filteredCalendarEvents.map((event, index) => (
                         <div key={index} className="flex items-start gap-4 relative">
-                          <div className="absolute -left-12 top-0 z-10">
-                            <div className="text-xs text-white font-medium">{event.day}</div>
-                          </div>
                           <div
                             className={`${event.color} backdrop-blur-md ${
                               event.isActive ? 'bg-blue-500/60 text-white border border-blue-400/40' : 'bg-gray-200/10 text-white border border-gray-300/40'
@@ -252,17 +266,10 @@ export default function StudentDashboard() {
                               ) : (
                                 <div className="w-4 h-4 rounded-full bg-gray-400"></div>
                               )}
-                              <h4
-                                className={`font-semibold text-white`}
-                              >
-                                {event.title}
-                              </h4>
+                              <h4 className="font-semibold text-white">{event.subject}</h4>
                             </div>
-                            <p
-                              className={`text-xs text-white`}
-                            >
-                              {event.duration}, {event.lesson}
-                            </p>
+                            <p className="text-xs text-white mb-1">{event.title}</p>
+                            <p className="text-xs text-white">{event.duration}</p>
                           </div>
                         </div>
                       ))}

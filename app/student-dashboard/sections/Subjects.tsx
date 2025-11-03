@@ -260,7 +260,7 @@ function SubjectCard({ subject }: { subject: typeof subjectsData[0] }) {
           </button>
           <button
             onClick={() => setShowNotes(true)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm font-medium"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
           >
             <FileText className="w-4 h-4" />
             View Notes
@@ -508,13 +508,6 @@ export default function Subjects() {
                   </div>
                   
                   <div className="flex flex-col items-end gap-2 ml-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full shadow-sm ${
-                      task.priority === "high" ? "bg-red-500/90 text-white" :
-                      task.priority === "medium" ? "bg-yellow-500/90 text-white" :
-                      "bg-blue-500/90 text-white"
-                    }`}>
-                      {task.priority}
-                    </span>
                     <div className={`px-3 py-1 rounded-full text-xs font-medium shadow-sm ${
                       task.status === "completed" ? "bg-green-500/90 text-white" :
                       task.status === "in-progress" ? "bg-yellow-500/90 text-white" :
@@ -556,13 +549,6 @@ export default function Subjects() {
                   </div>
                   
                   <div className="flex flex-col items-end gap-2 ml-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full shadow-sm ${
-                      task.priority === "high" ? "bg-red-500/90 text-white" :
-                      task.priority === "medium" ? "bg-yellow-500/90 text-white" :
-                      "bg-blue-500/90 text-white"
-                    }`}>
-                      {task.priority}
-                    </span>
                     <div className="px-3 py-1 rounded-full text-xs font-medium shadow-sm bg-gray-500/90 text-white">
                       Pending
                     </div>
