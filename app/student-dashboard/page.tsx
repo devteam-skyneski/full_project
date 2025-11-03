@@ -88,8 +88,13 @@ export default function StudentDashboard() {
 
   return (
     <div className="relative min-h-screen font-sans" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+<<<<<<< HEAD
       {/* Blue Background */}
       <div className="fixed inset-0 -z-10 w-full h-full" style={{ backgroundColor: '#1e3a8a' }}></div>
+=======
+      {/* Blue Gradient Background */}
+      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
+>>>>>>> 79a663ffb9bef9e24f4c11aca6ae091ea88a9595
       
       {/* Interactive Particles Background */}
       <ParticlesBackground />
@@ -109,7 +114,7 @@ export default function StudentDashboard() {
               
               {/* Hello Grace Section - SLIDES FROM LEFT */}
               <SlideIn direction="left" delay={0}>
-                <div className="backdrop-blur-xl bg-white/0 rounded-xl p-4 shadow-lg border border-white/30">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 shadow-lg border border-white/30">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <h2 className="text-2xl font-bold text-white mb-1">Hello Grace!</h2>
@@ -129,10 +134,10 @@ export default function StudentDashboard() {
 
               {/* Performance Section - SLIDES FROM LEFT */}
               <SlideIn direction="left" delay={100}>
-                <div className="backdrop-blur-xl bg-white/0 rounded-xl p-4 shadow-lg border border-white/30 flex-1">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 shadow-lg border border-white/30 flex-1">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-white">Performance</h3>
-                    <div className="flex items-center gap-2 backdrop-blur-md bg-white/30 rounded-lg px-3 py-1 cursor-pointer hover:bg-white/40 transition border border-white/20">
+                    <div className="flex items-center gap-2 backdrop-blur-md bg-white/0 rounded-lg px-3 py-1 cursor-pointer hover:bg-white/10 transition border border-white/20">
                       <span className="text-white text-sm">October</span>
                       <ChevronDown className="w-4 h-4 text-white" />
                     </div>
@@ -189,7 +194,7 @@ export default function StudentDashboard() {
 
               {/* Linked Teachers Section - SLIDES FROM LEFT */}
               <SlideIn direction="left" delay={200}>
-                <div className="backdrop-blur-xl bg-white/0 rounded-xl p-4 shadow-lg border border-white/30">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 shadow-lg border border-white/30">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-white">Linked Teachers</h3>
                     <a href="#" className="text-white hover:underline text-xs font-medium">
@@ -228,7 +233,7 @@ export default function StudentDashboard() {
               
               {/* Calendar Section - SLIDES FROM RIGHT */}
               <SlideIn direction="right" delay={0}>
-                <div className="backdrop-blur-xl bg-white/0 rounded-xl p-6 shadow-lg border border-white/30">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
                   <div className="mb-4">
                     <h3 className="text-xl font-semibold text-white">Calendar</h3>
                   </div>
@@ -273,7 +278,7 @@ export default function StudentDashboard() {
 
               {/* Upcoming Events Section - SLIDES FROM RIGHT */}
               <SlideIn direction="right" delay={100}>
-                <div className="backdrop-blur-xl bg-white/0 rounded-xl p-6 shadow-lg border border-white/30">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-semibold text-white">Upcoming events</h3>
                     <a href="#" className="text-white hover:underline text-sm font-medium">
