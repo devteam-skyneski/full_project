@@ -30,20 +30,15 @@ const ParentCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      // FIXED: Reduced padding from p-4 sm:p-6 to p-4
       className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          {/* FIXED: Reduced avatar size */}
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-            {parent.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
+            {/* FIXED: Changed to display only the first letter */}
+            {parent.name[0]}
           </div>
           <div>
-            {/* FIXED: Reduced text size */}
             <h3 className="font-bold text-gray-800 text-base">{parent.name}</h3>
             <p className="text-xs text-gray-600">Parent</p>
           </div>
@@ -55,7 +50,6 @@ const ParentCard = ({
 
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-xs">
-          {/* FIXED: Reduced icon box size */}
           <div className="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
             <Mail className="w-4 h-4 text-blue-600" />
           </div>
@@ -63,7 +57,6 @@ const ParentCard = ({
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          {/* FIXED: Reduced icon box size */}
           <div className="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
             <Phone className="w-4 h-4 text-green-600" />
           </div>
@@ -81,10 +74,8 @@ const ParentCard = ({
           {parent.students.map((student, index) => (
             <div
               key={index}
-              // FIXED: Reduced padding
               className="bg-gray-50 rounded-lg p-2 flex items-center gap-2"
             >
-              {/* FIXED: Reduced avatar size */}
               <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                 {student.name[0]}
               </div>
@@ -314,8 +305,7 @@ export default function ParentSection() {
             </div>
           </div>
 
-          {/* Parents Grid with Fixed Height and Scroll */}
-          {/* FIXED: Added xl:grid-cols-4 */}
+          {/* Parents Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-h-[800px] overflow-y-auto pr-2">
             {filteredParents.map((parent, index) => (
               <ParentCard key={index} parent={parent} />
