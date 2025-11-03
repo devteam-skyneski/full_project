@@ -626,4 +626,4 @@ export default function StudentSection() {
       </section>
     </>
   );
-} 
+}  
