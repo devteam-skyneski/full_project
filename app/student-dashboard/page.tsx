@@ -88,8 +88,8 @@ export default function StudentDashboard() {
 
   return (
     <div className="relative min-h-screen font-sans" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
-      {/* Blue Gradient Background */}
-      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500"></div>
+      {/* Blue Background */}
+      <div className="fixed inset-0 -z-10 w-full h-full" style={{ backgroundColor: '#1e3a8a' }}></div>
       
       {/* Interactive Particles Background */}
       <ParticlesBackground />
