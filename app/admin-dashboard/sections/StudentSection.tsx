@@ -672,10 +672,7 @@ export default function StudentSection() {
                             layoutId={`image-${student.name}-${id}`}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0"
                           >
-                            {student.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
+                            
                           </motion.div>
                           <div>
                             <motion.h3
