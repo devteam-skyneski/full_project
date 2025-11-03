@@ -74,7 +74,7 @@ export default function TaskSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
         {/* Recent Tasks - Left Side */}
         <motion.div 
-          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto"
+          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -146,7 +146,7 @@ export default function TaskSection() {
 
         {/* Recent Practice - Right Side */}
         <motion.div 
-          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto"
+          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
