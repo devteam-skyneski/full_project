@@ -244,7 +244,7 @@ export default function TeacherDashboard() {
         <div className="p-6">
           <div className="max-w-9x1 mx-auto">
             {/* Welcome Section and Classes - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 mb-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-2">
               {/* Welcome Card - Takes 2 columns WITH ANIMATED SPLIT TEXT (NO BLUR) */}
               <motion.div 
                 className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6"
@@ -343,12 +343,12 @@ export default function TeacherDashboard() {
                   <h2 className="text-xl font-bold text-jetblack-900">Classes</h2>
                   <select
                     value={selectedDay}
-                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Wednesday')}
+                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Day after tomorrow')}
                     className="text-sm text-blue-600 bg-transparent border-none cursor-pointer font-medium focus:outline-none"
                   >
                     <option value="Today">Today</option>
                     <option value="Tomorrow">Tomorrow</option>
-                    <option value="Wednesday">Wednesday</option>
+                    <option value="Day after tomorrow">Day after tomorrow</option>
                   </select>
                 </div>
                 <div className="space-y-3">
@@ -419,7 +419,7 @@ export default function TeacherDashboard() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Left Column - Performance & Progress */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Class Performance with Bar Graph */}
@@ -1379,7 +1379,6 @@ export default function TeacherDashboard() {
 </Link>
 
 
-                {/* Chemistry Course Card */}
                 {/* Chemistry Course Card */}
 <Link 
   href="/teacher-dashboard/courses/chemistry" 
