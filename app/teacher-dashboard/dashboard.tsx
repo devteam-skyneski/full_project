@@ -244,7 +244,7 @@ export default function TeacherDashboard() {
         <div className="p-6">
           <div className="max-w-9x1 mx-auto">
             {/* Welcome Section and Classes - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 mb-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-2">
               {/* Welcome Card - Takes 2 columns WITH ANIMATED SPLIT TEXT (NO BLUR) */}
               <motion.div 
                 className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6"
@@ -348,7 +348,7 @@ export default function TeacherDashboard() {
                   >
                     <option value="Today">Today</option>
                     <option value="Tomorrow">Tomorrow</option>
-                    <option value="Wednesday">Wednesday</option>
+                    <option value="Day after tomorrow">Day after tomorrow</option>
                   </select>
                 </div>
                 <div className="space-y-3">
@@ -419,7 +419,7 @@ export default function TeacherDashboard() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Left Column - Performance & Progress */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Class Performance with Bar Graph */}
@@ -1161,11 +1161,7 @@ export default function TeacherDashboard() {
           </div>
         </div>
       </div>
-<<<<<<< Updated upstream
 
-=======
-      
->>>>>>> Stashed changes
       <div className="mt-8">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 ml-10">Your Courses</h2>
@@ -1173,7 +1169,8 @@ export default function TeacherDashboard() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mr-6 ml-6">
                 {/* Math Course Card */}
-                <Link href="/teacher-dashboard/teacher/courses/Mathematics"
+                <Link 
+                  href="/teacher-dashboard/teacher/courses/Mathematics" 
                   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
                     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
@@ -1274,10 +1271,9 @@ export default function TeacherDashboard() {
                   </div>
                 </Link>
 
-<<<<<<< Updated upstream
                 {/* Physics Course Card - Now Abstract Blue */}
 <Link 
-  href="/teacher/courses/physics" 
+  href="/teacher-dashboard/teacher/courses/physics" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
@@ -1293,26 +1289,6 @@ export default function TeacherDashboard() {
                   M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z"/>
       </path>
     </svg>
-=======
-                {/* Physics Course Card */}
-                <Link 
-                  href="/teacher-dashboard/teacher/courses/Physics" 
-                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-purple-300 group ${
-                    isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
-                  style={{ transitionDelay: '1ms' }}
-                >
-                  {/* Top Colored Section */}
-                  <div className="relative bg-gradient-to-br from-purple-400 to-purple-600 group-hover:from-purple-500 group-hover:to-purple-700 transition-all duration-700 p-6 overflow-hidden">
-                    <svg className="absolute top-0 right-0 w-full h-full opacity-10" viewBox="0 0 400 200" preserveAspectRatio="none">
-                      <path d="M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z" fill="white">
-                        <animate attributeName="d" dur="7s" repeatCount="indefinite"
-                          values="M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z;
-                                  M0,0 L400,0 L400,100 Q300,120 200,100 T0,100 Z;
-                                  M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z"/>
-                      </path>
-                    </svg>
->>>>>>> Stashed changes
 
     {/* Physics symbols */}
     <div className="absolute inset-0 text-white/90 font-bold pointer-events-none">
@@ -1325,7 +1301,7 @@ export default function TeacherDashboard() {
       <div className="absolute top-10 right-20 text-lg">λ</div>
     </div>
 
-    <div className="relative z-10">
+   <div className="relative z-10">
       <p className="text-sm text-white/90 mb-1 font-bold">Course</p>
       <h3 className="text-2xl font-bold text-white">Physics</h3>
     </div>
@@ -1404,10 +1380,8 @@ export default function TeacherDashboard() {
 
 
                 {/* Chemistry Course Card */}
-<<<<<<< Updated upstream
-                {/* Chemistry Course Card */}
 <Link 
-  href="/teacher-dashboard/courses/chemistry" 
+  href="/teacher-dashboard/teacher/courses/chemistry" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
@@ -1423,25 +1397,6 @@ export default function TeacherDashboard() {
                   M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z"/>
       </path>
     </svg>
-=======
-                <Link 
-                  href="/teacher-dashboard/teacher/courses/Chemistry" 
-                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-green-300 group ${
-                    isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
-                  style={{ transitionDelay: '1ms' }}
-                >
-                  {/* Top Colored Section */}
-                  <div className="relative bg-gradient-to-br from-green-400 to-green-600 group-hover:from-green-500 group-hover:to-green-700 transition-all duration-700 p-6 overflow-hidden">
-                    <svg className="absolute top-0 right-0 w-full h-full opacity-10" viewBox="0 0 400 200" preserveAspectRatio="none">
-                      <path d="M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z" fill="white">
-                        <animate attributeName="d" dur="9s" repeatCount="indefinite"
-                          values="M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z;
-                                  M0,0 L400,0 L400,100 Q300,120 200,100 T0,100 Z;
-                                  M0,0 L400,0 L400,100 Q300,80 200,100 T0,100 Z"/>
-                      </path>
-                    </svg>
->>>>>>> Stashed changes
 
     {/* Chemistry symbols and organic compounds */}
     <div className="absolute inset-0 text-white font-mono pointer-events-none">
