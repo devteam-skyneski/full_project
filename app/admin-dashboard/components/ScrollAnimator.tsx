@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { useRef } from "react";
 
 interface ScrollAnimatorProps {
