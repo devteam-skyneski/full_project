@@ -10,10 +10,15 @@ import {
   ClipboardList,
   Trash2,
   ChevronDown,
+  School, // ADDED
+  ArrowRight, // ADDED
 } from "lucide-react";
 
 // Hook for detecting clicks outside
-function useOutsideClick(ref: React.RefObject<HTMLElement>, callback: () => void) {
+function useOutsideClick(
+  ref: React.RefObject<HTMLElement>,
+  callback: () => void,
+) {
   useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent) => {
       if (!ref.current || ref.current.contains(event.target as Node)) {
@@ -179,7 +184,8 @@ const students = [
   },
   {
     name: "Noah Anderson",
-    id: "STU010",
+    id: "STU021", // FIXED: Was STU010
+    class: "Class 1", // FIXED: Added missing property
     grade: "Grade 10",
     department: "Mathematics",
     email: "noah.a@student.edu",
@@ -188,7 +194,8 @@ const students = [
   },
   {
     name: "Emma Davis",
-    id: "STU011",
+    id: "STU022", // FIXED: Was STU011
+    class: "Class 2", // FIXED: Added missing property
     grade: "Grade 11",
     department: "Biology",
     email: "emma.d@student.edu",
@@ -197,7 +204,8 @@ const students = [
   },
   {
     name: "Liam Garcia",
-    id: "STU012",
+    id: "STU023", // FIXED: Was STU012
+    class: "Class 3", // FIXED: Added missing property
     grade: "Grade 12",
     department: "Physics",
     email: "liam.g@student.edu",
@@ -207,6 +215,7 @@ const students = [
   {
     name: "Ava Miller",
     id: "STU013",
+    class: "Class 1", // FIXED: Added missing property
     grade: "Grade 10",
     department: "Chemistry",
     email: "ava.m@student.edu",
@@ -216,6 +225,7 @@ const students = [
   {
     name: "William Taylor",
     id: "STU014",
+    class: "Class 2", // FIXED: Added missing property
     grade: "Grade 11",
     department: "Computer Science",
     email: "william.t@student.edu",
@@ -225,6 +235,7 @@ const students = [
   {
     name: "Mia Jackson",
     id: "STU015",
+    class: "Class 3", // FIXED: Added missing property
     grade: "Grade 12",
     department: "Arts & Design",
     email: "mia.j@student.edu",
@@ -234,6 +245,7 @@ const students = [
   {
     name: "Benjamin White",
     id: "STU016",
+    class: "Class 1", // FIXED: Added missing property
     grade: "Grade 10",
     department: "History",
     email: "ben.w@student.edu",
@@ -243,6 +255,7 @@ const students = [
   {
     name: "Charlotte Harris",
     id: "STU017",
+    class: "Class 2", // FIXED: Added missing property
     grade: "Grade 11",
     department: "Literature",
     email: "charlotte.h@student.edu",
@@ -252,6 +265,7 @@ const students = [
   {
     name: "Lucas Martin",
     id: "STU018",
+    class: "Class 3", // FIXED: Added missing property
     grade: "Grade 12",
     department: "Mathematics",
     email: "lucas.m@student.edu",
@@ -261,6 +275,7 @@ const students = [
   {
     name: "Amelia Thomas",
     id: "STU019",
+    class: "Class 1", // FIXED: Added missing property
     grade: "Grade 10",
     department: "Biology",
     email: "amelia.t@student.edu",
@@ -270,6 +285,7 @@ const students = [
   {
     name: "Henry Moore",
     id: "STU020",
+    class: "Class 2", // FIXED: Added missing property
     grade: "Grade 11",
     department: "Physics",
     email: "henry.m@student.edu",
@@ -280,13 +296,13 @@ const students = [
 
 type Student = (typeof students)[number];
 
-const InfoItem = ({ 
-  icon: Icon, 
-  label, 
-  value 
-}: { 
-  icon: React.ElementType; 
-  label: string; 
+const InfoItem = ({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ElementType;
+  label: string;
   value: string;
 }) => (
   <div className="flex items-start gap-2">
@@ -299,6 +315,10 @@ const InfoItem = ({
 );
 
 export default function StudentSection() {
+  // FIXED: Added state for allStudents and selectedClass
+  const [allStudents, setAllStudents] = useState(students);
+  const [selectedClass, setSelectedClass] = useState("All Classes");
+
   const [active, setActive] = useState<Student | null>(null);
   const [showParentModal, setShowParentModal] = useState(false);
   const [selectedParent, setSelectedParent] = useState<{
@@ -311,9 +331,11 @@ export default function StudentSection() {
   const id = useId();
 
   // Filter students based on selected class
-  const filteredStudents = selectedClass === "All Classes"
-    ? allStudents
-    : allStudents.filter((s) => s.class === selectedClass);
+  // This logic is now valid because selectedClass and allStudents are defined
+  const filteredStudents =
+    selectedClass === "All Classes"
+      ? allStudents
+      : allStudents.filter((s) => s.class === selectedClass);
 
   // Get unique classes - add all classes 1-10
   const uniqueClasses = [
@@ -352,12 +374,14 @@ export default function StudentSection() {
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm("Are you sure you want to delete this student?")) {
+      // This now works because setAllStudents and allStudents are defined
       setAllStudents(allStudents.filter((s) => s.id !== id));
     }
   };
 
-  const totalStudents = students.length;
-  const byDepartment = students.reduce((acc, student) => {
+  // Note: totalStudents should be based on the state so it updates on delete
+  const totalStudents = allStudents.length;
+  const byDepartment = allStudents.reduce((acc, student) => {
     acc[student.department] = (acc[student.department] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -430,10 +454,18 @@ export default function StudentSection() {
                     Student Details
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <InfoItem icon={ClipboardList} label="Student ID" value={active.id} />
+                    <InfoItem
+                      icon={ClipboardList}
+                      label="Student ID"
+                      value={active.id}
+                    />
                     <InfoItem icon={Mail} label="Email" value={active.email} />
                     <InfoItem icon={Phone} label="Phone" value={active.phone} />
-                    <InfoItem icon={School} label="Department" value={active.department} />
+                    <InfoItem
+                      icon={School} // FIXED: Now imported
+                      label="Department"
+                      value={active.department}
+                    />
                   </div>
                 </div>
 
@@ -442,14 +474,10 @@ export default function StudentSection() {
                     Quick Actions
                   </h4>
                   <div className="flex gap-2">
-                    <button
-                      className="flex-1 text-center py-2 px-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-semibold"
-                    >
+                    <button className="flex-1 text-center py-2 px-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-semibold">
                       View Parent Details
                     </button>
-                    <button
-                      className="flex-1 text-center py-2 px-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors text-sm font-semibold"
-                    >
+                    <button className="flex-1 text-center py-2 px-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors text-sm font-semibold">
                       View Grades
                     </button>
                   </div>
@@ -476,7 +504,9 @@ export default function StudentSection() {
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                   <div>
-                    <p className="text-xs text-gray-600 hidden sm:block">Total Students</p>
+                    <p className="text-xs text-gray-600 hidden sm:block">
+                      Total Students
+                    </p>
                     <p className="text-sm sm:text-xl font-bold text-gray-800">
                       {totalStudents}
                     </p>
@@ -516,7 +546,7 @@ export default function StudentSection() {
                   {filteredStudents.map((student) => (
                     <motion.tr
                       layoutId={`card-${student.name}-${id}`}
-                      key={student.id}
+                      key={student.id} // FIXED: IDs are now unique
                       onClick={() => setActive(student)}
                       className="cursor-pointer hover:bg-gray-100 hover:-translate-y-1 transition-all duration-200 group"
                     >
@@ -546,7 +576,9 @@ export default function StudentSection() {
                       </td>
 
                       <td className="p-4 whitespace-nowrap text-sm text-gray-600">
-                        <motion.span layoutId={`department-${student.name}-${id}`}>
+                        <motion.span
+                          layoutId={`department-${student.name}-${id}`}
+                        >
                           {student.department}
                         </motion.span>
                       </td>
@@ -557,7 +589,9 @@ export default function StudentSection() {
                         </div>
                       </td>
 
-                      <td className="p-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="p-4 whitespace-nowrap text-sm text-gray-600 hidden md:table-cell">
+                        {" "}
+                        {/* FIXED: Added hidden md:table-cell */}
                         <div className="flex items-center gap-2">
                           <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           <span className="truncate">{student.email}</span>
@@ -567,8 +601,20 @@ export default function StudentSection() {
                       <td className="p-4 whitespace-nowrap text-center">
                         <div className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-blue-50 text-blue-700 rounded-lg group-hover:bg-blue-100 transition-colors">
                           <span className="text-sm font-semibold">View</span>
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />{" "}
+                          {/* FIXED: Now imported */}
                         </div>
+                      </td>
+
+                      {/* FIXED: Added missing Delete button cell */}
+                      <td className="p-4 whitespace-nowrap text-center">
+                        <button
+                          onClick={(e) => handleDelete(student.id, e)}
+                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete Student"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </td>
                     </motion.tr>
                   ))}
@@ -580,4 +626,4 @@ export default function StudentSection() {
       </section>
     </>
   );
-}
+} 
