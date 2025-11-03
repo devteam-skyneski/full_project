@@ -1,18 +1,20 @@
+"use client";
 import {
   UserCheck,
   FileText,
   Clock,
-  Check,
+  Check, // This is the "tick mark" icon
   X,
   Bell,
-  Trash2,
   Eye,
-  Plus,
+  Trash2,
 } from "lucide-react";
 import { useState } from "react";
 
 export default function TeacherSection() {
-  const [activeTab, setActiveTab] = useState<"requests" | "teachers">("requests");
+  const [activeTab, setActiveTab] = useState<"requests" | "teachers">(
+    "requests",
+  );
   const [requests, setRequests] = useState([
     {
       id: "1",
@@ -136,6 +138,7 @@ export default function TeacherSection() {
     },
   ]);
 
+  // This list now represents PENDING teacher approvals
   const [teachers, setTeachers] = useState([
     {
       id: "1",
@@ -244,22 +247,40 @@ export default function TeacherSection() {
     },
   ]);
 
-  const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
-
   const handleApprove = (id: string) => {
     setRequests(
-      requests.map((r) => (r.id === id ? { ...r, status: "approved" } : r))
+      requests.map((r) =>
+        r.id === id ? { ...r, status: "approved" as const } : r,
+      ),
     );
   };
 
   const handleReject = (id: string) => {
     setRequests(
-      requests.map((r) => (r.id === id ? { ...r, status: "rejected" } : r))
+      requests.map((r) =>
+        r.id === id ? { ...r, status: "rejected" as const } : r,
+      ),
     );
   };
 
-  const handleDeleteTeacher = (id: string) => {
-    if (confirm("Are you sure you want to delete this teacher?")) {
+  // This function now simulates approval by removing the teacher from the pending list
+  const handleApproveTeacher = (id: string) => {
+    if (confirm("Are you sure you want to approve this teacher?")) {
+      // In a real app, this would send an API request to set the teacher's status to 'approved'.
+      // For this UI demo, we'll just remove them from the pending list.
+      console.log("Approve teacher:", id);
+      setTeachers(teachers.filter((t) => t.id !== id));
+    }
+  };
+
+  // Renamed this function for clarity
+  const handleRejectTeacher = (id: string) => {
+    if (
+      confirm(
+        "Are you sure you want to reject this teacher? This will delete their request.",
+      )
+    ) {
+      console.log("Reject teacher:", id);
       setTeachers(teachers.filter((t) => t.id !== id));
     }
   };
@@ -269,36 +290,28 @@ export default function TeacherSection() {
   const rejectedRequests = requests.filter((r) => r.status === "rejected");
 
   return (
-    <section id="teachers" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-10">
+    <section id="teachers" className="py-10 sm:py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
               Teacher Management
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
               Manage teachers and review note upload requests
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+            <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2 shadow-sm border border-gray-100 flex-1 sm:flex-none">
               <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-orange-500" />
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
                 <div>
-                  <p className="text-xs text-gray-600">Pending Requests</p>
-                  <p className="text-xl font-bold text-gray-800">
-                    {pendingRequests.length}
+                  <p className="text-xs text-gray-600 hidden sm:block">
+                    Pending Requests
                   </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2">
-                <UserCheck className="w-5 h-5 text-blue-500" />
-                <div>
-                  <p className="text-xs text-gray-600">Total Teachers</p>
-                  <p className="text-xl font-bold text-gray-800">
-                    {teachers.length}
+                  <p className="text-sm sm:text-xl font-bold text-gray-800">
+                    {pendingRequests.length}
                   </p>
                 </div>
               </div>
@@ -310,17 +323,18 @@ export default function TeacherSection() {
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("requests")}
-              className={`flex-1 px-6 py-4 font-semibold text-sm transition-colors ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "requests"
                   ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
-                <FileText className="w-5 h-5" />
-                Upload Requests
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Upload Requests</span>
+                <span className="sm:hidden">Requests</span>
                 {pendingRequests.length > 0 && (
-                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 rounded-full">
                     {pendingRequests.length}
                   </span>
                 )}
@@ -328,27 +342,36 @@ export default function TeacherSection() {
             </button>
             <button
               onClick={() => setActiveTab("teachers")}
-              className={`flex-1 px-6 py-4 font-semibold text-sm transition-colors ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "teachers"
                   ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
-                <UserCheck className="w-5 h-5" />
-                All Teachers
+                <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Teacher Approvals</span>
+                <span className="sm:hidden">Approvals</span>
+                {/* Show pending teacher count if any */}
+                {teachers.length > 0 && (
+                  <span className="bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 rounded-full">
+                    {teachers.length}
+                  </span>
+                )}
               </div>
             </button>
           </div>
 
           <div className="p-6">
+            {/* START: REQUESTS TAB CONTENT */}
             {activeTab === "requests" && (
               <div className="space-y-8">
+                {/* Pending Requests Table */}
                 {pendingRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Clock className="w-5 h-5 text-orange-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Pending Requests
                       </h3>
                       <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded-full">
@@ -403,7 +426,9 @@ export default function TeacherSection() {
                                 <td className="px-6 py-4">
                                   <div className="flex items-center justify-center gap-2">
                                     <button
-                                      onClick={() => alert("View note details")}
+                                      onClick={() =>
+                                        alert("View note details")
+                                      }
                                       className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
                                       title="View"
                                     >
@@ -434,11 +459,12 @@ export default function TeacherSection() {
                   </div>
                 )}
 
+                {/* Approved Requests Table */}
                 {approvedRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Check className="w-5 h-5 text-green-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Approved Requests
                       </h3>
                       <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
@@ -507,11 +533,12 @@ export default function TeacherSection() {
                   </div>
                 )}
 
+                {/* Rejected Requests Table */}
                 {rejectedRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <X className="w-5 h-5 text-red-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Rejected Requests
                       </h3>
                       <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
@@ -581,22 +608,18 @@ export default function TeacherSection() {
                 )}
               </div>
             )}
+            {/* END: REQUESTS TAB CONTENT */}
 
+            {/* START: TEACHERS TAB CONTENT */}
             {activeTab === "teachers" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-gray-800">
-                    All Teachers ({teachers.length})
+                <div className="mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                    Pending Teacher Approvals ({teachers.length})
                   </h3>
-                  <button
-                    onClick={() => setShowAddTeacherModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Add Teacher
-                  </button>
                 </div>
 
+                {/* Pending Teacher Approvals Table */}
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                   <div className="max-h-[600px] overflow-y-auto overflow-x-auto">
                     <table className="w-full">
@@ -649,19 +672,23 @@ export default function TeacherSection() {
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center justify-center gap-2">
+                                {/* This is the "Approve" button */}
                                 <button
                                   onClick={() =>
-                                    alert(`Edit ${teacher.name}`)
+                                    handleApproveTeacher(teacher.id)
                                   }
-                                  className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                                  title="Edit"
+                                  className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                                  title="Approve"
                                 >
-                                  <Eye className="w-4 h-4 text-blue-600" />
+                                  <Check className="w-4 h-4 text-green-600" />
                                 </button>
+                                {/* This is the "Reject" button */}
                                 <button
-                                  onClick={() => handleDeleteTeacher(teacher.id)}
+                                  onClick={() =>
+                                    handleRejectTeacher(teacher.id)
+                                  }
                                   className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                                  title="Delete"
+                                  title="Reject"
                                 >
                                   <Trash2 className="w-4 h-4 text-red-600" />
                                 </button>
@@ -675,9 +702,10 @@ export default function TeacherSection() {
                 </div>
               </div>
             )}
+            {/* END: TEACHERS TAB CONTENT */}
           </div>
         </div>
       </div>
     </section>
   );
-}
+}  
