@@ -1,15 +1,12 @@
 "use client";
 import {
   UserCheck,
-  UserPlus,
   FileText,
   Clock,
   Check,
   X,
   Bell,
-  Trash2,
   Eye,
-  Plus,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -111,22 +108,26 @@ export default function TeacherSection() {
     },
   ]);
 
-  const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
-
   const handleApprove = (id: string) => {
     setRequests(
-      requests.map((r) => (r.id === id ? { ...r, status: "approved" } : r))
+      requests.map((r) => (r.id === id ? { ...r, status: "approved" as const } : r))
     );
   };
 
   const handleReject = (id: string) => {
     setRequests(
-      requests.map((r) => (r.id === id ? { ...r, status: "rejected" } : r))
+      requests.map((r) => (r.id === id ? { ...r, status: "rejected" as const } : r))
     );
   };
 
-  const handleDeleteTeacher = (id: string) => {
-    if (confirm("Are you sure you want to delete this teacher?")) {
+  const handleApproveTeacher = (id: string) => {
+    // In real app, this would send API request to approve teacher
+    console.log("Approve teacher:", id);
+  };
+
+  const handleRejectTeacher = (id: string) => {
+    // In real app, this would send API request to reject teacher
+    if (confirm("Are you sure you want to reject this teacher?")) {
       setTeachers(teachers.filter((t) => t.id !== id));
     }
   };
@@ -136,36 +137,26 @@ export default function TeacherSection() {
   const rejectedRequests = requests.filter((r) => r.status === "rejected");
 
   return (
-    <section id="teachers" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-10">
+    <section id="teachers" className="py-10 sm:py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
               Teacher Management
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
               Manage teachers and review note upload requests
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+            <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2 shadow-sm border border-gray-100 flex-1 sm:flex-none">
               <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-orange-500" />
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
                 <div>
-                  <p className="text-xs text-gray-600">Pending Requests</p>
-                  <p className="text-xl font-bold text-gray-800">
+                  <p className="text-xs text-gray-600 hidden sm:block">Pending Requests</p>
+                  <p className="text-sm sm:text-xl font-bold text-gray-800">
                     {pendingRequests.length}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2">
-                <UserCheck className="w-5 h-5 text-blue-500" />
-                <div>
-                  <p className="text-xs text-gray-600">Total Teachers</p>
-                  <p className="text-xl font-bold text-gray-800">
-                    {teachers.length}
                   </p>
                 </div>
               </div>
@@ -179,17 +170,18 @@ export default function TeacherSection() {
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("requests")}
-              className={`flex-1 px-6 py-4 font-semibold text-sm transition-colors ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "requests"
                   ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
-                <FileText className="w-5 h-5" />
-                Upload Requests
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Upload Requests</span>
+                <span className="sm:hidden">Requests</span>
                 {pendingRequests.length > 0 && (
-                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-orange-500 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 rounded-full">
                     {pendingRequests.length}
                   </span>
                 )}
@@ -197,52 +189,53 @@ export default function TeacherSection() {
             </button>
             <button
               onClick={() => setActiveTab("teachers")}
-              className={`flex-1 px-6 py-4 font-semibold text-sm transition-colors ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "teachers"
                   ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
-                <UserCheck className="w-5 h-5" />
-                All Teachers
+                <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">All Teachers</span>
+                <span className="sm:hidden">Teachers</span>
               </div>
             </button>
           </div>
 
-          {/* Tab Content */}
-          <div className="p-6">
+          {/* Tab Content with Fixed Height and Scroll */}
+          <div className="p-4 sm:p-6">
             {activeTab === "requests" && (
-              <div className="space-y-8">
+              <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2">
                 {/* Pending Requests */}
                 {pendingRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Clock className="w-5 h-5 text-orange-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Pending Requests
                       </h3>
                       <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded-full">
                         {pendingRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                      <table className="w-full">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
+                      <table className="w-full min-w-[600px]">
                         <thead className="bg-gray-50 border-b border-gray-200">
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Note Title
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Teacher
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                               Subject
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">
                               Date
                             </th>
-                            <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Actions
                             </th>
                           </tr>
@@ -253,24 +246,24 @@ export default function TeacherSection() {
                               key={request.id}
                               className="hover:bg-gray-50 transition-colors"
                             >
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex items-center gap-2">
                                   <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                  <span className="font-medium text-gray-800">
+                                  <span className="font-medium text-sm text-gray-800">
                                     {request.title}
                                   </span>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-700">
+                              <td className="px-4 py-3 text-sm text-gray-700">
                                 {request.teacher}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-600">
+                              <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
                                 {request.subject}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-500">
+                              <td className="px-4 py-3 text-sm text-gray-500 hidden lg:table-cell">
                                 {request.date}
                               </td>
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex items-center justify-center gap-2">
                                   <button
                                     onClick={() => alert("View note details")}
@@ -308,30 +301,30 @@ export default function TeacherSection() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <Check className="w-5 h-5 text-green-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Approved Requests
                       </h3>
                       <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
                         {approvedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                      <table className="w-full">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
+                      <table className="w-full min-w-[600px]">
                         <thead className="bg-gray-50 border-b border-gray-200">
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Note Title
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Teacher
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                               Subject
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">
                               Date
                             </th>
-                            <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Status
                             </th>
                           </tr>
@@ -342,24 +335,24 @@ export default function TeacherSection() {
                               key={request.id}
                               className="hover:bg-gray-50 transition-colors"
                             >
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex items-center gap-2">
                                   <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                  <span className="font-medium text-gray-800">
+                                  <span className="font-medium text-sm text-gray-800">
                                     {request.title}
                                   </span>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-700">
+                              <td className="px-4 py-3 text-sm text-gray-700">
                                 {request.teacher}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-600">
+                              <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
                                 {request.subject}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-500">
+                              <td className="px-4 py-3 text-sm text-gray-500 hidden lg:table-cell">
                                 {request.date}
                               </td>
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex justify-center">
                                   <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold flex items-center gap-1">
                                     <Check className="w-3 h-3" />
@@ -380,30 +373,30 @@ export default function TeacherSection() {
                   <div>
                     <div className="flex items-center gap-2 mb-4">
                       <X className="w-5 h-5 text-red-500" />
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         Rejected Requests
                       </h3>
                       <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
                         {rejectedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                      <table className="w-full">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
+                      <table className="w-full min-w-[600px]">
                         <thead className="bg-gray-50 border-b border-gray-200">
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Note Title
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Teacher
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                               Subject
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">
                               Date
                             </th>
-                            <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                               Status
                             </th>
                           </tr>
@@ -414,24 +407,24 @@ export default function TeacherSection() {
                               key={request.id}
                               className="hover:bg-gray-50 transition-colors"
                             >
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex items-center gap-2">
                                   <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                  <span className="font-medium text-gray-800">
+                                  <span className="font-medium text-sm text-gray-800">
                                     {request.title}
                                   </span>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-700">
+                              <td className="px-4 py-3 text-sm text-gray-700">
                                 {request.teacher}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-600">
+                              <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
                                 {request.subject}
                               </td>
-                              <td className="px-6 py-4 text-sm text-gray-500">
+                              <td className="px-4 py-3 text-sm text-gray-500 hidden lg:table-cell">
                                 {request.date}
                               </td>
-                              <td className="px-6 py-4">
+                              <td className="px-4 py-3">
                                 <div className="flex justify-center">
                                   <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold flex items-center gap-1">
                                     <X className="w-3 h-3" />
@@ -451,36 +444,29 @@ export default function TeacherSection() {
 
             {activeTab === "teachers" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-gray-800">
+                <div className="mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                     All Teachers ({teachers.length})
                   </h3>
-                  <button
-                    onClick={() => setShowAddTeacherModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Add Teacher
-                  </button>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="w-full">
+                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden overflow-x-auto max-h-[600px] overflow-y-auto">
+                  <table className="w-full min-w-[600px]">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Name
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Subject
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                           Email
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">
                           Phone
                         </th>
-                        <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
@@ -491,45 +477,43 @@ export default function TeacherSection() {
                           key={teacher.id}
                           className="hover:bg-gray-50 transition-colors"
                         >
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm">
                                 {teacher.name
                                   .split(" ")
                                   .map((n) => n[0])
                                   .join("")}
                               </div>
-                              <span className="font-medium text-gray-800">
+                              <span className="font-medium text-sm text-gray-800">
                                 {teacher.name}
                               </span>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-700">
+                          <td className="px-4 py-3 text-sm text-gray-700">
                             {teacher.subject}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
                             {teacher.email}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">
                             {teacher.phone}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-3">
                             <div className="flex items-center justify-center gap-2">
                               <button
-                                onClick={() =>
-                                  alert(`Edit ${teacher.name}`)
-                                }
-                                className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                                title="Edit"
+                                onClick={() => handleApproveTeacher(teacher.id)}
+                                className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Accept"
                               >
-                                <Eye className="w-4 h-4 text-blue-600" />
+                                <Check className="w-4 h-4 text-green-600" />
                               </button>
                               <button
-                                onClick={() => handleDeleteTeacher(teacher.id)}
+                                onClick={() => handleRejectTeacher(teacher.id)}
                                 className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                                title="Delete"
+                                title="Reject"
                               >
-                                <Trash2 className="w-4 h-4 text-red-600" />
+                                <X className="w-4 h-4 text-red-600" />
                               </button>
                             </div>
                           </td>
