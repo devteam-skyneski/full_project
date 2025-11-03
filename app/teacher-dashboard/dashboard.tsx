@@ -240,7 +240,7 @@ export default function TeacherDashboard() {
         <div className="p-6">
           <div className="max-w-9x1 mx-auto">
             {/* Welcome Section and Classes - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 mb-2">
               {/* Welcome Card - Takes 2 columns WITH ANIMATED SPLIT TEXT (NO BLUR) */}
               <motion.div 
                 className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6"
@@ -415,7 +415,7 @@ export default function TeacherDashboard() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
               {/* Left Column - Performance & Progress */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Class Performance with Bar Graph */}
@@ -1157,7 +1157,7 @@ export default function TeacherDashboard() {
           </div>
         </div>
       </div>
-      HEAD
+
       <div className="mt-8">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 ml-10">Your Courses</h2>
@@ -1507,7 +1507,6 @@ export default function TeacherDashboard() {
                 </Link>
               </div>
             </div>
-             b5d3eb409b96f4b1aa82b64875dc264abb66fe7a
     </>
   );
 }
