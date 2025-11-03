@@ -36,7 +36,6 @@ import {
   LabelList,
 } from 'recharts';
 import Navbar from './navbar';
-import ParticlesBackground from '../student-dashboard/components/ParticlesBackground';
 import ScrollAnimator from './components/ScrollAnimator';
 import TeacherSection from './sections/TeacherSection';
 import StudentSection from './sections/StudentSection';
@@ -110,7 +109,7 @@ export default function AdminDashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-xl font-bold text-gray-700"
+            className="text-xl font-bold text-white"
           >
             {percentage}%
           </motion.span>
@@ -177,7 +176,6 @@ export default function AdminDashboard() {
   return (
     <div className="bg-gray-50 relative z-0">
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
-      <ParticlesBackground />
       {/* Navbar animation */}
       <motion.div
         initial={{ y: -100, opacity: 0 }}
@@ -212,19 +210,19 @@ export default function AdminDashboard() {
               {/* Admin Welcome / Overview */}
               {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-6 shadow-sm"
+                className="rounded-xl p-6 shadow-lg bg-white/10 backdrop-blur-md border border-white/20"
                 whileHover={{ scale: 1.03, rotateY: 10 }} // Tilt
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Admin Overview</h2>
-                    <p className="text-gray-600 mb-2">
+                    <h2 className="text-3xl font-bold text-white mb-2">Admin Overview</h2>
+                    <p className="text-gray-200 mb-2">
                       Key metrics for the institution. You have 2 pending tasks.
                     </p>
                     <motion.a
                       href="#teachers"
-                      className="text-blue-600 hover:underline font-medium"
+                      className="text-blue-300 hover:underline font-medium"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -236,7 +234,7 @@ export default function AdminDashboard() {
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
                     style={{ originX: 0.5, originY: 0.5 }}
-                    className="w-32 h-32 bg-blue-100 rounded-lg flex items-center justify-center ml-4"
+                    className="w-32 h-32 rounded-lg flex items-center justify-center ml-4 bg-white/10 backdrop-blur-md border border-white/20"
                   >
                     <motion.div
                       animate={{ scale: [1, 1.05, 1] }} // "Breathe"
@@ -252,24 +250,24 @@ export default function AdminDashboard() {
               {/* Student Performance Section */}
               {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-6 shadow-sm flex-1 flex flex-col"
+                className="rounded-xl p-6 shadow-lg flex-1 flex flex-col bg-white/10 backdrop-blur-md border border-white/20"
                 whileHover={{ scale: 1.03, rotateY: 10 }} // Tilt
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800">Student Performance</h3>
+                  <h3 className="text-xl font-semibold text-white">Student Performance</h3>
                   <div className="flex items-center gap-4">
                     <motion.div
-                      className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 cursor-pointer hover:bg-gray-50 transition"
+                      className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition bg-white/10 backdrop-blur-md border border-white/20 text-white"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                     >
-                      <span className="text-gray-700 text-sm">Classes 1-10</span>
+                      <span className="text-gray-200 text-sm">Classes 1-10</span>
                       <motion.div
                         animate={{ y: [0, -2, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                       >
-                        <ChevronDown className="w-4 h-4 text-gray-500" />
+                        <ChevronDown className="w-4 h-4 text-gray-300" />
                       </motion.div>
                     </motion.div>
                     <motion.button
@@ -299,7 +297,7 @@ export default function AdminDashboard() {
                         type="category"
                         width={100} 
                         fontSize={11}
-                        tick={{ fill: '#6B7280' }}
+                        tick={{ fill: '#E5E7EB' }}
                         tickLine={false}
                         axisLine={false}
                       />
@@ -315,7 +313,7 @@ export default function AdminDashboard() {
                         <LabelList
                           dataKey="score"
                           position="right"
-                          style={{ fill: '#374151', fontSize: '12px', fontWeight: 'bold' }}
+                          style={{ fill: '#E5E7EB', fontSize: '12px', fontWeight: 'bold' }}
                         />
                         {overallPerformanceData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill="#3B82F6" />
@@ -337,23 +335,23 @@ export default function AdminDashboard() {
               {/* Overall Attendance Section */}
               {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-6 shadow-sm flex-1"
+                className="rounded-xl p-6 shadow-lg flex-1 bg-white/10 backdrop-blur-md border border-white/20"
                 whileHover={{ scale: 1.03, rotateX: 5 }} // Tilt
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-gray-800">School Attendance</h3>
+                  <h3 className="text-xl font-semibold text-white">School Attendance</h3>
                   <motion.div
-                    className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 cursor-pointer hover:bg-gray-50 transition"
+                    className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition bg-white/10 backdrop-blur-md border border-white/20 text-white"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
-                    <span className="text-gray-700 text-sm">Today</span>
+                    <span className="text-gray-200 text-sm">Today</span>
                     <motion.div
                       animate={{ y: [0, -2, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <ChevronDown className="w-4 h-4 text-gray-500" />
+                      <ChevronDown className="w-4 h-4 text-gray-300" />
                     </motion.div>
                   </motion.div>
                 </div>
@@ -371,7 +369,7 @@ export default function AdminDashboard() {
                         <DonutChart data={item} percentage={item.value} />
                       </div>
                       <motion.p 
-                        className="text-xs text-gray-600 mt-3 text-center leading-tight"
+                        className="text-xs text-gray-200 mt-3 text-center leading-tight"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.15 + 1.2 }} // Increased delay
