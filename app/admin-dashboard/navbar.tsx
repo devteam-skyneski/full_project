@@ -21,7 +21,6 @@ export default function Navbar() {
   const [isProfileView, setIsProfileView] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Mock admin data - in real app, fetch from context/state
   const adminData = {
     name: "Admin User",
     email: "admin@university.edu"
@@ -44,11 +43,10 @@ export default function Navbar() {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
 
-          // Show navbar when scrolling up or at the top
           if (currentScrollY < lastScrollY || currentScrollY < 10) {
             setIsVisible(true);
           }
-          // Hide navbar when scrolling down past 150px
+
           else if (currentScrollY > lastScrollY && currentScrollY > 150) {
             setIsVisible(false);
           }
@@ -68,12 +66,11 @@ export default function Navbar() {
     };
   }, [lastScrollY]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowProfileDropdown(false);
-        setIsProfileView(false); // Reset view on close
+        setIsProfileView(false);
       }
     };
 
@@ -82,7 +79,7 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    // In real app, clear auth state and redirect
+
     window.location.href = "/auth";
   };
 
@@ -93,7 +90,6 @@ export default function Navbar() {
         transition-all duration-500 ease-in-out
         ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
     >
-      {/* Left Section - Logo */}
       <div className="flex items-center gap-2">
         <div className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center font-bold text-lg rounded-lg shadow-md">
           A
@@ -101,7 +97,6 @@ export default function Navbar() {
         <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">Admin Portal</h1>
       </div>
 
-      {/* Right Section - Navigation & Profile */}
       <div className="flex items-center gap-2 sm:gap-6">
         <div className="hidden md:flex">
           <FloatingDock
@@ -111,11 +106,11 @@ export default function Navbar() {
           />
         </div>
 
-        {/* Profile Dropdown */}
+
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => {
-              // This logic resets the inner view if you close the dropdown
+
               const closing = showProfileDropdown;
               if (closing) {
                 setIsProfileView(false);
@@ -130,16 +125,10 @@ export default function Navbar() {
             <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
           </button>
 
-          {/* Dropdown Menu */}
+
           {showProfileDropdown && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              {/* === THIS TOP SECTION IS NOW REMOVED === */}
-              {/* <div className="px-4 py-3 border-b border-gray-200">
-                <p className="text-sm font-semibold text-gray-800">{adminData.name}</p>
-                <p className="text-xs text-gray-600 truncate">{adminData.email}</p>
-              </div> */}
 
-              {/* === MODIFIED DROPDOWN ITEMS === */}
               {!isProfileView ? (
                 <>
                   <button
@@ -176,7 +165,6 @@ export default function Navbar() {
                   </div>
                 </>
               )}
-              {/* === END OF MODIFICATIONS === */}
             </div>
           )}
         </div>

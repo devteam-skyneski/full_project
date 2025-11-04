@@ -30,43 +30,42 @@ const ParentCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+      className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-            {/* FIXED: Changed to display only the first letter */}
             {parent.name[0]}
           </div>
           <div>
-            <h3 className="font-bold text-gray-800 text-base">{parent.name}</h3>
-            <p className="text-xs text-gray-600">Parent</p>
+            <h3 className="font-bold text-white text-base">{parent.name}</h3>
+            <p className="text-xs text-gray-300">Parent</p>
           </div>
         </div>
-        <div className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold ml-2">
+        <div className="bg-blue-500/30 text-blue-200 px-2 py-1 rounded-full text-xs font-semibold ml-2">
           {parent.students.length} Student{parent.students.length > 1 ? "s" : ""}
         </div>
       </div>
 
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-xs">
-          <div className="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-            <Mail className="w-4 h-4 text-blue-600" />
+          <div className="w-7 h-7 rounded-lg bg-blue-500/30 flex items-center justify-center flex-shrink-0">
+            <Mail className="w-4 h-4 text-blue-300" />
           </div>
-          <span className="text-gray-700 truncate">{parent.email}</span>
+          <span className="text-gray-200 truncate">{parent.email}</span>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <div className="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-            <Phone className="w-4 h-4 text-green-600" />
+          <div className="w-7 h-7 rounded-lg bg-green-500/30 flex items-center justify-center flex-shrink-0">
+            <Phone className="w-4 h-4 text-green-300" />
           </div>
-          <span className="text-gray-700">{parent.phone}</span>
+          <span className="text-gray-200">{parent.phone}</span>
         </div>
       </div>
 
       {/* Students Section */}
-      <div className="border-t border-gray-200 pt-3">
-        <h4 className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-2">
+      <div className="border-t border-white/20 pt-3">
+        <h4 className="text-xs font-semibold text-white mb-2 flex items-center gap-2">
           <GraduationCap className="w-4 h-4" />
           Enrolled Children
         </h4>
@@ -74,16 +73,16 @@ const ParentCard = ({
           {parent.students.map((student, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-lg p-2 flex items-center gap-2"
+              className="bg-white/10 rounded-lg p-2 flex items-center gap-2"
             >
               <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                 {student.name[0]}
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-800">
+                <span className="text-xs font-medium text-white">
                   {student.name}
                 </span>
-                <p className="text-xs text-gray-600">{student.id}</p>
+                <p className="text-xs text-gray-300">{student.id}</p>
               </div>
             </div>
           ))}
@@ -212,7 +211,6 @@ export default function ParentSection() {
       );
       setFilteredParents(found);
 
-      // If a single parent matches, open their card
       if (found.length === 1) {
         setSelectedParent(found[0]);
       }
@@ -226,15 +224,15 @@ export default function ParentSection() {
 
   return (
     <>
-      {/* Selected Parent Modal */}
+
       {selectedParent && (
         <div className="fixed inset-0 grid place-items-center z-[100] p-4">
           <div
-            className="fixed inset-0 bg-black/50 h-full w-full"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full"
             onClick={() => setSelectedParent(null)}
           />
-          <div className="w-full max-w-lg bg-white rounded-2xl overflow-hidden z-[100] relative">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
+          <div className="w-full max-w-lg bg-black/50 backdrop-blur-lg border border-white/20 rounded-2xl overflow-hidden z-[100] relative">
+            <div className="p-6 text-white border-b border-white/20">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-bold">Parent Information</h3>
                 <button
@@ -252,37 +250,37 @@ export default function ParentSection() {
         </div>
       )}
 
-      {/* Main Content */}
-      <section id="parents" className="py-10 sm:py-20 bg-gray-50">
+      
+      <section id="parents" className="py-10 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Header */}
+          
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
                 Parent Directory
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+              <p className="text-sm sm:text-base text-gray-300 mt-1 sm:mt-2">
                 View contact information and details of all enrolled parents
               </p>
             </div>
             <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2 shadow-sm border border-gray-100 flex-1 sm:flex-none">
+              <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-300" />
                   <div>
-                    <p className="text-xs text-gray-600 hidden sm:block">Total Parents</p>
-                    <p className="text-sm sm:text-xl font-bold text-gray-800">
+                    <p className="text-xs text-gray-300 hidden sm:block">Total Parents</p>
+                    <p className="text-sm sm:text-xl font-bold text-white">
                       {parents.length}
                     </p>
                   </div>
                 </div>
               </div>  
-              <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2 shadow-sm border border-gray-100 flex-1 sm:flex-none">
+              <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
                 <div className="flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                  <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
                   <div>
-                    <p className="text-xs text-gray-600 hidden sm:block">Total Students</p>
-                    <p className="text-sm sm:text-xl font-bold text-gray-800">
+                    <p className="text-xs text-gray-300 hidden sm:block">Total Students</p>
+                    <p className="text-sm sm:text-xl font-bold text-white">
                       {totalStudents}
                     </p>
                   </div>
@@ -291,21 +289,21 @@ export default function ParentSection() {
             </div>
           </div>
 
-          {/* Search Bar */}
+          
           <div className="mb-6 sm:mb-8">
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-300" />
               <input
                 type="text"
                 placeholder="Search by student ID, email, or name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
               />
             </div>
           </div>
 
-          {/* Parents Grid */}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-h-[800px] overflow-y-auto pr-2">
             {filteredParents.map((parent, index) => (
               <ParentCard key={index} parent={parent} />
@@ -314,7 +312,7 @@ export default function ParentSection() {
 
           {filteredParents.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-600 text-base sm:text-lg">
+              <p className="text-gray-300 text-base sm:text-lg">
                 No parents found matching your search.
               </p>
             </div>
