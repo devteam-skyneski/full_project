@@ -1,13 +1,7 @@
 import type { Metadata } from 'next'
-import { Montserrat } from 'next/font/google'
 
 import './globals.css'
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-  display: 'swap',
-})
+import ClickSpark from '@/components/ClickSpark'
 
 
 
@@ -34,7 +28,11 @@ export default function RootLayout({
   return (
 
     <html lang="en">
-      <body className={montserrat.variable}>{children}</body>
+      <body className="min-h-screen">
+        <ClickSpark sparkColor="#fff" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+          {children}
+        </ClickSpark>
+      </body>
     </html>
 
   )

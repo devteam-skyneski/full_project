@@ -7,7 +7,7 @@ import { Calendar, Clock, Users, FileText, CheckCircle, AlertCircle, TrendingUp,
 import Link from 'next/link';
 import Navbar from './navbar';
 import teacherDashboardAnimation from '../../login(animations)/TeacherDashboard.json';
-import ParticlesBackground from '../student-dashboard/components/ParticlesBackground';
+import TeacherParticlesBackground from './components/TeacherParticlesBackground';
 
 export default function TeacherDashboard() {
   const [selectedDay, setSelectedDay] = useState<'Today' | 'Tomorrow' | 'Wednesday'>('Today');
@@ -238,7 +238,7 @@ export default function TeacherDashboard() {
       <Navbar />
       {/* Blue Gradient Background to match Student Dashboard */}
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
-      <ParticlesBackground />
+      <TeacherParticlesBackground />
 
       <div className="min-h-screen pt-20">
         <div className="p-6">
@@ -247,7 +247,7 @@ export default function TeacherDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-2">
               {/* Welcome Card - Takes 2 columns WITH ANIMATED SPLIT TEXT (NO BLUR) */}
               <motion.div 
-                className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6"
+                className="lg:col-span-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                 style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -329,7 +329,7 @@ export default function TeacherDashboard() {
 
               {/* Classes Card - Takes 1 column (Right Side) */}
               <motion.div 
-                className="bg-white rounded-xl shadow-sm p-6"
+                className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                 style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -424,7 +424,7 @@ export default function TeacherDashboard() {
               <div className="lg:col-span-2 space-y-6">
                 {/* Class Performance with Bar Graph */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6 cursor-pointer relative overflow-hidden"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6 cursor-pointer relative overflow-hidden"
                   style={{ willChange: 'transform, box-shadow', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -549,7 +549,7 @@ export default function TeacherDashboard() {
                 </motion.div>
 
                 {/* Pending Approvals - React Vertical Timeline Style */}
-                <div className="bg-white rounded-xl shadow-sm p-6" style={{ backfaceVisibility: 'hidden' }}>
+                <div className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6" style={{ backfaceVisibility: 'hidden' }}>
                   <h2 className="text-xl font-bold text-gray-900 mb-8">Pending Approvals</h2>
                   
                   <div className="relative">
@@ -792,7 +792,7 @@ export default function TeacherDashboard() {
 
                 {/* Recent Activities - SLIDE IN FROM LEFT ON SCROLL */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: -100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -888,7 +888,7 @@ export default function TeacherDashboard() {
               <div className="space-y-6">
                 {/* Full Schedule with View More - SLIDE IN FROM RIGHT ON SCROLL */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -1048,7 +1048,7 @@ export default function TeacherDashboard() {
 
                 {/* Quick Stats - SLIDE IN FROM RIGHT ON SCROLL */}
                 <motion.div 
-                  className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20 shadow-lg"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -1198,7 +1198,7 @@ export default function TeacherDashboard() {
                   </div>
 
                   {/* Middle White Section with Stats */}
-                  <div className="bg-white p-6">
+                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -1304,7 +1304,7 @@ export default function TeacherDashboard() {
   </div>
 
   {/* Middle White Section */}
-  <div className="bg-white p-6">
+  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
     <div className="flex items-center gap-3 mb-4">
       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -1421,7 +1421,7 @@ export default function TeacherDashboard() {
   </div>
 
   {/* Middle White Section */}
-  <div className="bg-white p-6">
+  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
     <div className="flex items-center gap-3 mb-4">
       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
