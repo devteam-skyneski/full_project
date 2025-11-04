@@ -18,21 +18,21 @@ import { motion, AnimatePresence } from "motion/react";
 type Audience = "All" | "Students" | "Teachers" | "Parents";
 
 const tabDetails = {
-  All: { icon: Users, color: "text-blue-600", border: "border-blue-600" },
+  All: { icon: Users, color: "text-blue-300", border: "border-blue-300" },
   Students: {
     icon: User,
-    color: "text-green-600",
-    border: "border-green-600",
+    color: "text-green-300",
+    border: "border-green-300",
   },
   Teachers: {
     icon: UserCheck,
-    color: "text-purple-600",
-    border: "border-purple-600",
+    color: "text-purple-300",
+    border: "border-purple-300",
   },
   Parents: {
     icon: Users,
-    color: "text-orange-600",
-    border: "border-orange-600",
+    color: "text-orange-300",
+    border: "border-orange-300",
   },
 };
 
@@ -128,7 +128,7 @@ export default function AnnouncementSection() {
 
   return (
     <>
-      {/* Form Modal */}
+      
       <AnimatePresence>
         {showFormModal && (
           <div className="fixed inset-0 grid place-items-center z-[100] p-4">
@@ -136,7 +136,7 @@ export default function AnnouncementSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 h-full w-full"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full"
               onClick={() => setShowFormModal(false)}
             />
 
@@ -144,9 +144,9 @@ export default function AnnouncementSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-2xl bg-white rounded-2xl overflow-hidden z-[100] relative"
+              className="w-full max-w-2xl bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl overflow-hidden z-[100] relative"
             >
-              <div className="bg-gradient-to-br from-blue-500 to-purple-500 p-6 text-white">
+              <div className="p-6 text-white border-b border-white/20">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-bold">New Announcement</h3>
                   <button
@@ -159,9 +159,9 @@ export default function AnnouncementSection() {
               </div>
 
               <form onSubmit={handleSubmit} className="p-6">
-                {/* Tab Buttons */}
+                
                 <div className="mb-6">
-                  <div className="flex border-b border-gray-200">
+                  <div className="flex border-b border-white/20">
                     {tabs.map((tab) => {
                       const { icon: Icon, color, border } = tabDetails[tab];
                       const isActive = activeTab === tab;
@@ -173,7 +173,7 @@ export default function AnnouncementSection() {
                           className={`flex items-center gap-2 py-2 px-4 font-semibold text-sm transition-all duration-300 -mb-px ${
                             isActive
                               ? `${color} border-b-2 ${border}`
-                              : "text-gray-500 hover:text-gray-800"
+                              : "text-gray-300 hover:text-white"
                           }`}
                         >
                           <Icon
@@ -188,12 +188,12 @@ export default function AnnouncementSection() {
                   </div>
                 </div>
 
-                {/* Form Fields */}
+               
                 <div className="space-y-4">
                   <div>
                     <label
                       htmlFor="title"
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-gray-200 mb-1"
                     >
                       Announcement Title
                     </label>
@@ -203,14 +203,14 @@ export default function AnnouncementSection() {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="e.g., End of Semester Exams"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-gray-200 mb-1"
                     >
                       Message
                     </label>
@@ -220,14 +220,14 @@ export default function AnnouncementSection() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder={`Write your announcement for ${activeTab}...`}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
                     />
                   </div>
                 </div>
 
-                {/* Submit Button */}
+                
                 <div className="mt-6 flex items-center justify-between">
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-300">
                     Sending to:{" "}
                     <span
                       className={`font-bold ${tabDetails[activeTab].color}`}
@@ -242,7 +242,7 @@ export default function AnnouncementSection() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
-                          className="flex items-center gap-2 text-green-600"
+                          className="flex items-center gap-2 text-green-400"
                         >
                           <CheckCircle className="w-5 h-5" />
                           <span className="font-semibold">Sent!</span>
@@ -277,15 +277,15 @@ export default function AnnouncementSection() {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
-      <section id="announcements" className="py-10 sm:py-20 bg-gray-50">
+      
+      <section id="announcements" className="py-10 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Header */}
+          
           <div className="mb-8 sm:mb-10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Megaphone className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                <Megaphone className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                <h2 className="text-2xl sm:text-3xl font-bold text-white">
                   Announcements
                 </h2>
               </div>
@@ -300,12 +300,11 @@ export default function AnnouncementSection() {
                 <span className="sm:hidden">New</span>
               </button>
             </div>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-gray-300">
               Manage and broadcast important messages to the community
             </p>
           </div>
 
-          {/* Tab Buttons */}
           <div className="flex flex-wrap gap-2 mb-6">
             {tabs.map((tab) => {
               const { icon: Icon, color, border } = tabDetails[tab];
@@ -316,8 +315,8 @@ export default function AnnouncementSection() {
                   onClick={() => setActiveTab(tab)}
                   className={`flex items-center gap-2 py-2 px-4 font-semibold text-xs sm:text-sm transition-all duration-300 rounded-lg ${
                     isActive
-                      ? `bg-blue-50 ${color} border-2 ${border}`
-                      : "text-gray-500 bg-white hover:bg-gray-50 border border-gray-200"
+                      ? `bg-blue-500/30 ${color} border-2 ${border}`
+                      : "text-gray-200 bg-white/10 hover:bg-white/20 border border-white/20"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -327,7 +326,7 @@ export default function AnnouncementSection() {
             })}
           </div>
 
-          {/* Announcements Grid */}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredAnnouncements.map((announcement) => {
               const { icon: Icon, color } = tabDetails[announcement.targetAudience];
@@ -337,15 +336,15 @@ export default function AnnouncementSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-6 relative group hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                  className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 sm:p-6 relative group hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${color.replace('text-', 'bg-').replace('-600', '-100')}`}>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${color.replace('text-', 'bg-').replace('-300', '-500').replace('-600', '-500')}/30`}>
                         <Icon className={`w-5 h-5 ${color}`} />
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-800 text-sm sm:text-base">
+                        <h3 className="font-bold text-white text-sm sm:text-base">
                           {announcement.title}
                         </h3>
                         <span className={`text-xs ${color} font-semibold`}>
@@ -355,18 +354,18 @@ export default function AnnouncementSection() {
                     </div>
                     <button
                       onClick={() => handleDelete(announcement.id)}
-                      className="p-2 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      className="p-2 hover:bg-red-500/20 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                       title="Delete"
                     >
-                      <X className="w-4 h-4 text-red-600" />
+                      <X className="w-4 h-4 text-red-400" />
                     </button>
                   </div>
 
-                  <p className="text-gray-700 text-sm mb-4 line-clamp-3">
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-3">
                     {announcement.message}
                   </p>
 
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
                     <Calendar className="w-4 h-4" />
                     <span>{announcement.date}</span>
                   </div>
@@ -378,12 +377,12 @@ export default function AnnouncementSection() {
           {filteredAnnouncements.length === 0 && (
             <div className="text-center py-12">
               <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-300 text-lg">
                 No announcements for {activeTab} yet.
               </p>
               <button
                 onClick={() => setShowFormModal(true)}
-                className="mt-4 text-blue-600 hover:underline"
+                className="mt-4 text-blue-400 hover:text-white hover:underline"
               >
                 Create one now
               </button>
