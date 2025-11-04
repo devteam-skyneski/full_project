@@ -30,7 +30,7 @@ const ParentCard = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ const ParentCard = ({
           {parent.students.map((student, index) => (
             <div
               key={index}
-              className="bg-white/10 rounded-lg p-2 flex items-center gap-2"
+              className="bg-white/20 rounded-lg p-2 flex items-center gap-2"
             >
               <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                 {student.name[0]}
@@ -264,7 +264,7 @@ export default function ParentSection() {
               </p>
             </div>
             <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
+              <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-300" />
                   <div>
@@ -275,7 +275,7 @@ export default function ParentSection() {
                   </div>
                 </div>
               </div>  
-              <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
+              <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
                   <div>
@@ -298,7 +298,7 @@ export default function ParentSection() {
                 placeholder="Search by student ID, email, or name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
               />
             </div>
           </div>
