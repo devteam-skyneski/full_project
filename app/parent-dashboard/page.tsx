@@ -331,10 +331,10 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['home'] = el; }}
         >
-          <div className="w-full px-6 py-3 h-full">
-            <div className="grid grid-cols-3 gap-3 h-full dashboard-grid">
+          <div className="section-inner">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full dashboard-grid">
               {/* Left Column */}
-              <div className="col-span-2 flex flex-col gap-3 overflow-y-auto">
+              <div className="lg:col-span-2 flex flex-col gap-3 overflow-y-auto">
                 {/* Greeting Section */}
                 <motion.div 
                   className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-shrink-0"
@@ -394,7 +394,7 @@ export default function ParentDashboard() {
                       </button>
                       {monthOpen && (
                         <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[140px] z-50 dropdown-menu">
-                          {['September','October','November','December'].map((m) => (
+                          {['January','February','march','april','may','june','july','august','September','October','November','December'].map((m) => (
                             <button
                               key={m}
                               className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${m===selectedMonth ? 'font-semibold text-gray-800' : 'text-gray-700'}`}
