@@ -57,6 +57,13 @@ try {
 }
 
 export default function ParentDashboard() {
+  const NavIcon: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors">
+      <div className="text-black">
+        {children}
+      </div>
+    </div>
+  );
   const [navHidden, setNavHidden] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [monthOpen, setMonthOpen] = useState(false);
@@ -70,11 +77,11 @@ export default function ParentDashboard() {
 
   // Navbar items for FloatingDock
   const navItems = [
-    { title: "Home", icon: <Home className="w-5 h-5" />, href: "#home" },
-    { title: "Task", icon: <FileText className="w-5 h-5" />, href: "#tasks" },
-    { title: "Report", icon: <BarChart3 className="w-5 h-5" />, href: "#performance" },
-    { title: "Attendance", icon: <CheckSquare className="w-5 h-5" />, href: "#attendance" },
-    { title: "Feedback", icon: <MessageSquare className="w-5 h-5" />, href: "#feedback" },
+    { title: "Home", icon: <NavIcon><Home className="w-5 h-5 text-black" /></NavIcon>, href: "#home" },
+    { title: "Task", icon: <NavIcon><FileText className="w-5 h-5 text-black" /></NavIcon>, href: "#tasks" },
+    { title: "Report", icon: <NavIcon><BarChart3 className="w-5 h-5 text-black" /></NavIcon>, href: "#performance" },
+    { title: "Attendance", icon: <NavIcon><CheckSquare className="w-5 h-5 text-black" /></NavIcon>, href: "#attendance" },
+    { title: "Feedback", icon: <NavIcon><MessageSquare className="w-5 h-5 text-black" /></NavIcon>, href: "#feedback" },
   ];
 
   // Animation variants for cards
@@ -193,12 +200,17 @@ export default function ParentDashboard() {
   ];
 
   // Calendar events - matching exact times from image
-  const calendarEvents = [
+  const initialCalendarEvents = [
     { time: '10:00', displayTime: '9.45-10.30', endTime: '10:30', title: 'Electronics lesson', lesson: '21 lesson', active: true },
     { time: '11:00', displayTime: '11.00-11.40', endTime: '11:40', title: 'Electronics lesson', lesson: '23 lesson', active: false },
     { time: '12:00', displayTime: '12.00-12.45', endTime: '12:45', title: 'Robotics lesson', lesson: '23 lesson', active: false },
     { time: '13:30', displayTime: '13.45-14.30', endTime: '14:30', title: 'C++ lesson', lesson: '21 lesson', active: false },
   ];
+
+  const [calendarEvents, setCalendarEvents] = useState(initialCalendarEvents);
+  const setActiveEventByTime = (time: string) => {
+    setCalendarEvents(prev => prev.map(e => ({ ...e, active: e.time === time })));
+  };
 
   return (
     <div className="parent-dashboard">
@@ -218,18 +230,18 @@ export default function ParentDashboard() {
           <div className="relative notifications-dropdown">
             <button
               onClick={() => setNotificationsOpen(o => !o)}
-              className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
               aria-haspopup="true"
               aria-expanded={notificationsOpen}
               aria-label="Open notifications"
             >
-              <Bell className="w-5 h-5 text-gray-700" />
+              <Bell className="w-5 h-5 text-black" />
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-4 px-1.5 py-0.5 rounded-full">3</span>
             </button>
             {notificationsOpen && (
               <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
                 <div className="px-4 py-2 border-b border-gray-100">
-                  <h3 className="text-sm font-semibold text-[#1A1A1A]">Notifications</h3>
+                  <h3 className="text-sm font-semibold text-white">Notifications</h3>
                 </div>
                 <ul className="max-h-80 overflow-auto divide-y divide-gray-100">
                   {[
@@ -242,7 +254,7 @@ export default function ParentDashboard() {
                         <Bell className="w-4 h-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm text-[#1A1A1A] font-medium truncate">{a.title}</p>
+                        <p className="text-sm text-white font-medium truncate">{a.title}</p>
                         <p className="text-[11px] text-[#6B7280] mt-0.5">{a.date}</p>
                       </div>
                     </li>
@@ -288,18 +300,18 @@ export default function ParentDashboard() {
                     P
                   </div>
                   <div>
-                    <div className="font-semibold text-[#1A1A1A] text-sm">Parent</div>
+                    <div className="font-semibold text-white text-sm">Parent</div>
                     <div className="text-xs text-[#6B7280]">Parent</div>
                   </div>
                 </div>
                 
                 {/* Menu Items */}
                 <div className="py-1">
-                  <button onClick={() => window.location.assign('/parent/profile')} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors" aria-label="Open parent profile">
+                  <button onClick={() => window.location.assign('/parent/profile')} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-50 transition-colors" aria-label="Open parent profile">
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
-                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors">
+                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-50 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
@@ -333,7 +345,7 @@ export default function ParentDashboard() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 pr-4">
                       <motion.h1 
-                        className="text-[36px] font-bold text-[#1A1A1A] mb-2 leading-tight"
+                        className="text-[36px] font-bold text-white mb-2 leading-tight"
                         initial={{ opacity: 0, y: -12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ type: 'spring', stiffness: 120, damping: 12 }}
@@ -341,7 +353,7 @@ export default function ParentDashboard() {
                         Hello Parent!
                       </motion.h1>
                       <motion.p 
-                        className="text-base text-[#1A1A1A] mb-3 leading-relaxed"
+                        className="text-base text-white mb-3 leading-relaxed"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.15 }}
@@ -368,7 +380,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-[#1A1A1A]">Performance</h3>
+                    <h3 className="text-lg font-semibold text-white">Performance</h3>
                     <div className="relative dropdown-container">
                       <button
                         onClick={() => setMonthOpen(!monthOpen)}
@@ -400,7 +412,7 @@ export default function ParentDashboard() {
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                   <div>
-                        <span className="text-3xl font-bold text-[#1A1A1A]">95.4</span>
+                        <span className="text-3xl font-bold text-white">95.4</span>
                         <p className="text-[#6B7280] text-xs mt-1">Introduction to programming</p>
                       </div>
                       <button className="bg-[#3B82F6] text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition text-xs font-medium">
@@ -422,14 +434,14 @@ export default function ParentDashboard() {
                           dataKey="name"
                           height={0.5}
                           fontSize={10}
-                          tick={{ fill: '#1F2937' }}
+                          tick={{ fill: '#ffffff' }}
                           tickLine={false}
                           interval={0}
                         />
                         <YAxis
                           domain={[0, 100]}
                           fontSize={11}
-                          tick={{ fill: '#1F2937' }}
+                          tick={{ fill: '#ffffff' }}
                           tickLine={false}
                         />
                         <Bar dataKey="score" stackId="a" radius={[0, 0, 0, 0]} isAnimationActive animationDuration={1600} animationEasing="ease-out">
@@ -448,7 +460,7 @@ export default function ParentDashboard() {
                           <LabelList
                             dataKey="score"
                             position="top"
-                            style={{ fill: '#1F2937', fontSize: '12px', fontWeight: 'bold' }}
+                            style={{ fill: '#ffffff', fontSize: '12px', fontWeight: 'bold' }}
                             formatter={(label: any) => `${label}%`}
                           />
                         </Bar>
@@ -470,7 +482,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
                   <div className="flex items-center justify-between mb-3 flex-shrink-0">
-                    <h2 className="text-lg font-semibold text-[#1A1A1A]">Calendar</h2>
+                    <h2 className="text-lg font-semibold text-white">Calendar</h2>
                     <div className="relative dropdown-container">
                       <button
                         onClick={() => setTodayOpen(!todayOpen)}
@@ -501,7 +513,7 @@ export default function ParentDashboard() {
                         const event = calendarEvents.find(e => e.time === time);
                         if (event) {
                           return (
-                            <div key={time} className="relative">
+                            <div key={time} className="relative" onClick={() => setActiveEventByTime(event.time)}>
                               {/* Time marker */}
                               <div className="absolute -left-4 top-4">
                                 <div className={`w-8 h-8 rounded-full ${event.active ? 'bg-white border-2 border-[#5D5FEF]' : 'bg-white border-2 border-gray-300'} flex items-center justify-center`}>
@@ -509,13 +521,13 @@ export default function ParentDashboard() {
                                 </div>
                               </div>
                               {/* Event card */}
-                              <div className={`${event.active ? 'bg-[#5D5FEF] text-white active' : 'bg-gray-50 text-[#1A1A1A] calendar-event'} rounded-xl p-4 shadow-sm ml-4 relative interactive-element`}>
+                              <div className={`${event.active ? 'bg-[#5D5FEF] text-white active' : 'bg-white/10 text-white calendar-event'} rounded-xl p-4 shadow-sm ml-4 relative interactive-element`}>
                                 <div className="flex items-start gap-3">
                                   <div className={`${event.active ? 'bg-white/20' : 'bg-gray-200'} rounded-full p-2 flex-shrink-0`}>
                                     <Home className={`w-4 h-4 ${event.active ? 'text-white' : 'text-gray-600'}`} />
                                   </div>
                                   <div className="flex-1">
-                                    <div className={`font-semibold mb-1 text-sm ${event.active ? 'text-white' : 'text-[#1A1A1A]'}`}>
+                                    <div className={`font-semibold mb-1 text-sm ${event.active ? 'text-white' : 'text-white'}`}>
                                       {event.title}
                                     </div>
                                     <div className={`text-xs ${event.active ? 'text-white/80' : 'text-[#6B7280]'}`}>
@@ -544,7 +556,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.6, delay: 0.15 }}
                 >
                   <div className="flex items-center justify-between mb-4" id="announcements" ref={(el) => { sectionsRef.current['announcements'] = el as unknown as HTMLElement; }}>
-                    <h2 className="text-lg font-semibold text-[#1A1A1A]">Announcements</h2>
+                    <h2 className="text-lg font-semibold text-white">Announcements</h2>
                     <a href="#" className="text-[#5D5FEF] text-sm font-medium hover:underline">
                       See all
                     </a>
@@ -561,7 +573,7 @@ export default function ParentDashboard() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="font-medium text-[#1A1A1A] text-sm leading-snug">{a.title}</p>
+                            <p className="font-medium text-white text-sm leading-snug">{a.title}</p>
                             <span className={`text-[10px] px-2 py-0.5 rounded-full ${a.priority === 'high' ? 'bg-red-100 text-red-700' : a.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}`}>{a.priority}</span>
                           </div>
                           <p className="text-xs text-[#6B7280] mt-0.5">{a.date}</p>
@@ -610,7 +622,7 @@ export default function ParentDashboard() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
-                  className="text-xl font-bold text-[#1A1A1A] mb-2 flex items-center gap-2"
+                  className="text-xl font-bold text-white mb-2 flex items-center gap-2"
                 >
                   📊 Subject Performance
                 </motion.h2>
@@ -638,14 +650,14 @@ export default function ParentDashboard() {
                       <XAxis 
                         type="number"
                         domain={[0, 100]}
-                        tick={{ fill: '#636E72', fontSize: 10, fontWeight: 500 }}
+                        tick={{ fill: '#ffffff', fontSize: 10, fontWeight: 500 }}
                         axisLine={{ stroke: '#DFE6E9' }}
                         tickLine={{ stroke: '#DFE6E9' }}
                       />
                       <YAxis 
                         type="category"
                         dataKey="name"
-                        tick={{ fill: '#1A1A1A', fontSize: 11, fontWeight: 500 }}
+                        tick={{ fill: '#ffffff', fontSize: 11, fontWeight: 500 }}
                         axisLine={false}
                         tickLine={false}
                         width={90}
@@ -674,7 +686,7 @@ export default function ParentDashboard() {
                         <LabelList 
                           dataKey="score" 
                           position="right" 
-                          style={{ fill: '#2D3436', fontSize: '11px', fontWeight: '600' }}
+                          style={{ fill: '#ffffff', fontSize: '11px', fontWeight: '600' }}
                         />
                       </Bar>
                     </BarChart>
@@ -696,7 +708,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.4, delay: 0.3 }}
                   className="flex items-center justify-between mb-3"
                 >
-                  <h2 className="text-xl font-bold text-[#1A1A1A]">Report Card</h2>
+                  <h2 className="text-xl font-bold text-white">Report Card</h2>
                   <button 
                     onClick={() => {
                       // PDF download functionality would go here
@@ -716,7 +728,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.4, delay: 0.4 }}
                   className="text-center mb-3"
                 >
-                  <p className="text-xs text-[#1A1A1A] leading-tight">
+                  <p className="text-xs text-white leading-tight">
                     Congratulations, Sarah! Your hard work and dedication have paid off. Here&apos;s a detailed overview of your academic performance this semester.
                   </p>
                 </motion.div>
@@ -728,7 +740,7 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.4, delay: 0.5 }}
                   className="bg-gray-50 rounded-xl p-3 mb-3"
                 >
-                  <h3 className="text-sm font-bold text-[#1A1A1A] mb-1">Academic Performance</h3>
+                  <h3 className="text-sm font-bold text-white mb-1">Academic Performance</h3>
                   <p className="text-xs text-gray-600 mb-2">Semester 1, 2024</p>
                   <div className="flex items-center justify-between gap-3">
                     <div className="text-2xl font-bold text-[#5D5FEF]">Overall Grade: A</div>
@@ -759,46 +771,46 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.4, delay: 0.7 }}
                   className="mb-3"
                 >
-                  <h3 className="text-sm font-bold text-[#1A1A1A] mb-2">Subject-wise Performance</h3>
+                  <h3 className="text-sm font-bold text-white mb-2">Subject-wise Performance</h3>
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b-2 border-gray-300">
-                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">SUBJECT</th>
-                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">GRADE</th>
-                          <th className="text-left py-1.5 px-2 font-bold text-[#1A1A1A] text-xs">MARKS</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-white text-xs">SUBJECT</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-white text-xs">GRADE</th>
+                          <th className="text-left py-1.5 px-2 font-bold text-white text-xs">MARKS</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">Python</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">Python</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">92/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">92/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">Java</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">Java</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">88/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">JavaScript</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">JavaScript</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B+</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">85/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">85/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">React</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">React</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">88/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">HTML/CSS</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">HTML/CSS</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">95/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">95/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
-                          <td className="py-1.5 px-2 text-[#1A1A1A] font-medium text-xs">C++</td>
+                          <td className="py-1.5 px-2 text-white font-medium text-xs">C++</td>
                           <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B</td>
-                          <td className="py-1.5 px-2 text-[#1A1A1A] text-xs">82/100</td>
+                          <td className="py-1.5 px-2 text-white text-xs">82/100</td>
                         </tr>
                       </tbody>
                     </table>

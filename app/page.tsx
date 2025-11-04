@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Route } from 'next';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -145,7 +146,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={itemVariants}>
                 <Link
-                  href="/contact"
+                  href={"/contact" as Route}
                   className="group relative text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left"
                 >
                   Contact
@@ -157,7 +158,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
           <motion.div variants={groupVariants} className="hidden md:flex items-center space-x-4">
             <motion.div variants={itemVariants}>
               <Link
-                href="/auth"
+                href={"/auth" as Route}
                 className="text-gray-700 hover:text-gray-900 px-4 py-2 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-gray-300 hover:border-gray-400 bg-white/60"
               >
                 Login
@@ -165,7 +166,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
             </motion.div>
             <motion.div variants={itemVariants}>
               <Link
-                href="/auth?mode=signup"
+                href={{ pathname: "/auth", query: { mode: "signup" } }}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm hover:shadow"
               >
                 Sign Up
@@ -222,7 +223,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href={"/contact" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
                     Contact
                   </Link>
                 </motion.div>
@@ -230,12 +231,12 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={groupVariants} initial="hidden" animate="show" className="mt-4 border-t pt-4">
                 <div className="flex gap-2">
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
+                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
                       Login
                     </Link>
                   </motion.div>
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href="/auth?mode=signup" onClick={() => setIsMenuOpen(false)} className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm">
+                    <Link href={{ pathname: "/auth", query: { mode: "signup" } }} onClick={() => setIsMenuOpen(false)} className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm">
                       Sign Up
                     </Link>
                   </motion.div>
@@ -294,7 +295,7 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
             <motion.div variants={heroGroup} className="flex flex-col sm:flex-row gap-4">
               <motion.div variants={heroItem}>
                 <Link
-                  href="/admin"
+                  href={"/admin" as Route}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Get Started
@@ -1089,7 +1090,7 @@ const LandingFooter = () => {
                 </a>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
+                <Link href={"/contact" as Route} className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
                   Contact
                 </Link>
               </li>

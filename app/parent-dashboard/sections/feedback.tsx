@@ -38,7 +38,7 @@ export default function Feedback() {
       });
 
       if (response.ok) {
-        setShowThankYou(true);
+    setShowThankYou(true);
         setFormData({
           parentName: '',
           studentName: '',
@@ -46,7 +46,7 @@ export default function Feedback() {
           category: '',
           message: ''
         });
-        setTimeout(() => setShowThankYou(false), 3000);
+    setTimeout(() => setShowThankYou(false), 3000);
       } else {
         try {
           const data = await response.json();
@@ -88,6 +88,7 @@ export default function Feedback() {
         position: 'bottom' as const,
         labels: {
           padding: 20,
+          color: '#ffffff',
           font: {
             size: 12
           }
@@ -117,7 +118,7 @@ export default function Feedback() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 flex-1 min-h-0">
           {/* Feedback Form */}
           <motion.div 
-            className="bg-white rounded-xl shadow-lg p-2 flex flex-col min-h-0 overflow-y-auto"
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-2 flex flex-col min-h-0 overflow-y-auto"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -219,7 +220,7 @@ export default function Feedback() {
 
           {/* Feedback Summary */}
           <motion.div 
-            className="bg-white rounded-xl shadow-lg p-2 flex flex-col min-h-0 overflow-y-auto"
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-2 flex flex-col min-h-0 overflow-y-auto"
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}

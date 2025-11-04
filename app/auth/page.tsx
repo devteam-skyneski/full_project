@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Eye, EyeOff, GraduationCap, Users, UserCog, Shield, Loader2, CheckCircle2, XCircle, AlertCircle, Mail, User, Lock, Phone, Calendar, MapPin, BookOpen, School, UserCheck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import type { Route } from 'next';
 import Lottie from 'lottie-react';
 import studentAnimation from '../../login(animations)/Student.json';
 import teacherAnimation from '../../login(animations)/Teacher.json';
@@ -624,7 +625,7 @@ const AuthPage = () => {
         admin: '/admin-dashboard',
       };
       
-      router.push(dashboardRoutes[selectedRole]);
+      router.push(dashboardRoutes[selectedRole] as Route);
     } catch (error) {
       setErrors({ submit: 'An error occurred. Please try again.' });
     } finally {
