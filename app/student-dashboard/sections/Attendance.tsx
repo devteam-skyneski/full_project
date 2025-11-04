@@ -47,7 +47,7 @@ const Index = () => {
   ];
 
   return (
-    <section id="attendance" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <section id="attendance" className="py-12 sm:py-16 font-sans">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         {/* Header */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-8 sm:mb-12 text-center tracking-tight">

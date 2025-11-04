@@ -307,7 +307,7 @@ export default function Exams() {
   const filteredExams = getFilteredExams();
 
   return (
-    <section id="exams" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <section id="exams" className="py-12 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-8 sm:mb-10">

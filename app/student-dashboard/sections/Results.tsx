@@ -111,7 +111,7 @@ export default function Results() {
   };
 
   return (
-    <section id="results" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <section id="results" className="py-12 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 sm:mb-10 text-center">Results</h2>
 

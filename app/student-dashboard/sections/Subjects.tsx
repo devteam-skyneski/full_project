@@ -416,7 +416,7 @@ export default function Subjects() {
   }, []);
 
   return (
-    <section id="subjects" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <section id="subjects" className="py-12 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Subjects Section - Top Left with Horizontal Scroll */}
         <div className="mb-8 sm:mb-12">

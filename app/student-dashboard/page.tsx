@@ -91,7 +91,7 @@ export default function StudentDashboard() {
   ];
 
   return (
-    <div className="relative min-h-screen font-sans" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <div className="relative min-h-screen font-sans overflow-x-hidden">
       {/* Blue Gradient Background */}
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
       
@@ -102,10 +102,11 @@ export default function StudentDashboard() {
       <Navbar />
 
       {/* Dashboard Content Wrapper */}
-      <div className="pt-20 sm:pt-24 relative z-0">
+      <div className="pt-20 sm:pt-24 relative z-0 overflow-x-hidden">
         
-        {/* === START OF EXISTING LAYOUT === */}
-        <div className="section-inner px-4 sm:px-6">
+        {/* === START OF HOME SECTION === */}
+        <section className="py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             
             {/* Left Column - Spans 2 columns */}
@@ -306,7 +307,8 @@ export default function StudentDashboard() {
 
             </div>
           </div>
-        </div> 
+        </div>
+        </section>
           <Subjects />
           <Assignments />
           <Exams />
