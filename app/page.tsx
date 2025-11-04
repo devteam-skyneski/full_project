@@ -490,13 +490,13 @@ const UniversityPartners = () => {
             {scrollingList.map((university, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-48 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+                className="flex-shrink-0 w-48 bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
               >
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-white/30">
                     <GraduationCap className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-sm font-medium text-gray-900 leading-tight">
+                  <h3 className="text-sm font-medium text-white leading-tight">
                     {university}
                   </h3>
                 </div>
@@ -581,32 +581,32 @@ const UniversityPrograms = () => {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-md">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <GraduationCap className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Accredited Degrees
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-neutral-200">
                       Bachelor's and Master's programs recognized globally
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-md">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Live Classes
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-neutral-200">
                       Interactive sessions with professors and classmates
                     </p>
                   </div>
@@ -661,28 +661,28 @@ const CourseCategories = () => {
             return (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
               >
                 <div className="flex flex-col h-full">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                    <IconComponent className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-6 border border-blue-400/30">
+                    <IconComponent className="w-8 h-8 text-white" />
                   </div>
                   
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-xl font-semibold text-white mb-3">
                     {category.title}
                   </h3>
                   
-                  <p className="text-gray-600 mb-6 flex-grow">
+                  <p className="text-neutral-200 mb-6 flex-grow">
                     {category.description}
                   </p>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-neutral-300">
                       {category.courseCount}
                     </span>
                     <Link
                       href={"/auth" as Route}
-                      className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                      className="inline-block bg-blue-600/80 backdrop-blur-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 border border-blue-400/30 transition-all"
                     >
                       Explore →
                     </Link>
@@ -931,16 +931,14 @@ const LearningStyles = () => {
             <div
               key={index}
               className={cn(
-                "group w-full cursor-pointer overflow-visible relative card rounded-2xl shadow-md hover:shadow-lg flex flex-col border border-transparent dark:border-neutral-800 bg-white",
-                program.popular ? 'border-2 border-blue-600' : 'border border-gray-200',
-                // Preload hover image by setting it in a pseudo-element
-                "before:bg-[url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)] before:fixed before:inset-0 before:opacity-0 before:z-[-1]",
-                "transition-all duration-500"
+                "group w-full cursor-pointer overflow-visible relative card rounded-2xl shadow-lg hover:shadow-xl flex flex-col transition-all duration-500",
+                program.popular ? 'border-2 border-blue-400/50' : 'border border-white/20',
+                "bg-white/10 backdrop-blur-md hover:border-white/30"
               )}
             >
               {program.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap">
-                  <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium relative z-50">
+                  <span className="bg-blue-600/80 backdrop-blur-sm text-white px-4 py-1 rounded-full text-sm font-medium relative z-50 border border-blue-400/30">
                     Most Popular
                   </span>
                 </div>
@@ -963,7 +961,7 @@ const LearningStyles = () => {
               >
                 {/* Background layer that covers the entire card */}
                 <div
-                  className="card-bg-layer absolute inset-0 rounded-2xl z-0 transition-all duration-500"
+                  className="card-bg-layer absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-30"
                   style={{
                     backgroundImage: 'none',
                     backgroundSize: 'cover',
@@ -972,16 +970,16 @@ const LearningStyles = () => {
                   }}
                 />
                 {/* Dark overlay on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-500 z-10 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-500 z-10 pointer-events-none" />
               <div className="relative z-20">
               <div className="text-center mb-6 relative z-50">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 relative z-50">
+                <h3 className="text-xl font-semibold text-white mb-2 relative z-50">
                   {program.title}
                 </h3>
-                <p className="text-gray-600 mb-4 relative z-50">
+                <p className="text-neutral-200 mb-4 relative z-50">
                   {program.description}
                 </p>
-                <div className="text-sm text-gray-500 relative z-50">
+                <div className="text-sm text-neutral-300 relative z-50">
                   {program.duration}
                 </div>
               </div>
@@ -989,21 +987,21 @@ const LearningStyles = () => {
               <div className="space-y-3 mb-6 relative z-50">
                 {program.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-start space-x-3 relative z-50">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5 relative z-50" />
-                    <span className="text-sm text-gray-700 relative z-50">{feature}</span>
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5 relative z-50" />
+                    <span className="text-sm text-neutral-200 relative z-50">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="bg-blue-50 rounded-lg p-3 mb-6 relative z-50">
-                <div className="text-center text-sm text-blue-800 font-medium relative z-50">
+              <div className="bg-blue-600/20 backdrop-blur-sm rounded-lg p-3 mb-6 relative z-50 border border-blue-400/30">
+                <div className="text-center text-sm text-white font-medium relative z-50">
                   {program.availability}
                 </div>
               </div>
 
               <Link
                 href={"/auth" as Route}
-                className="w-full py-3 px-6 rounded-lg font-medium transition-colors relative z-50 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 inline-block text-center"
+                className="w-full py-3 px-6 rounded-lg font-medium transition-all relative z-50 border-2 border-white/30 hover:border-blue-400/50 text-white hover:text-blue-300 bg-white/10 backdrop-blur-sm hover:bg-white/20 inline-block text-center"
               >
                 {program.buttonText}
               </Link>
@@ -1048,12 +1046,12 @@ const ContactForm = () => {
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="bg-white rounded-2xl p-8 shadow-xl">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300">
             <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Ready to Start Your Learning Journey?
               </h2>
-              <p className="text-gray-600">
+              <p className="text-neutral-200">
                 Fill out the form below and our team will contact you within 24 hours
               </p>
             </div>
@@ -1061,7 +1059,7 @@ const ContactForm = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="fullName" className="block text-sm font-medium text-white mb-2">
                     Full Name *
                   </label>
                   <input
@@ -1072,12 +1070,12 @@ const ContactForm = () => {
                     value={formData.fullName}
                     onChange={handleInputChange}
                     placeholder="Name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                     Email Address *
                   </label>
                   <input
@@ -1088,12 +1086,12 @@ const ContactForm = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="email@example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
                     Phone Number
                   </label>
                   <input
@@ -1103,12 +1101,12 @@ const ContactForm = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+91 1111122222"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="interest" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="interest" className="block text-sm font-medium text-white mb-2">
                     I'm Interested In *
                   </label>
                   <select
@@ -1117,19 +1115,19 @@ const ContactForm = () => {
                     required
                     value={formData.interest}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white transition-all"
                   >
-                    <option value="">Select an option</option>
-                    <option value="individual-courses">Individual Courses</option>
-                    <option value="bootcamp-programs">Bootcamp Programs</option>
-                    <option value="university-degrees">University Degrees</option>
-                    <option value="certifications">Certifications</option>
+                    <option value="" className="bg-slate-900 text-white">Select an option</option>
+                    <option value="individual-courses" className="bg-slate-900 text-white">Individual Courses</option>
+                    <option value="bootcamp-programs" className="bg-slate-900 text-white">Bootcamp Programs</option>
+                    <option value="university-degrees" className="bg-slate-900 text-white">University Degrees</option>
+                    <option value="certifications" className="bg-slate-900 text-white">Certifications</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
                   Message
                 </label>
                 <textarea
@@ -1139,13 +1137,13 @@ const ContactForm = () => {
                   value={formData.message}
                   onChange={handleInputChange}
                   placeholder="Tell us about your learning goals and any questions you have..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all resize-none"
                 />
               </div>
 
               <Link
                 href={"/auth" as Route}
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 px-6 rounded-lg font-semibold transition-colors inline-block text-center"
+                className="w-full bg-blue-600/80 backdrop-blur-sm hover:bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold transition-all inline-block text-center border border-blue-400/30 hover:border-blue-400/50"
               >
                 Submit Enquiry
               </Link>
