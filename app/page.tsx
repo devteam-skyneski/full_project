@@ -7,12 +7,51 @@ import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 import { AnimatePresence, motion } from 'framer-motion';
 import LoadingScreen from '@/app/components/LoadingScreen';
+import { ThreeDMarquee } from '@/components/ui/3d-marquee';
+import { cn } from '@/lib/utils';
+import AuthParticlesBackground from '@/app/auth/components/AuthParticlesBackground';
+import SectionParticlesBackground from '@/app/components/SectionParticlesBackground';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
   Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowUp,
   Menu, X
 } from 'lucide-react';
+
+// Shared marquee images for background animation
+const MARQUEE_IMAGES = [
+  'https://assets.aceternity.com/cloudinary_bkp/3d-card.png',
+  'https://assets.aceternity.com/animated-modal.png',
+  'https://assets.aceternity.com/animated-testimonials.webp',
+  'https://assets.aceternity.com/cloudinary_bkp/Tooltip_luwy44.png',
+  'https://assets.aceternity.com/github-globe.png',
+  'https://assets.aceternity.com/glare-card.png',
+  'https://assets.aceternity.com/layout-grid.png',
+  'https://assets.aceternity.com/flip-text.png',
+  'https://assets.aceternity.com/hero-highlight.png',
+  'https://assets.aceternity.com/carousel.webp',
+  'https://assets.aceternity.com/placeholders-and-vanish-input.png',
+  'https://assets.aceternity.com/shooting-stars-and-stars-background.png',
+  'https://assets.aceternity.com/signup-form.png',
+  'https://assets.aceternity.com/cloudinary_bkp/stars_sxle3d.png',
+  'https://assets.aceternity.com/spotlight-new.webp',
+  'https://assets.aceternity.com/cloudinary_bkp/Spotlight_ar5jpr.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Parallax_Scroll_pzlatw_anfkh7.png',
+  'https://assets.aceternity.com/tabs.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Tracing_Beam_npujte.png',
+  'https://assets.aceternity.com/cloudinary_bkp/typewriter-effect.png',
+  'https://assets.aceternity.com/glowing-effect.webp',
+  'https://assets.aceternity.com/hover-border-gradient.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Infinite_Moving_Cards_evhzur.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Lamp_hlq3ln.png',
+  'https://assets.aceternity.com/macbook-scroll.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Meteors_fye3ys.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Moving_Border_yn78lv.png',
+  'https://assets.aceternity.com/multi-step-loader.png',
+  'https://assets.aceternity.com/vortex.png',
+  'https://assets.aceternity.com/wobble-card.png',
+  'https://assets.aceternity.com/world-map.webp',
+];
 
 // Simplified hooks
 const useScrollShadow = () => {
@@ -65,9 +104,22 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const update = () => setActiveHash(window.location.hash || '');
+    const update = () => {
+      // Only set activeHash if we have a valid hash in the URL
+      const hash = window.location.hash;
+      setActiveHash(hash || '');
+    };
     update();
     window.addEventListener('hashchange', update);
+    // Clear hash on page load to prevent constant active state
+    if (window.location.hash) {
+      const hash = window.location.hash;
+      // Only set if it's a valid section
+      const validSections = ['#courses', '#universities', '#how-it-works', '#about'];
+      if (!validSections.includes(hash)) {
+        setActiveHash('');
+      }
+    }
     return () => window.removeEventListener('hashchange', update);
   }, []);
 
@@ -98,6 +150,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#courses');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -110,6 +169,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#universities"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#universities');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -122,6 +188,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#how-it-works"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#how-it-works');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -134,6 +207,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#about');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -279,8 +359,17 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
   } as const;
 
   return (
-    <section className="bg-gradient-to-br from-blue-50 to-blue-200 py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative bg-gradient-to-br from-blue-50 to-blue-200 py-20 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div variants={heroParent} initial="hidden" animate={reveal ? 'show' : 'hidden'} className="space-y-8">
             <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
@@ -303,7 +392,7 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={heroItem}>
                 <Link
                   href="https://listofcourses.netlify.app/"
-                  className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
+                  className="border-2 border-white hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Explore Courses
                 </Link>
@@ -389,8 +478,17 @@ const UniversityPartners = () => {
   }, [hasAnimated]);
 
   return (
-    <section ref={sectionRef} className="py-16 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="relative py-16 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-gray-900 mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
             Top Universities We Partner With
@@ -462,16 +560,33 @@ const UniversityPartners = () => {
 // University Programs Component
 const UniversityPrograms = () => {
   return (
-    <section id="universities" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="universities" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/university-building.jpg"
-                alt="University building"
-                fill
-                className="object-cover"
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/uni2.webm"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                aria-label="University registration video"
               />
             </div>
           </div>
@@ -543,13 +658,29 @@ const CourseCategories = () => {
   ];
 
   return (
-    <section id="courses" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="courses" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 landing-dark overflow-hidden">
+      <div
+        className="absolute top-20 left-1/2 -translate-x-1/2 w-screen bottom-0 pointer-events-none z-0 opacity-80"
+        style={{ transform: 'translateX(-50%) translateZ(0)', willChange: 'transform' }}
+      >
+        <ThreeDMarquee images={MARQUEE_IMAGES} className="h-full" />
+      </div>
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Explore Our Course Categories
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-white max-w-3xl mx-auto">
             Choose from a wide range of subjects designed to help you achieve your learning goals
           </p>
         </div>
@@ -593,6 +724,7 @@ const CourseCategories = () => {
             );
           })}
         </div>
+        </div>
       </div>
     </section>
   );
@@ -608,8 +740,17 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             How It Works
@@ -660,18 +801,42 @@ const FeaturesSection = () => {
     'Customize your study plan based on your goals and availability',
     'Get help from instructors and peers through our community forums'
   ];
+  // images moved to top-level MARQUEE_IMAGES
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      const el = videoRef.current;
+      if (!el) return;
+      if (document.visibilityState === 'visible') {
+        try { el.play(); } catch {}
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
           <div className="space-y-8">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Self-Paced Learning for Modern Learners
+              Self‑Paced Learning, Built for Modern Life
             </h2>
             
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Our self-paced learning platform empowers you to study on your own schedule, from anywhere in the world. Whether you're a working professional, a parent, or simply someone with a busy lifestyle, we've designed our courses to fit seamlessly into your life.
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
             </p>
 
             <div className="space-y-4">
@@ -680,19 +845,56 @@ const FeaturesSection = () => {
                   <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <CheckCircle className="w-4 h-4 text-green-600" />
                   </div>
-                  <p className="text-gray-700">{feature}</p>
+                  <p className="text-gray-800">
+                    {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
+                    {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
+                    {index === 2 && 'Get timely support from instructors and peers in our community.'}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="relative">
-            <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/learning-woman.jpg"
-                alt="Student learning with laptop"
-                fill
-                className="object-cover"
+            <div className="relative w-full h-full min-h-[24rem] rounded-2xl overflow-hidden">
+              <video
+                ref={videoRef}
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/self.webm"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                onLoadedMetadata={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onLoadedData={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onCanPlay={(e) => {
+                  try { if (e.currentTarget.paused) e.currentTarget.play(); } catch {}
+                }}
+                onStalled={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onWaiting={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onTimeUpdate={(e) => {
+                  const el = e.currentTarget;
+                  if (el.duration && el.duration - el.currentTime < 0.05) {
+                    try { el.currentTime = 0; el.play(); } catch {}
+                  }
+                }}
+                onEnded={(e) => {
+                  try { e.currentTarget.currentTime = 0; e.currentTarget.play(); } catch {}
+                }}
+                aria-label="Self study video"
               />
             </div>
           </div>
@@ -756,8 +958,18 @@ const LearningStyles = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Classes Available for Every Learning Style
@@ -771,56 +983,87 @@ const LearningStyles = () => {
           {programs.map((program, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow duration-300 ${
-                program.popular ? 'border-2 border-blue-600' : 'border border-gray-200'
-              }`}
+              className={cn(
+                "group w-full cursor-pointer overflow-visible relative card rounded-2xl shadow-md hover:shadow-lg flex flex-col border border-transparent dark:border-neutral-800 bg-white",
+                program.popular ? 'border-2 border-blue-600' : 'border border-gray-200',
+                // Preload hover image by setting it in a pseudo-element
+                "before:bg-[url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)] before:fixed before:inset-0 before:opacity-0 before:z-[-1]",
+                "transition-all duration-500"
+              )}
             >
               {program.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap">
+                  <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium relative z-50">
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <div 
+                className="overflow-hidden rounded-2xl relative p-8 flex flex-col"
+                onMouseEnter={(e) => {
+                  const bgLayer = e.currentTarget.querySelector('.card-bg-layer') as HTMLElement;
+                  if (bgLayer) {
+                    bgLayer.style.backgroundImage = 'url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  const bgLayer = e.currentTarget.querySelector('.card-bg-layer') as HTMLElement;
+                  if (bgLayer) {
+                    bgLayer.style.backgroundImage = 'none';
+                  }
+                }}
+              >
+                {/* Background layer that covers the entire card */}
+                <div
+                  className="card-bg-layer absolute inset-0 rounded-2xl z-0 transition-all duration-500"
+                  style={{
+                    backgroundImage: 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                />
+                {/* Dark overlay on hover */}
+                <div className="absolute inset-0 rounded-2xl bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-500 z-10 pointer-events-none" />
+              <div className="relative z-20">
+              <div className="text-center mb-6 relative z-50">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2 relative z-50">
                   {program.title}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-4 relative z-50">
                   {program.description}
                 </p>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-500 relative z-50">
                   {program.duration}
                 </div>
               </div>
 
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3 mb-6 relative z-50">
                 {program.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                  <div key={featureIndex} className="flex items-start space-x-3 relative z-50">
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5 relative z-50" />
+                    <span className="text-sm text-gray-700 relative z-50">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="bg-blue-50 rounded-lg p-3 mb-6">
-                <div className="text-center text-sm text-blue-800 font-medium">
+              <div className="bg-blue-50 rounded-lg p-3 mb-6 relative z-50">
+                <div className="text-center text-sm text-blue-800 font-medium relative z-50">
                   {program.availability}
                 </div>
               </div>
 
               <button
-                className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                  program.buttonStyle === 'primary'
-                    ? 'bg-gray-900 hover:bg-gray-800 text-white'
-                    : 'border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600'
-                }`}
+                className="w-full py-3 px-6 rounded-lg font-medium transition-colors relative z-50 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600"
               >
                 {program.buttonText}
               </button>
+              </div>
+              </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </section>
@@ -852,8 +1095,17 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 landing-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 bg-gradient-to-br from-blue-600 to-blue-800 landing-dark overflow-hidden">
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <SectionParticlesBackground />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="bg-white rounded-2xl p-8 shadow-xl">
             <div className="text-center mb-8">
@@ -1202,8 +1454,51 @@ export default function Page() {
           }
         }}
         style={{ willChange: 'transform, opacity' }}
-        className="min-h-screen overflow-x-hidden bg-gradient-to-br from-blue-50 to-blue-200 landing-root"
+        className="min-h-screen overflow-x-hidden bg-gradient-to-br from-blue-50 to-blue-200 landing-root relative overflow-hidden"
       >
+        {/* Particles background - constrained to left and right sides with mask */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div 
+            className="absolute inset-0"
+            style={{
+              maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+            }}
+          >
+            <AuthParticlesBackground />
+          </div>
+        </div>
+        {/* Floating parallax background elements - constrained to left and right sides */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{ transform: 'translate(0px, 0px)' }}
+        >
+          {/* Left side blobs */}
+          <div className="absolute top-20 -left-32 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+          <div className="absolute top-60 -left-24 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-20 -left-28 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+          
+          {/* Right side blobs */}
+          <div className="absolute top-40 -right-32 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-80 -right-24 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+          <div className="absolute bottom-40 -right-28 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        </div>
+
+        {/* Additional floating elements - constrained to left and right sides */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{ transform: 'translate(0px, 0px)' }}
+        >
+          {/* Left side floating circles */}
+          <div className="absolute top-1/4 left-0 w-32 h-32 bg-blue-300 rounded-full opacity-10 animate-float"></div>
+          <div className="absolute bottom-1/4 left-4 w-24 h-24 bg-purple-300 rounded-full opacity-10 animate-float-delayed"></div>
+          <div className="absolute top-1/2 left-0 w-20 h-20 bg-pink-300 rounded-full opacity-10 animate-float"></div>
+          
+          {/* Right side floating circles */}
+          <div className="absolute top-1/3 right-0 w-32 h-32 bg-purple-300 rounded-full opacity-10 animate-float"></div>
+          <div className="absolute bottom-1/3 right-4 w-24 h-24 bg-blue-300 rounded-full opacity-10 animate-float-delayed"></div>
+          <div className="absolute top-2/3 right-0 w-20 h-20 bg-pink-300 rounded-full opacity-10 animate-float"></div>
+        </div>
         <LandingNavbar reveal={hasLandingRevealed} />
         <main>
           <HeroSection reveal={hasLandingRevealed} />
