@@ -465,7 +465,7 @@ export default function ParentDashboard() {
                     </div>
                   </div>
                 </motion.div>
-                {/* Upcoming Events Section (moved from left column) */}
+                {/* Announcements Section */}
                 <motion.div 
                   className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-shrink-0"
                   initial={variants.zoomIn.initial}
@@ -473,45 +473,34 @@ export default function ParentDashboard() {
                   transition={{ duration: 0.6, delay: 0.15 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-[#1A1A1A]">Upcoming events</h2>
+                    <h2 className="text-lg font-semibold text-[#1A1A1A]">Announcements</h2>
                     <a href="#" className="text-[#5D5FEF] text-sm font-medium hover:underline">
                       See all
                     </a>
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-red-400 flex-shrink-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-[#1A1A1A] mb-1 text-sm leading-snug">
-                          The main event in your life &quot;Robot Fest&quot; will coming soon in...
+                  <ul className="space-y-3">
+                    {[
+                      { title: 'Report cards available for download', date: 'Dec 14, 2025', priority: 'high' },
+                      { title: 'Parent-teacher meet schedule released', date: 'Dec 18, 2025', priority: 'medium' },
+                      { title: 'Winter break begins next week', date: 'Dec 22, 2025', priority: 'low' },
+                    ].map((a, i) => (
+                      <li key={i} className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${a.priority === 'high' ? 'bg-red-100 text-red-600' : a.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}`}>
+                          <Bell className="w-5 h-5" />
                         </div>
-                        <div className="text-xs text-[#6B7280]">14 December 2023 12.00 pm</div>
-                      </div>
-                      <button className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
-                        <MoreVertical className="w-5 h-5" />
-                      </button>
-                    </div>
-                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex-shrink-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7.01 5 5 7.01 5 9.5S7.01 14 9.5 14 14 11.99 14 9.5 11.99 5 9.5 5z"/>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-[#1A1A1A] mb-1 text-sm">
-                          Webinar of new tools in Minecraft
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-[#1A1A1A] text-sm leading-snug">{a.title}</p>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full ${a.priority === 'high' ? 'bg-red-100 text-red-700' : a.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}`}>{a.priority}</span>
+                          </div>
+                          <p className="text-xs text-[#6B7280] mt-0.5">{a.date}</p>
                         </div>
-                        <div className="text-xs text-[#6B7280]">21 December 2023 11.00 pm</div>
-                      </div>
-                      <button className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
-                        <MoreVertical className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
+                        <button className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0" aria-label="More options">
+                          <MoreVertical className="w-5 h-5" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </motion.div>
               </div>
             </div>
@@ -544,7 +533,7 @@ export default function ParentDashboard() {
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.1 }}
-                className="bg-white rounded-2xl p-4 shadow-sm dashboard-card overflow-y-auto"
+                className="bg-white rounded-2xl p-4 shadow-sm dashboard-card flex flex-col min-h-0"
               >
                 <motion.h2 
                   initial={{ opacity: 0, y: -10 }}
@@ -560,7 +549,7 @@ export default function ParentDashboard() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="h-[220px] mb-2"
+                  className="flex-1 min-h-0"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -573,7 +562,7 @@ export default function ParentDashboard() {
                         { name: 'C++', score: 82, color: '#A0AEC0' },
                       ]}
                       layout="vertical"
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
                     >
                       <XAxis 
                         type="number"
@@ -619,45 +608,6 @@ export default function ParentDashboard() {
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
-                </motion.div>
-
-                {/* Remarks Section */}
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="grid grid-cols-3 gap-2 mt-2"
-                >
-                  <div className="flex flex-col items-center p-2 bg-[#6C5CE7]/5 rounded-lg border border-[#6C5CE7]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">Python</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Excellent</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Strong in Data Structures</p>
-                  </div>
-                  <div className="flex flex-col items-center p-2 bg-[#0984E3]/5 rounded-lg border border-[#0984E3]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">Java</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Very Good</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">OOP concepts mastered</p>
-                  </div>
-                  <div className="flex flex-col items-center p-2 bg-[#00B894]/5 rounded-lg border border-[#00B894]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">JavaScript</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Good</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Strong DOM manipulation</p>
-                  </div>
-                  <div className="flex flex-col items-center p-2 bg-[#FDCB6E]/5 rounded-lg border border-[#FDCB6E]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">React</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Very Good</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Component patterns</p>
-                  </div>
-                  <div className="flex flex-col items-center p-2 bg-[#E17055]/5 rounded-lg border border-[#E17055]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">HTML/CSS</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Excellent</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Responsive design expert</p>
-                  </div>
-                  <div className="flex flex-col items-center p-2 bg-[#A0AEC0]/5 rounded-lg border border-[#A0AEC0]/20">
-                    <span className="text-xs font-semibold text-[#2D3436] mb-0.5">C++</span>
-                    <span className="text-[10px] text-[#00B894] font-medium">Good</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">Algorithm implementation</p>
-                  </div>
                 </motion.div>
               </motion.div>
 
