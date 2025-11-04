@@ -23,6 +23,7 @@ import {
   Bell,
   Download,
 } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { FloatingDock } from '@/components/ui/floating-dock';
 import {
   BarChart,
@@ -69,9 +70,11 @@ export default function ParentDashboard() {
   // Navbar items for FloatingDock
   const navItems = [
     { title: "Home", icon: <Home className="w-5 h-5" />, href: "#home" },
-    { title: "Assignment", icon: <FileText className="w-5 h-5" />, href: "#home" },
+    { title: "Task", icon: <FileText className="w-5 h-5" />, href: "#tasks" },
     { title: "Report", icon: <BarChart3 className="w-5 h-5" />, href: "#performance" },
     { title: "Attendance", icon: <CheckSquare className="w-5 h-5" />, href: "#attendance" },
+    { title: "Notifications", icon: <Bell className="w-5 h-5" />, href: "#announcements" },
+    { title: "Feedback", icon: <MessageSquare className="w-5 h-5" />, href: "#feedback" },
   ];
 
   // Animation variants for cards
@@ -142,6 +145,12 @@ export default function ParentDashboard() {
 
     let last = 0;
     const onScroll = () => {
+      // Keep navbar visible while any dropdown is open
+      if (profileOpen || monthOpen || todayOpen) {
+        setNavHidden(false);
+        return;
+      }
+
       const st = (container as HTMLElement).scrollTop || 0;
       // small threshold to avoid flicker
       if (st > last + 10) {
@@ -157,7 +166,7 @@ export default function ParentDashboard() {
 
     container.addEventListener('scroll', onScroll, { passive: true });
     return () => container.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [profileOpen, monthOpen, todayOpen]);
 
   // Logout handler: clear relevant local storage and redirect to /auth
   const handleLogout = () => {
@@ -248,10 +257,10 @@ export default function ParentDashboard() {
                 
                 {/* Menu Items */}
                 <div className="py-1">
-                  <a href="/parent/profile" className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors" aria-label="Open parent profile">
+                  <button onClick={() => window.location.assign('/parent/profile')} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors" aria-label="Open parent profile">
                     <User className="w-4 h-4" />
                     <span>Profile</span>
-                  </a>
+                  </button>
                   <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#1A1A1A] hover:bg-gray-50 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
@@ -496,7 +505,7 @@ export default function ParentDashboard() {
                   animate={variants.zoomIn.animate}
                   transition={{ duration: 0.6, delay: 0.15 }}
                 >
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-4" id="announcements" ref={(el) => { sectionsRef.current['announcements'] = el as unknown as HTMLElement; }}>
                     <h2 className="text-lg font-semibold text-[#1A1A1A]">Announcements</h2>
                     <a href="#" className="text-[#5D5FEF] text-sm font-medium hover:underline">
                       See all
