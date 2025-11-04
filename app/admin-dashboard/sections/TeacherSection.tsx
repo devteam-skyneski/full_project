@@ -10,12 +10,14 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion"; // <-- 1. IMPORT MOTION
 
 export default function TeacherSection() {
   const [activeTab, setActiveTab] = useState<"requests" | "teachers">(
     "requests",
   );
   const [requests, setRequests] = useState([
+    // ... all your requests data ...
     {
       id: "1",
       teacher: "Dr. Sarah Johnson",
@@ -140,6 +142,7 @@ export default function TeacherSection() {
 
   //PENDING teacher approvals
   const [teachers, setTeachers] = useState([
+    // ... all your teachers data ...
     {
       id: "1",
       name: "Dr. Sarah Johnson",
@@ -287,7 +290,16 @@ export default function TeacherSection() {
   const rejectedRequests = requests.filter((r) => r.status === "rejected");
 
   return (
-    <section id="teachers" className="py-10 sm:py-20">
+    // 2. WRAP YOUR WHOLE SECTION in <motion.section>
+    <motion.section
+      id="teachers"
+      className="py-10 sm:py-20"
+      // 3. ADD THESE ANIMATION PROPS
+      initial={{ opacity: 0, y: 50 }} // Start hidden and 50px down
+      whileInView={{ opacity: 1, y: 0 }} // Animate to visible and 0px
+      viewport={{ once: true, amount: 0.2 }} // Trigger once when 20% is visible
+      transition={{ duration: 0.6, ease: "easeOut" }} // Smooth animation
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
@@ -701,6 +713,6 @@ export default function TeacherSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

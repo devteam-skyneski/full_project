@@ -687,29 +687,41 @@ export default function AdminDashboard() {
             </motion.div>
           </motion.div>
         </div>
-
         
-        <ScrollAnimator className="w-full">
-          <TeacherSection />
-        </ScrollAnimator>
+       {/* === START OF SCROLLING SECTIONS WITH PARALLAX ANIMATION === */}
+       {/* === START OF SCROLLING SECTIONS === */}
+{/* === START OF SCROLLING SECTIONS === */}
+      {/* === START OF SCROLLING SECTIONS === */}
+      
+      {/* We apply z-10 to stay on top of particles.
+        We apply min-h-screen to make sure the page has scroll-depth.
+      */}
+
+      <div className="relative z-10 min-h-screen w-full">
+        <TeacherSection />
+      </div>
+      
+      <div className="relative z-10 min-h-screen w-full">
+        <StudentSection />
+      </div>
+
+      <div className="relative z-10 min-h-screen w-full">
+        <AnnouncementSection />
+      </div>
+
+      <div className="relative z-10 min-h-screen w-full">
+        <ParentSection />
+      </div>
         
-        <ScrollAnimator className="w-full">
-          <StudentSection />
-        </ScrollAnimator>
-
-        <ScrollAnimator className="w-full">
-          <AnnouncementSection />
-        </ScrollAnimator>
-
-        <ScrollAnimator className="w-full">
-          <ParentSection />
-        </ScrollAnimator>
+    {/* === END OF SCROLLING SECTIONS === */}
+      </div>
+        
         
         {/* === END OF SCROLLING SECTIONS === */}
 
       </div>
 
-      {/* Tasks Modal */}
+  );{/* Tasks Modal */}
       <AnimatePresence>
         {showTasksModal && (
           <TasksModal
@@ -721,6 +733,6 @@ export default function AdminDashboard() {
           />
         )}
       </AnimatePresence>
-    </div>
-  );
+    
+  
 }

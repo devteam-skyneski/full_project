@@ -1,5 +1,7 @@
+"use client";
 import React, { useEffect, useId, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+// 1. IMPORT MOTION (FROM THE CORRECT LIBRARY)
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Users,
   GraduationCap,
@@ -324,7 +326,7 @@ const InfoItem = ({
   label,
   value,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ElementType;
   label: string;
   value: string;
 }) => (
@@ -576,7 +578,16 @@ export default function StudentSection() {
       </AnimatePresence>
 
       
-      <section id="students" className="py-20">
+      {/* 2. CHANGE <section> TO <motion.section> */}
+      <motion.section
+        id="students"
+        className="py-20"
+        // 3. ADD THE ANIMATION PROPS
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
             
@@ -730,7 +741,7 @@ export default function StudentSection() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }
