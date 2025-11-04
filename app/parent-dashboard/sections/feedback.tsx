@@ -11,6 +11,8 @@ const feedbackCategories = ['Teaching', 'Communication', 'Infrastructure', 'Othe
 
 export default function Feedback() {
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     parentName: '',
     studentName: '',
@@ -19,10 +21,45 @@ export default function Feedback() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowThankYou(true);
-    setTimeout(() => setShowThankYou(false), 3000);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch('https://formspree.io/f/xnnokljv', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setShowThankYou(true);
+        setFormData({
+          parentName: '',
+          studentName: '',
+          classGrade: '',
+          category: '',
+          message: ''
+        });
+        setTimeout(() => setShowThankYou(false), 3000);
+      } else {
+        try {
+          const data = await response.json();
+          setErrorMessage(data?.errors?.[0]?.message || 'Failed to submit feedback. Please try again.');
+        } catch {
+          setErrorMessage('Failed to submit feedback. Please try again.');
+        }
+      }
+    } catch (err) {
+      setErrorMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -157,11 +194,18 @@ export default function Feedback() {
                 ></textarea>
               </div>
 
+              {errorMessage && (
+                <div className="text-red-600 text-xs" role="alert">
+                  {errorMessage}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full flex justify-center py-1 px-3 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                disabled={isSubmitting}
+                className="w-full flex justify-center py-1 px-3 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Submit Feedback
+                {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
               </button>
             </form>
 
