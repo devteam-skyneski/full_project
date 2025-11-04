@@ -1,182 +1,416 @@
 'use client';
 
-import React from 'react';
-// === EDITED: Removed useScroll and useTransform ===
-import { motion, Variants } from 'framer-motion';
-import {
-  Phone,
-  Mail,
-  Home,
-  ChevronDown,
-  MoreVertical,
-  Users,
-  Book,
-  Bell,
-  LogOut,
-  BookOpen,
-  FileText,
-  ClipboardList,
-  BarChart3,
-  CheckSquare,
-  User,
-  GraduationCap,
-  Megaphone,
-  ScrollText,
-} from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  LabelList,
-} from 'recharts';
+import React, { useState, useCallback, useEffect, memo } from 'react';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
 import Navbar from './navbar';
+import ParticlesBackground from '../student-dashboard/components/ParticlesBackground';
 import ScrollAnimator from './components/ScrollAnimator';
 import TeacherSection from './sections/TeacherSection';
 import StudentSection from './sections/StudentSection';
 import AnnouncementSection from './sections/AnnouncementSection';
 import ParentSection from './sections/ParentSection';
+import {
+  Phone, Mail, Home, ChevronDown, MoreVertical, Users, Book, Bell, LogOut,
+  BookOpen, FileText, ClipboardList, BarChart3, User,
+  GraduationCap, Megaphone, ScrollText, CheckSquare, X
+} from 'lucide-react';
+import { Montserrat } from 'next/font/google'; // Added for font
+import {
+  BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer,
+  XAxis, YAxis, Tooltip, LabelList,
+} from 'recharts';
 
+// Instantiate the font
+const montserrat = Montserrat({ subsets: ['latin'] });
 
-export default function AdminDashboard() {
-  // Mock data (no changes)
- 
-  const overallPerformanceData = [
-    { name: 'Computer Science', score: 82.1 },
-    { name: 'Humanities', score: 88.5 },
-    { name: 'Mathematics', score: 79.0 },
-    { name: 'Natural Sciences', score: 85.3 },
-    { name: 'Arts & Design', score: 90.2 },
-    { name: 'Business', score: 81.7 },
-  ];
-  const schoolAttendanceData = [
-    { name: 'Grade 9', value: 95, fill: '#3B82F6' },
-    { name: 'Grade 10', value: 92, fill: '#10B981' },
-    { name: 'Grade 11', value: 93, fill: '#F59E0B' },
-    { name: 'Grade 12', value: 89, fill: '#EF4444' },
-    { name: 'Faculty', value: 98, fill: '#6366F1' },
-    { name: 'Staff', value: 99, fill: '#8B5CF6' },
-  ];
-  const calendarEvents = [
-    { title: 'All-Faculty Meeting', duration: '9.00-10.30', location: 'Auditorium', color: 'bg-blue-500' },
-    { title: 'Board of Directors Call', duration: '11.00-11.40', location: 'Admin Office', color: 'bg-gray-200' },
-    { title: 'Budget Review: Q4', duration: '14.00-15.45', location: 'Conf. Room 3', color: 'bg-gray-200' },
-  ];
-  const upcomingTasks = [
-    {
-      icon: '📅',
-      title: "Approve 'Robot Fest' event budget and schedule.",
-      date: 'Due: 15 December 2023',
-    },
-    {
-      icon: '📚',
-      title: 'Review new curriculum proposals for Science dept.',
-      date: 'Due: 18 December 2023',
-    },
-  ];
+// --- Reusable Dropdown Component (No changes) ---
+const Dropdown = memo(({ options, onSelect }: { options: string[], onSelect: (option: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState(options[0]);
 
-  // Donut chart component (no changes)
-  const DonutChart = ({ data, percentage }: { data: any; percentage: number }) => {
-    return (
-      <div className="relative w-full h-full flex items-center justify-center">
-        <ResponsiveContainer width="100%" height={120}>
-          <PieChart>
-            <Pie
-              data={[data, { name: 'remaining', value: 100 - data.value, fill: '#E5E7EB' }]}
-              cx="50%"
-              cy="50%"
-              innerRadius={35}
-              outerRadius={50}
-              startAngle={90}
-              endAngle={-270}
-              dataKey="value"
-              isAnimationActive={true}
-              animationDuration={1500}
-              animationEasing="ease-out"
-            >
-              <Cell key={`cell-0`} fill={data.fill} />
-              <Cell key={`cell-1`} fill="#E5E7EB" />
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="text-xl font-bold text-white"
-          >
-            {percentage}%
-          </motion.span>
-        </div>
-      </div>
-    );
+  const handleSelect = (option: string) => {
+    setSelected(option);
+    onSelect(option);
+    setIsOpen(false);
   };
 
-  // Variants for the main 3-column grid container (Idea 1)
-  const gridContainerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2, // Each column animates 0.2s after the previous
-        delayChildren: 0.5,  // Wait 0.5s after navbar
-      },
-    },
+  const dropdownVariants: Variants = {
+    open: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
+    closed: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
-
-  // Variants for columns (Idea 1)
-  const columnLeftVariants: Variants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-  };
-  
-  const columnRightVariants: Variants = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-  };
-  
-  const columnMiddleVariants: Variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-  };
-
-  // Staggered list container variants (for lists inside cards)
-  const listContainerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.5, 
-      },
-    },
-  };
-
-  // Staggered list item variants (slide from left)
-  const listItemVariants: Variants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
-  };
-
-  // Staggered list item variants (slide from right)
-  const taskItemVariants: Variants = {
-    hidden: { opacity: 0, x: 30 },
-    visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
-  };
-  
-  // === REMOVED hooks for Idea 5 (Scroll Transition) ===
-
 
   return (
-    <div className="bg-gray-50 relative z-0">
+    <motion.div className="relative" animate>
+      <motion.div
+        className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 cursor-pointer hover:bg-gray-50 transition"
+        whileTap={{ scale: 0.97 }}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="text-gray-700 text-sm">{selected}</span>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <ChevronDown className="w-4 h-4 text-gray-500" />
+        </motion.div>
+      </motion.div>
+      
+      <motion.div
+        className="absolute top-full right-0 mt-1 w-32 bg-white rounded-lg shadow-xl z-10 overflow-hidden"
+        variants={dropdownVariants}
+        initial="closed"
+        animate={isOpen ? "open" : "closed"}
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+      >
+        {options.map((option) => (
+          <div
+            key={option}
+            className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            onClick={() => handleSelect(option)}
+          >
+            {option}
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+});
+
+// --- DonutChart Component (No changes) ---
+const DonutChart = memo(({ data, percentage }: { data: any; percentage: number }) => {
+  return (
+    <div className="relative w-24 h-24 flex items-center justify-center">
+      <ResponsiveContainer width="100%" height={96}>
+        <PieChart>
+          <Pie
+            data={[data, { name: 'remaining', value: 100 - data.value, fill: '#E5E7EB' }]}
+            cx="50%"
+            cy="50%"
+            innerRadius={30}
+            outerRadius={40}
+            startAngle={90}
+            endAngle={-270}
+            dataKey="value"
+            isAnimationActive={true}
+            animationDuration={1500}
+            animationEasing="ease-out"
+          >
+            <Cell key={`cell-0`} fill={data.fill} />
+            <Cell key={`cell-1`} fill="#E5E7EB" />
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="text-lg font-bold text-gray-700"
+        >
+          {percentage}%
+        </motion.span>
+      </div>
+    </div>
+  );
+});
+
+const initialUpcomingTasks = [
+  { id: 1, icon: '📅', title: "Approve 'Robot Fest' event budget.", date: 'Due: 15 December 2023', desc: "Approve and allocate funds for the Robot Fest event planned for next month." },
+  { id: 2, icon: '📚', title: 'Review new curriculum proposals.', date: 'Due: 18 December 2023', desc: "Review the proposed curriculum changes and give feedback to the academic committee." },
+  { id: 3, icon: '🎓', title: 'Plan graduation ceremony logistics.', date: 'Due: 20 December 2023', desc: "Coordinate vendors, seating, and invites for the upcoming graduation ceremony." },
+  { id: 4, icon: '🧾', title: 'Verify staff reimbursement claims.', date: 'Due: 22 December 2023', desc: "Audit staff expense claims and prepare approvals for finance." },
+  { id: 5, icon: '🏫', title: 'Inspect classroom renovations.', date: 'Due: 25 December 2023', desc: "Inspect renovated classrooms to ensure safety and completion before re-opening." },
+];
+
+const allClassesData = [
+  { name: 'Comp. Sci', score: 82.1 }, { name: 'Humanities', score: 88.5 }, { name: 'Math', score: 79.0 },
+  { name: 'Science', score: 85.3 }, { name: 'Arts', score: 90.2 }, { name: 'Business', score: 81.7 },
+];
+const class1Data = [
+  { name: 'English', score: 88.0 }, { name: 'Math', score: 92.0 }, { name: 'Science', score: 85.0 },
+  { name: 'History', score: 90.0 }, { name: 'Art', score: 95.0 },
+];
+const class2Data = [
+  { name: 'English', score: 82.0 }, { name: 'Math', score: 88.0 }, { name: 'Science', score: 91.0 },
+  { name: 'History', score: 85.0 }, { name: 'P.E.', score: 94.0 },
+];
+const class3Data = [
+  { name: 'English', score: 90.0 }, { name: 'Math', score: 85.0 }, { name: 'Science', score: 88.0 },
+  { name: 'Geography', score: 92.0 }, { name: 'Music', score: 91.0 },
+];
+
+const performanceDataMap: { [key: string]: typeof allClassesData } = {
+  'All Classes': allClassesData, 'Class 1': class1Data, 'Class 2': class2Data, 'Class 3': class3Data,
+  'Class 4': class3Data, 'Class 5': class1Data, 'Class 6': class2Data, 'Class 7': class3Data,
+  'Class 8': class1Data, 'Class 9': class2Data, 'Class 10': class3Data,
+};
+
+const attendanceDataToday = [
+  { name: 'Class 1', value: 95, fill: '#3B82F6' }, { name: 'Class 2', value: 92, fill: '#10B981' },
+  { name: 'Class 3', value: 93, fill: '#F59E0B' }, { name: 'Class 4', value: 89, fill: '#EF4444' },
+  { name: 'Class 5', value: 98, fill: '#6366F1' }, { name: 'Class 6', value: 99, fill: '#8B5CF6' },
+  { name: 'Class 7', value: 91, fill: '#EC4899' }, { name: 'Class 8', value: 94, fill: '#06B6D4' },
+  { name: 'Class 9', value: 88, fill: '#F97316' }, { name: 'Class 10', value: 96, fill: '#22C55E' },
+];
+const attendanceDataYesterday = [
+  { name: 'Class 1', value: 92, fill: '#3B82F6' }, { name: 'Class 2', value: 94, fill: '#10B981' },
+  { name: 'Class 3', value: 90, fill: '#F59E0B' }, { name: 'Class 4', value: 91, fill: '#EF4444' },
+  { name: 'Class 5', value: 97, fill: '#6366F1' }, { name: 'Class 6', value: 98, fill: '#8B5CF6' },
+  { name: 'Class 7', value: 93, fill: '#EC4899' }, { name: 'Class 8', value: 92, fill: '#06B6D4' },
+  { name: 'Class 9', value: 89, fill: '#F97316' }, { name: 'Class 10', value: 95, fill: '#22C55E' },
+];
+const attendanceDataPastWeek = [
+  { name: 'Class 1', value: 88, fill: '#3B82F6' }, { name: 'Class 2', value: 85, fill: '#10B981' },
+  { name: 'Class 3', value: 90, fill: '#F59E0B' }, { name: 'Class 4', value: 82, fill: '#EF4444' },
+  { name: 'Class 5', value: 91, fill: '#6366F1' }, { name: 'Class 6', value: 93, fill: '#8B5CF6' },
+  { name: 'Class 7', value: 89, fill: '#EC4899' }, { name: 'Class 8', value: 90, fill: '#06B6D4' },
+  { name: 'Class 9', value: 85, fill: '#F97316' }, { name: 'Class 10', value: 92, fill: '#22C55E' },
+];
+const attendanceDataMap = {
+  'Today': attendanceDataToday,
+  'Yesterday': attendanceDataYesterday,
+  'Past Week': attendanceDataPastWeek,
+};
+
+const calendarEventsToday = [
+  { title: 'All-Faculty Meeting', location: 'Auditorium', color: 'bg-blue-500' },
+  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-gray-200' },
+  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-gray-200' },
+];
+const calendarEventsYesterday = [
+  { title: 'IT Dept. Sync', location: 'Room 102', color: 'bg-green-500' },
+  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-gray-200' },
+];
+const calendarEventsPastWeek = [
+  { title: 'All-Faculty Meeting', location: 'Auditorium', color: 'bg-blue-500' },
+  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-gray-200' },
+  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-gray-200' },
+  { title: 'IT Dept. Sync', location: 'Room 102', color: 'bg-green-500' },
+  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-gray-200' },
+  { title: 'Science Fair Planning', location: 'Lab 3', color: 'bg-purple-500' },
+];
+const calendarDataMap = {
+  'Today': calendarEventsToday,
+  'Yesterday': calendarEventsYesterday,
+  'Past Week': calendarEventsPastWeek,
+};
+const gridContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.5 } },
+};
+const columnLeftVariants: Variants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+const columnRightVariants: Variants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+const columnMiddleVariants: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+const listContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.5 } },
+};
+const listItemVariants: Variants = {
+  hidden: { opacity: 0, x: -30 },
+  visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
+};
+const taskItemVariants: Variants = {
+  hidden: { opacity: 0, x: 30 },
+  visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
+};
+
+// --- Task Modal (keeps animated vibe) ---
+function TasksModal({
+  tasks,
+  onClose,
+  onMarkDone,
+}: {
+  tasks: typeof initialUpcomingTasks,
+  onClose: () => void,
+  onMarkDone: (id: number) => void,
+}) {
+  const [selectedTask, setSelectedTask] = useState<any | null>(null);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {/* backdrop */}
+        <motion.div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          onClick={() => !selectedTask && onClose()}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
+
+        <motion.div
+          className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden"
+          initial={{ scale: 0.95, y: 20, opacity: 0 }}
+          animate={{ scale: 1, y: 0, opacity: 1 }}
+          exit={{ scale: 0.95, y: 20, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+        >
+          <div className="flex items-center justify-between px-5 py-4 border-b">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">All Pending Tasks</h3>
+              <p className="text-sm text-gray-500 mt-0.5">{tasks.length} tasks</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                className="text-sm text-gray-600 hover:text-gray-800"
+                onClick={() => onClose()}
+              >
+                Close
+              </button>
+              <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={() => onClose()} />
+            </div>
+          </div>
+
+          <div className="h-80 overflow-y-auto px-4 py-4 space-y-3">
+            <motion.div
+              className="space-y-2"
+              variants={listContainerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {tasks.map((t, idx) => (
+                <motion.div
+                  key={t.id}
+                  className="bg-gray-50 rounded-lg p-3 flex items-start justify-between gap-3 shadow-sm"
+                  variants={taskItemVariants}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div
+                    className="flex items-start gap-3 flex-1 cursor-pointer"
+                    onClick={() => setSelectedTask(t)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl flex-shrink-0">
+                      {t.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-semibold text-gray-800 text-sm truncate">{t.title}</h4>
+                      <p className="text-xs text-gray-600">{t.date}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => onMarkDone(t.id)}
+                      className="cursor-pointer"
+                      title="Mark as done"
+                    >
+                      <CheckSquare className="w-6 h-6 text-green-500 hover:text-green-700 transition" />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ))}
+              {tasks.length === 0 && (
+                <motion.div className="text-center text-sm text-gray-500 py-8">
+                  No pending tasks. Nice work!
+                </motion.div>
+              )}
+            </motion.div>
+          </div>
+
+          {/* task detail overlay inside modal */}
+          <AnimatePresence>
+            {selectedTask && (
+              <motion.div
+                className="absolute inset-0 bg-white/95 p-6 flex flex-col justify-between"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+              >
+                <div>
+                  <h4 className="text-xl font-semibold text-gray-800 mb-2">{selectedTask.title}</h4>
+                  <p className="text-sm text-gray-700 mb-4">{selectedTask.desc}</p>
+                  <p className="text-xs text-gray-500">{selectedTask.date}</p>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <button
+                    className="px-4 py-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200"
+                    onClick={() => setSelectedTask(null)}
+                  >
+                    Back
+                  </button>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white"
+                    onClick={() => {
+                      onMarkDone(selectedTask.id);
+                      setSelectedTask(null);
+                    }}
+                  >
+                    Mark Done
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// --- REVERTED: Back to simple upcomingTasks array is now initialUpcomingTasks; component-level state will be used ---
+
+export default function AdminDashboard() {
+  // State for Student Performance
+  const [selectedClass, setSelectedClass] = useState('All Classes');
+  const [performanceData, setPerformanceData] = useState(performanceDataMap['All Classes']);
+
+  const handleClassChange = useCallback((option: string) => {
+    setSelectedClass(option);
+    setPerformanceData(performanceDataMap[option] || allClassesData);
+  }, []);
+
+  // State for Calendar
+  const [calendarPeriod, setCalendarPeriod] = useState('Today');
+  const [currentCalendarEvents, setCurrentCalendarEvents] = useState(calendarDataMap['Today']);
+  
+  const handleCalendarChange = useCallback((option: string) => {
+    setCalendarPeriod(option);
+    setCurrentCalendarEvents(calendarDataMap[option as keyof typeof calendarDataMap] || calendarEventsToday);
+  }, []);
+
+  // State for Attendance
+  const [attendancePeriod, setAttendancePeriod] = useState('Today');
+  const [currentAttendanceData, setCurrentAttendanceData] = useState(attendanceDataMap['Today']);
+
+  const handleAttendanceChange = useCallback((option: string) => {
+    setAttendancePeriod(option);
+    setCurrentAttendanceData(attendanceDataMap[option as keyof typeof attendanceDataMap] || attendanceDataToday);
+  }, []);
+
+  // --- Tasks State (NEW) ---
+  const [tasks, setTasks] = useState(initialUpcomingTasks);
+  const [showTasksModal, setShowTasksModal] = useState(false);
+
+  const markTaskDone = (id: number) => {
+    // remove with smooth state update
+    setTasks(prev => prev.filter(t => t.id !== id));
+  };
+
+  // Dropdown options
+  const classOptions = ['All Classes', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+  const timeOptions = ['Today', 'Yesterday', 'Past Week'];
+
+  return (
+    <div className={`bg-gray-50 relative z-0 ${montserrat.className}`}>
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
-      {/* Navbar animation */}
+      <ParticlesBackground />
       <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -186,43 +420,39 @@ export default function AdminDashboard() {
         <Navbar />
       </motion.div>
 
-      <div className="pt-24">
-        
-        {/* === REMOVED motion.div wrapper for Idea 5 === */}
-        {/* === START OF 3-COLUMN ADMIN LAYOUT === */}
-        <div className="p-6">
-          {/* === EDITED: Added motion.div wrapper for Idea 1 (Grand Entrance) === */}
-          <motion.div 
-            className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch"
+      <div className="pt-20">
+        <div className="p-4">
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch"
             variants={gridContainerVariants}
             initial="hidden"
             animate="visible"
           >
             
             {/* === Left Column === */}
-            {/* === EDITED: Added column variants and perspective for 3D tilt (Idea 2) === */}
-            <motion.div 
-              className="space-y-6 flex flex-col" 
+            <motion.div
+              className="space-y-4 flex flex-col"
               variants={columnLeftVariants}
-              style={{ perspective: 1000 }} // For 3D tilt
+              style={{ perspective: 1000 }}
             >
               
               {/* Admin Welcome / Overview */}
-              {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="rounded-xl p-6 shadow-lg bg-white/10 backdrop-blur-md border border-white/20"
-                whileHover={{ scale: 1.03, rotateY: 10 }} // Tilt
+                className="bg-gray-100 rounded-xl p-4 shadow-sm"
+                whileHover={{ scale: 1.03, rotateY: 10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h2 className="text-3xl font-bold text-white mb-2">Admin Overview</h2>
-                    <p className="text-gray-200 mb-2">
-                      Key metrics for the institution. You have 2 pending tasks.
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Admin Overview</h2>
+                    <p className="text-gray-600 mb-2 text-sm">
+                      Key metrics for the institution.</p>
+                       <p className="text-gray-600 mb-2 text-sm">
+                      You have {tasks.length} pending tasks.
                     </p>
                     <motion.a
                       href="#teachers"
-                      className="text-blue-300 hover:underline font-medium"
+                      className="text-blue-600 hover:underline font-medium text-sm"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -234,12 +464,12 @@ export default function AdminDashboard() {
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
                     style={{ originX: 0.5, originY: 0.5 }}
-                    className="w-32 h-32 rounded-lg flex items-center justify-center ml-4 bg-white/10 backdrop-blur-md border border-white/20"
+                    className="w-28 h-28 bg-blue-100 rounded-lg flex items-center justify-center ml-2"
                   >
                     <motion.div
-                      animate={{ scale: [1, 1.05, 1] }} // "Breathe"
+                      animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-6xl"
+                      className="text-5xl"
                     >
                       📊
                     </motion.div>
@@ -248,63 +478,40 @@ export default function AdminDashboard() {
               </motion.div>
 
               {/* Student Performance Section */}
-              {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="rounded-xl p-6 shadow-lg flex-1 flex flex-col bg-white/10 backdrop-blur-md border border-white/20"
+                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: 10 }} // Tilt
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-white">Student Performance</h3>
-                  <div className="flex items-center gap-4">
-                    <motion.div
-                      className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition bg-white/10 backdrop-blur-md border border-white/20 text-white"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <span className="text-gray-200 text-sm">Classes 1-10</span>
-                      <motion.div
-                        animate={{ y: [0, -2, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <ChevronDown className="w-4 h-4 text-gray-300" />
-                      </motion.div>
-                    </motion.div>
-                    <motion.button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm font-medium"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      animate={{ scale: [1, 1.02, 1] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      Full Report
-                    </motion.button>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-gray-800">Student Performance</h3>
+                  <div className="flex items-center gap-3">
+                    <Dropdown options={classOptions} onSelect={handleClassChange} />
                   </div>
                 </div>
 
-                {/* Bar Chart (Department Scores) */}
                 <div className="flex-1">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" key={selectedClass}>
                     <BarChart
-                      data={overallPerformanceData}
+                      data={performanceData}
                       layout="vertical"
-                      barSize={20}
-                      margin={{ left: 10, right: 40, top: 0, bottom: 0 }}
+                      barSize={16}
+                      margin={{ left: 10, right: 30, top: 0, bottom: 0 }}
                     >
                       <XAxis type="number" domain={[0, 100]} hide />
                       <YAxis
                         dataKey="name"
                         type="category"
-                        width={100} 
-                        fontSize={11}
-                        tick={{ fill: '#E5E7EB' }}
+                        width={80}
+                        fontSize={14}
+                        tick={{ fill: '#6B7280' }}
                         tickLine={false}
                         axisLine={false}
                       />
                       <Tooltip />
-                      <Bar 
-                        dataKey="score" 
-                        fill="#3B82F6" 
+                      <Bar
+                        dataKey="score"
+                        fill="#3B82F6"
                         radius={[0, 4, 4, 0]}
                         isAnimationActive={true}
                         animationDuration={1500}
@@ -313,9 +520,9 @@ export default function AdminDashboard() {
                         <LabelList
                           dataKey="score"
                           position="right"
-                          style={{ fill: '#E5E7EB', fontSize: '12px', fontWeight: 'bold' }}
+                          style={{ fill: '#374151', fontSize: '11px', fontWeight: 'bold' }}
                         />
-                        {overallPerformanceData.map((entry, index) => (
+                        {performanceData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill="#3B82F6" />
                         ))}
                       </Bar>
@@ -326,53 +533,42 @@ export default function AdminDashboard() {
             </motion.div>
 
             {/* === Middle Column === */}
-            {/* === EDITED: Added column variants and perspective for 3D tilt (Idea 2) === */}
-            <motion.div 
-              className="space-y-6 flex flex-col" 
+            <motion.div
+              className="space-y-4 flex flex-col"
               variants={columnMiddleVariants}
-              style={{ perspective: 1000 }} // For 3D tilt
+              style={{ perspective: 1000 }}
             >
               {/* Overall Attendance Section */}
-              {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="rounded-xl p-6 shadow-lg flex-1 bg-white/10 backdrop-blur-md border border-white/20"
-                whileHover={{ scale: 1.03, rotateX: 5 }} // Tilt
+                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                whileHover={{ scale: 1.03, rotateX: 5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-white">School Attendance</h3>
-                  <motion.div
-                    className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition bg-white/10 backdrop-blur-md border border-white/20 text-white"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <span className="text-gray-200 text-sm">Today</span>
-                    <motion.div
-                      animate={{ y: [0, -2, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <ChevronDown className="w-4 h-4 text-gray-300" />
-                    </motion.div>
-                  </motion.div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">School Attendance</h3>
+                  <Dropdown options={timeOptions} onSelect={handleAttendanceChange} />
                 </div>
-                {/* Donut Charts Grid (Grade Levels) */}
-                <div className="grid grid-cols-2 gap-8">
-                  {schoolAttendanceData.map((item, index) => (
+                
+                <div
+                  key={attendancePeriod}
+                  className="flex-1 grid grid-cols-2 grid-rows-5 gap-x-4"
+                >
+                  {currentAttendanceData.map((item, index) => (
                     <motion.div
-                      key={index}
-                      className="flex flex-col items-center"
+                      key={item.name}
+                      className="flex items-center justify-center gap-2"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.8, delay: index * 0.15 + 1.0, type: "spring", stiffness: 100 }} // Increased delay
+                      transition={{ duration: 0.8, delay: index * 0.1 + 1.0, type: "spring", stiffness: 100 }}
                     >
-                      <div className="w-full h-32 flex items-center justify-center">
+                      <div className="w-24">
                         <DonutChart data={item} percentage={item.value} />
                       </div>
-                      <motion.p 
-                        className="text-xs text-gray-200 mt-3 text-center leading-tight"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.15 + 1.2 }} // Increased delay
+                      <motion.p
+                        className="text-sm font-medium text-gray-700 leading-tight"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 + 1.2 }}
                       >
                         {item.name}
                       </motion.p>
@@ -383,49 +579,35 @@ export default function AdminDashboard() {
             </motion.div>
 
             {/* === Right Column === */}
-            {/* === EDITED: Added column variants and perspective for 3D tilt (Idea 2) === */}
-            <motion.div 
-              className="space-y-6 flex flex-col" 
+            <motion.div
+              className="space-y-4 flex flex-col"
               variants={columnRightVariants}
-              style={{ perspective: 1000 }} // For 3D tilt
+              style={{ perspective: 1000 }}
             >
               
               {/* School Calendar Section */}
-              {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-6 shadow-sm flex-1 flex flex-col"
-                whileHover={{ scale: 1.03, rotateY: -10 }} // Tilt
+                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-800">School Calendar</h3>
-                    <p className="text-sm text-gray-600 mt-1">3 major events today</p>
+                    <h3 className="text-lg font-semibold text-gray-800">School Calendar</h3>
+                    <p className="text-sm text-gray-600 mt-1">{currentCalendarEvents.length} major events</p>
                   </div>
-                  <motion.div
-                    className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 cursor-pointer hover:bg-gray-50 transition"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <span className="text-gray-700 text-sm">Today</span>
-                    <motion.div
-                      animate={{ y: [0, -2, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <ChevronDown className="w-4 h-4 text-gray-500" />
-                    </motion.div>
-                  </motion.div>
+                  <Dropdown options={timeOptions} onSelect={handleCalendarChange} />
                 </div>
-                {/* Timeline */}
-                <div className="relative mt-6 pl-8 flex-1">
+                <div className="relative mt-4 pl-6 flex-1">
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300"></div>
-                  <motion.div 
-                    className="space-y-6"
+                  <motion.div
+                    key={calendarPeriod}
+                    className="space-y-3"
                     variants={listContainerVariants}
                     initial="hidden"
                     animate="visible"
                   >
-                    {calendarEvents.map((event, index) => (
+                    {currentCalendarEvents.map((event, index) => (
                       <motion.div
                         key={index}
                         className="flex items-start gap-4 relative"
@@ -433,9 +615,7 @@ export default function AdminDashboard() {
                         whileHover={{ scale: 1.03 }}
                       >
                         <div
-                          className={`${event.color} ${
-                            event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'
-                          } rounded-lg p-3 flex-1 shadow-sm`}
+                          className={`${event.color} ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'} rounded-lg p-3 flex-1 shadow-sm`}
                         >
                           <div className="flex items-center gap-2 mb-1">
                             {event.title === 'All-Faculty Meeting' ? (
@@ -443,20 +623,12 @@ export default function AdminDashboard() {
                             ) : (
                               <div className="w-4 h-4 rounded-full bg-gray-400"></div>
                             )}
-                            <h4
-                              className={`font-semibold ${
-                                event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'
-                              }`}
-                            >
+                            <h4 className={`font-semibold text-sm ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'}`}>
                               {event.title}
                             </h4>
                           </div>
-                          <p 
-                            className={`text-xs ${
-                              event.title === 'All-Faculty Meeting' ? 'text-white/90' : 'text-gray-600'
-                            }`}
-                          >
-                            {event.duration}, {event.location}
+                          <p className={`text-xs ${event.title === 'All-Faculty Meeting' ? 'text-white/90' : 'text-gray-600'}`}>
+                            {event.location}
                           </p>
                         </div>
                       </motion.div>
@@ -466,39 +638,37 @@ export default function AdminDashboard() {
               </motion.div>
 
               {/* Pending Tasks Section */}
-              {/* === EDITED: Added Idea 2 (3D Tilt) === */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-6 shadow-sm flex-1 flex flex-col"
-                whileHover={{ scale: 1.03, rotateY: -10 }} // Tilt
+                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-gray-800">Pending Tasks</h3>
-                  <motion.a
-                    href="#teachers"
-                    className="text-blue-600 hover:underline text-sm font-medium"
-                    whileHover={{ scale: 1.05, x: [0, 2, -2, 2, 0] }}
-                    transition={{ duration: 0.5, type: "spring", stiffness: 500 }}
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Pending Tasks</h3>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    className="text-sm text-blue-600 hover:underline font-medium"
+                    onClick={() => setShowTasksModal(true)}
                   >
-                    See all
-                  </motion.a>
+                    See All
+                  </motion.button>
                 </div>
-                <motion.div 
-                  className="space-y-4 flex-1"
+                <motion.div
+                  className="space-y-3 flex-1"
                   variants={listContainerVariants}
                   initial="hidden"
                   animate="visible"
                 >
-                  {upcomingTasks.map((event, index) => (
+                  {tasks.slice(0, 2).map((event, index) => (
                     <motion.div
-                      key={index}
-                      className="bg-white rounded-lg p-4 flex items-start gap-4"
+                      key={event.id}
+                      className="bg-white rounded-lg p-3 flex items-start gap-3"
                       variants={taskItemVariants}
                       whileHover={{ scale: 1.03 }}
                     >
-                      <motion.div 
-                        className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-2xl flex-shrink-0"
+                      <motion.div
+                        className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl flex-shrink-0"
                         animate={{ rotate: [0, 5, -5, 0] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }}
                       >
@@ -516,12 +686,17 @@ export default function AdminDashboard() {
                       </motion.div>
                     </motion.div>
                   ))}
+                  {tasks.length === 0 && (
+                    <div className="text-sm text-gray-500">No pending tasks. 🎉</div>
+                  )}
                 </motion.div>
               </motion.div>
             </motion.div>
           </motion.div>
         </div>
-        
+
+
+        {/* === START OF SCROLLING SECTIONS WITH PARALLAX ANIMATION === */}
         
         <ScrollAnimator className="w-full">
           <TeacherSection />
@@ -542,6 +717,19 @@ export default function AdminDashboard() {
         {/* === END OF SCROLLING SECTIONS === */}
 
       </div>
+
+      {/* Tasks Modal */}
+      <AnimatePresence>
+        {showTasksModal && (
+          <TasksModal
+            tasks={tasks}
+            onClose={() => setShowTasksModal(false)}
+            onMarkDone={(id) => {
+              markTaskDone(id);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
