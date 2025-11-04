@@ -20,6 +20,10 @@ import {
   XAxis, YAxis, Tooltip, LabelList,
 } from 'recharts';
 
+// --- NEW IMPORTS ---
+import Lottie from 'lottie-react';
+import adminAnimationData from './admin-animation.json'; // Import the animation
+
 // Instantiate the font
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -223,7 +227,7 @@ const taskItemVariants: Variants = {
   visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
 };
 
-// --- Task Modal (keeps animated vibe) ---
+// --- Task Modal (No changes) ---
 function TasksModal({
   tasks,
   onClose,
@@ -364,7 +368,6 @@ function TasksModal({
   );
 }
 
-// --- REVERTED: Back to simple upcomingTasks array is now initialUpcomingTasks; component-level state will be used ---
 
 export default function AdminDashboard() {
   // State for Student Performance
@@ -394,12 +397,11 @@ export default function AdminDashboard() {
     setCurrentAttendanceData(attendanceDataMap[option as keyof typeof attendanceDataMap] || attendanceDataToday);
   }, []);
 
-  // --- Tasks State (NEW) ---
+  // --- Tasks State ---
   const [tasks, setTasks] = useState(initialUpcomingTasks);
   const [showTasksModal, setShowTasksModal] = useState(false);
 
   const markTaskDone = (id: number) => {
-    // remove with smooth state update
     setTasks(prev => prev.filter(t => t.id !== id));
   };
 
@@ -444,10 +446,10 @@ export default function AdminDashboard() {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Admin Overview</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Hey Admin!!</h2>
                     <p className="text-gray-600 mb-2 text-sm">
                       Key metrics for the institution.</p>
-                       <p className="text-gray-600 mb-2 text-sm">
+                      <p className="text-gray-600 mb-2 text-sm">
                       You have {tasks.length} pending tasks.
                     </p>
                     <motion.a
@@ -459,21 +461,24 @@ export default function AdminDashboard() {
                       Review Tasks
                     </motion.a>
                   </div>
+                  
+                  {/* === REPLACEMENT BLOCK === */}
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
                     style={{ originX: 0.5, originY: 0.5 }}
-                    className="w-28 h-28 bg-blue-100 rounded-lg flex items-center justify-center ml-2"
+                    className="w-28 h-28 bg-blue-100 rounded-lg flex items-center justify-center ml-2 overflow-hidden" // Added overflow-hidden
                   >
-                    <motion.div
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-5xl"
-                    >
-                      📊
-                    </motion.div>
+                    {/* Replaced the emoji with the Lottie component */}
+                    <Lottie 
+                      animationData={adminAnimationData} 
+                      loop={true} 
+                      className="w-full h-full scale-150" // Scale up if needed
+                    />
                   </motion.div>
+                  {/* === END OF REPLACEMENT === */}
+
                 </div>
               </motion.div>
 
