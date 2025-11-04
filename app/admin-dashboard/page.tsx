@@ -10,13 +10,13 @@ import StudentSection from './sections/StudentSection';
 import AnnouncementSection from './sections/AnnouncementSection';
 import ParentSection from './sections/ParentSection';
 import Lottie from 'lottie-react';
-import adminAnimationData from './admin-animation.json'; 
+import adminAnimationData from './admin-animation.json';
 import {
   Phone, Mail, Home, ChevronDown, MoreVertical, Users, Book, Bell, LogOut,
   BookOpen, FileText, ClipboardList, BarChart3, User,
   GraduationCap, Megaphone, ScrollText, CheckSquare, X
 } from 'lucide-react';
-import { Montserrat } from 'next/font/google'; 
+import { Montserrat } from 'next/font/google';
 import {
   BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer,
   XAxis, YAxis, Tooltip, LabelList,
@@ -96,7 +96,7 @@ const DonutChart = memo(({ data, percentage }: { data: any; percentage: number }
             animationEasing="ease-out"
           >
             <Cell key={`cell-0`} fill={data.fill} />
-            <Cell key={`cell-1`} fill="#9CA3AF" /> 
+            <Cell key={`cell-1`} fill="#9CA3AF" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
             >
               
               <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20"
                 whileHover={{ scale: 1.03, rotateY: 10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
@@ -461,7 +461,7 @@ export default function AdminDashboard() {
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
                     style={{ originX: 0.5, originY: 0.5 }}
-                    className="w-28 h-28 bg-white/10 rounded-lg flex items-center justify-center ml-2 overflow-hidden" // Added overflow-hidden
+                    className="w-28 h-28 bg-white/20 rounded-lg flex items-center justify-center ml-2 overflow-hidden" // Added overflow-hidden
                   >
                     
                     <Lottie 
@@ -470,13 +470,13 @@ export default function AdminDashboard() {
                       className="w-full h-full scale-150" 
                     />
                   </motion.div>
-                 
+                  
 
                 </div>
               </motion.div>
 
               <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: 10 }} 
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
@@ -536,7 +536,7 @@ export default function AdminDashboard() {
             >
 
               <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateX: 5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
@@ -581,7 +581,7 @@ export default function AdminDashboard() {
             >
 
               <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
@@ -632,7 +632,7 @@ export default function AdminDashboard() {
               </motion.div>
 
               <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >

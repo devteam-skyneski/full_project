@@ -144,7 +144,7 @@ export default function AnnouncementSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-2xl bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl overflow-hidden z-[100] relative"
+              className="w-full max-w-2xl bg-white/20 backdrop-blur-lg border border-white/20 rounded-2xl overflow-hidden z-[100] relative"
             >
               <div className="p-6 text-white border-b border-white/20">
                 <div className="flex items-center justify-between">
@@ -188,7 +188,7 @@ export default function AnnouncementSection() {
                   </div>
                 </div>
 
-               
+                
                 <div className="space-y-4">
                   <div>
                     <label
@@ -203,7 +203,7 @@ export default function AnnouncementSection() {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="e.g., End of Semester Exams"
-                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
+                      className="w-full px-3 py-2 bg-white/20 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
                     />
                   </div>
 
@@ -220,7 +220,7 @@ export default function AnnouncementSection() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder={`Write your announcement for ${activeTab}...`}
-                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
+                      className="w-full px-3 py-2 bg-white/20 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -316,7 +316,7 @@ export default function AnnouncementSection() {
                   className={`flex items-center gap-2 py-2 px-4 font-semibold text-xs sm:text-sm transition-all duration-300 rounded-lg ${
                     isActive
                       ? `bg-blue-500/30 ${color} border-2 ${border}`
-                      : "text-gray-200 bg-white/10 hover:bg-white/20 border border-white/20"
+                      : "text-gray-200 bg-white/20 hover:bg-white/20 border border-white/20"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -336,7 +336,7 @@ export default function AnnouncementSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 sm:p-6 relative group hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                  className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-4 sm:p-6 relative group hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
