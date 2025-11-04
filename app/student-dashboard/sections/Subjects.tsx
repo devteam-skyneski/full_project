@@ -416,11 +416,11 @@ export default function Subjects() {
   }, []);
 
   return (
-    <section id="subjects" className="py-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="subjects" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Subjects Section - Top Left with Horizontal Scroll */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-white mb-6">Subjects</h2>
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Subjects</h2>
           
           {/* Horizontal Scrollable Container */}
           <div className="relative">

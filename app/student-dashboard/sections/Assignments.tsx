@@ -648,9 +648,9 @@ export default function Assignments() {
   const filteredAssignments = assignmentsData.filter((a) => `${a.dueDate} ${a.year}` === selectedDate);
 
   return (
-    <section id="assignments" className="py-20 min-h-screen">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Assignments Timeline</h2>
+    <section id="assignments" className="py-12 sm:py-16 min-h-screen" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12 text-center">Assignments Timeline</h2>
 
         <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
           {/* Date Filter */}

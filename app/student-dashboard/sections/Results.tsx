@@ -111,33 +111,34 @@ export default function Results() {
   };
 
   return (
-    <section id="results" className="py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-white mb-10 text-center">Results</h2>
+    <section id="results" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 sm:mb-10 text-center">Results</h2>
 
         <div className="backdrop-blur-xl bg-white/10 rounded-xl shadow-lg border border-white/30 overflow-hidden">
           {/* Header bar with gradient, congrats and download */}
           <div
-            className="relative px-6 py-8 sm:px-8 sm:py-10 border-b border-white/20"
+            className="relative px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 border-b border-white/20"
             style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.6) 0%, rgba(29,78,216,0.6) 100%)" }}
           >
-            <div className="flex items-start sm:items-center justify-between gap-6">
-              <div className="space-y-2 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+              <div className="space-y-2 text-white flex-1">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 border border-white/30 backdrop-blur">
                   <span className="h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
                   Congratulations!
                 </div>
-                <p className="text-2xl sm:text-3xl font-extrabold tracking-tight">Academic Performance</p>
-                <p className="text-white/90 text-sm">
+                <p className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">Academic Performance</p>
+                <p className="text-white/90 text-xs sm:text-sm">
                   A snapshot of your progress this term with highlights and subject-level details.
                 </p>
               </div>
               <button
                 onClick={handleDownload}
-                className="group inline-flex items-center gap-2 rounded-lg px-4 py-2 text-white text-sm font-semibold shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition"
+                className="group inline-flex items-center gap-2 rounded-lg px-3 sm:px-4 py-2 text-white text-xs sm:text-sm font-semibold shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition whitespace-nowrap"
               >
-                <IconDownload className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-                Download Report
+                <IconDownload className="h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-y-0.5" />
+                <span className="hidden sm:inline">Download Report</span>
+                <span className="sm:hidden">Download</span>
               </button>
             </div>
           </div>
@@ -145,7 +146,7 @@ export default function Results() {
           {/* Body */}
           <div ref={cardRef} className="opacity-0 translate-y-6 transition-all duration-500">
             {/* Semester switch + Overall grade */}
-            <div className="px-6 py-6 sm:px-8 sm:py-8">
+            <div className="px-4 py-4 sm:px-6 sm:py-6 md:px-8 md:py-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="inline-flex p-1 rounded-xl bg-white/10 border border-white/20 w-full sm:w-auto">
                   {(["Semester 1", "Semester 2"] as const).map((s) => (
@@ -153,7 +154,7 @@ export default function Results() {
                       key={s}
                       onClick={() => setSelectedSemester(s)}
                       className={cn(
-                        "flex-1 sm:flex-none px-4 py-2 text-sm font-semibold rounded-lg transition",
+                        "flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition",
                         s === selectedSemester
                           ? "text-white bg-gradient-to-r from-blue-600 to-blue-700"
                           : "text-white/80 hover:text-white hover:bg-white/10"
@@ -163,26 +164,26 @@ export default function Results() {
                     </button>
                   ))}
                 </div>
-                <div className="text-white text-sm font-semibold inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/20">
+                <div className="text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/20 w-full sm:w-auto justify-center sm:justify-start">
                   Overall Grade: <span className="text-white rounded-md px-2 py-1 bg-gradient-to-r from-blue-600 to-blue-700">{active.overallGrade}</span>
                 </div>
               </div>
             </div>
 
             {/* Subject-wise table */}
-            <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+            <div className="px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8">
               <div className="overflow-hidden rounded-xl border border-white/20 bg-white/5">
-                <div className="bg-gradient-to-r from-blue-600/30 to-blue-700/30 text-white text-sm font-semibold py-3 px-4 border-b border-white/10">
+                <div className="bg-gradient-to-r from-blue-600/30 to-blue-700/30 text-white text-xs sm:text-sm font-semibold py-2 sm:py-3 px-3 sm:px-4 border-b border-white/10">
                   Subject-wise Performance
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm">
+                  <table className="min-w-full text-xs sm:text-sm">
                     <thead className="text-left text-white/90">
                       <tr className="border-b border-white/10">
-                        <th className="px-4 py-3 font-semibold">Subject</th>
-                        <th className="px-4 py-3 font-semibold">Subject Code</th>
-                        <th className="px-4 py-3 font-semibold">Grade</th>
-                        <th className="px-4 py-3 font-semibold">Marks</th>
+                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Subject</th>
+                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Subject Code</th>
+                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Grade</th>
+                        <th className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">Marks</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -195,14 +196,14 @@ export default function Results() {
                             "hover:bg-white/10 transition-colors"
                           )}
                         >
-                          <td className="px-4 py-3">{row.subject}</td>
-                          <td className="px-4 py-3">{row.code}</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold">
+                          <td className="px-2 sm:px-4 py-2 sm:py-3">{row.subject}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3">{row.code}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold text-xs">
                               {row.grade}
                             </span>
                           </td>
-                          <td className="px-4 py-3 font-semibold">{row.marks}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 font-semibold">{row.marks}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -212,13 +213,13 @@ export default function Results() {
             </div>
 
             {/* Overall Remark */}
-            <div className="px-6 pb-8 sm:px-8 sm:pb-10">
-              <div className="rounded-xl border border-white/20 bg-white/5 p-5">
+            <div className="px-4 pb-6 sm:px-6 sm:pb-8 md:px-8 md:pb-10">
+              <div className="rounded-xl border border-white/20 bg-white/5 p-4 sm:p-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-white font-semibold">Overall Remark</p>
+                  <p className="text-white font-semibold text-sm sm:text-base">Overall Remark</p>
                   <IconChevronDown className="h-4 w-4 text-white/70" />
                 </div>
-                <p className="text-white/90 mt-2 text-sm">
+                <p className="text-white/90 mt-2 text-xs sm:text-sm">
                   {active.overallRemark}
                 </p>
               </div>

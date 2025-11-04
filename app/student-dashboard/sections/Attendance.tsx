@@ -47,10 +47,10 @@ const Index = () => {
   ];
 
   return (
-    <section id="attendance" className="py-20">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+    <section id="attendance" className="py-12 sm:py-16" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         {/* Header */}
-        <h1 className="text-5xl font-bold text-white mb-12 text-center tracking-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-8 sm:mb-12 text-center tracking-tight">
           Attendance Dashboard
         </h1>
 

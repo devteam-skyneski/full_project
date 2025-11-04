@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Home,
   BookOpen,
@@ -15,6 +16,7 @@ import {
 import { FloatingDock } from "@/components/ui/floating-dock";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -36,8 +38,14 @@ export default function Navbar() {
     // Prevent default link behavior
     e.preventDefault();
     
-    // Ignore Profile and Logout
-    if (title === "Profile" || title === "Logout") {
+    // Handle Logout - redirect to login page
+    if (title === "Logout") {
+      router.push("/auth");
+      return;
+    }
+    
+    // Ignore Profile
+    if (title === "Profile") {
       return;
     }
     
@@ -112,7 +120,7 @@ export default function Navbar() {
       title: "Logout", 
       icon: <LogOut className="w-5 h-5" />, 
       href: "#",
-      onClick: () => {} // Ignored for now
+      onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleNavClick(e, "Logout")
     },
   ];
 
@@ -150,25 +158,26 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 
+      className={`w-full py-3 px-4 sm:px-6 flex items-center justify-between fixed top-0 left-0 z-50 
         backdrop-blur-xl bg-white/10 border-b border-white/30 shadow-lg
         transition-all duration-500 ease-in-out
         ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}
     >
       {/* Left Section - Logo */}
       <div className="flex items-center gap-2">
-        <div className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center font-bold text-lg rounded-lg shadow-md">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 text-white flex items-center justify-center font-bold text-base sm:text-lg rounded-lg shadow-md">
           S
         </div>
-        <h1 className="text-xl font-semibold text-white">Student Portal</h1>
+        <h1 className="text-base sm:text-xl font-semibold text-white">Student Portal</h1>
       </div>
 
       {/* Right Section - Floating Dock */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 sm:gap-6">
         <FloatingDock
           items={navItems}
-          desktopClassName="flex gap-4"
-          mobileClassName="grid grid-cols-4 gap-4"
+          desktopClassName="flex gap-2 sm:gap-4"
+          mobileClassName="grid grid-cols-4 gap-2"
         />
       </div>
     </nav>
