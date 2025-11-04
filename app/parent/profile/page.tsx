@@ -50,7 +50,8 @@ export default function ParentProfilePage() {
         setState(s => ({ ...s, loading: true, error: null, success: null }));
         const res = await fetch("/api/parent/profile", { credentials: "include" });
         if (res.status === 401) {
-          window.location.assign("/auth");
+          if (!mounted) return;
+          setState(s => ({ ...s, error: "Please sign in to view your profile." }));
           return;
         }
         if (!res.ok) throw new Error(await res.text());
@@ -85,7 +86,7 @@ export default function ParentProfilePage() {
         body: JSON.stringify({ profile, password: password || undefined }),
       });
       if (res.status === 401) {
-        window.location.assign("/auth");
+        setState({ loading: false, error: "Please sign in to update your profile.", success: null });
         return;
       }
       const body = await res.json();

@@ -267,15 +267,12 @@ export default function ParentDashboard() {
           />
           
           {/* Profile Dropdown */}
-                  <div className="relative profile-dropdown">
+          <div className="relative profile-dropdown">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-[#6C5CE7] text-white flex items-center justify-center font-semibold text-sm">
-                P
-              </div>
-              <span className="text-sm font-medium text-gray-700">Parent</span>
+              <User className="w-5 h-5 text-gray-700" />
               {profileOpen ? (
                 <ChevronUp className="w-4 h-4 text-gray-600" />
               ) : (
