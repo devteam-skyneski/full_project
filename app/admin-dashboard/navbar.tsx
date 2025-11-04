@@ -18,13 +18,14 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isProfileView, setIsProfileView] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Mock admin data - in real app, fetch from context/state
   const adminData = {
     name: "Admin User",
-    email: "admin@university.edu",
-    phone: "+1 (555) 111-2222",
+    email: "admin@university.edu"
+   
   };
 
   const navItems = [
@@ -46,7 +47,7 @@ export default function Navbar() {
           // Show navbar when scrolling up or at the top
           if (currentScrollY < lastScrollY || currentScrollY < 10) {
             setIsVisible(true);
-          } 
+          }
           // Hide navbar when scrolling down past 150px
           else if (currentScrollY > lastScrollY && currentScrollY > 150) {
             setIsVisible(false);
@@ -72,6 +73,7 @@ export default function Navbar() {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowProfileDropdown(false);
+        setIsProfileView(false); // Reset view on close
       }
     };
 
@@ -112,7 +114,14 @@ export default function Navbar() {
         {/* Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
-            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            onClick={() => {
+              // This logic resets the inner view if you close the dropdown
+              const closing = showProfileDropdown;
+              if (closing) {
+                setIsProfileView(false);
+              }
+              setShowProfileDropdown(!showProfileDropdown);
+            }}
             className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
@@ -124,24 +133,50 @@ export default function Navbar() {
           {/* Dropdown Menu */}
           {showProfileDropdown && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              {/* Profile Section */}
-              <div className="px-4 py-3 border-b border-gray-200">
+              {/* === THIS TOP SECTION IS NOW REMOVED === */}
+              {/* <div className="px-4 py-3 border-b border-gray-200">
                 <p className="text-sm font-semibold text-gray-800">{adminData.name}</p>
                 <p className="text-xs text-gray-600 truncate">{adminData.email}</p>
-              </div>
+              </div> */}
 
-              {/* Dropdown Items */}
-              <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Profile
-              </button>
-              <button
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
+              {/* === MODIFIED DROPDOWN ITEMS === */}
+              {!isProfileView ? (
+                <>
+                  <button
+                    onClick={() => setIsProfileView(true)}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 border-b"
+                  >
+                    <User className="w-4 h-4" />
+                    Profile
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setIsProfileView(false)}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 border-b"
+                  >
+                    <ChevronDown className="w-4 h-4 rotate-90" />
+                    Back
+                  </button>
+                  <div className="px-4 py-3 space-y-2">
+                    <p className="text-xs text-gray-500">Full Name</p>
+                    <p className="text-sm font-semibold text-gray-800">{adminData.name}</p>
+                    
+                    <p className="text-xs text-gray-500">Email Address</p>
+                    <p className="text-sm font-semibold text-gray-800">{adminData.email}</p>
+                  
+                  </div>
+                </>
+              )}
+              {/* === END OF MODIFICATIONS === */}
             </div>
           )}
         </div>
