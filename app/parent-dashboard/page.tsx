@@ -64,6 +64,7 @@ export default function ParentDashboard() {
   const [todayOpen, setTodayOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const sectionsRef = useRef<{ [key: string]: HTMLElement | null }>({});
   const scrollContainerRef = useRef<HTMLElement | null>(null);
 
@@ -73,7 +74,6 @@ export default function ParentDashboard() {
     { title: "Task", icon: <FileText className="w-5 h-5" />, href: "#tasks" },
     { title: "Report", icon: <BarChart3 className="w-5 h-5" />, href: "#performance" },
     { title: "Attendance", icon: <CheckSquare className="w-5 h-5" />, href: "#attendance" },
-    { title: "Notifications", icon: <Bell className="w-5 h-5" />, href: "#announcements" },
     { title: "Feedback", icon: <MessageSquare className="w-5 h-5" />, href: "#feedback" },
   ];
 
@@ -127,10 +127,11 @@ export default function ParentDashboard() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.dropdown-container') && !target.closest('.profile-dropdown')) {
+      if (!target.closest('.dropdown-container') && !target.closest('.profile-dropdown') && !target.closest('.notifications-dropdown')) {
         setMonthOpen(false);
         setTodayOpen(false);
         setProfileOpen(false);
+        setNotificationsOpen(false);
       }
     };
 
@@ -146,7 +147,7 @@ export default function ParentDashboard() {
     let last = 0;
     const onScroll = () => {
       // Keep navbar visible while any dropdown is open
-      if (profileOpen || monthOpen || todayOpen) {
+      if (profileOpen || monthOpen || todayOpen || notificationsOpen) {
         setNavHidden(false);
         return;
       }
@@ -166,7 +167,7 @@ export default function ParentDashboard() {
 
     container.addEventListener('scroll', onScroll, { passive: true });
     return () => container.removeEventListener('scroll', onScroll);
-  }, [profileOpen, monthOpen, todayOpen]);
+  }, [profileOpen, monthOpen, todayOpen, notificationsOpen]);
 
   // Logout handler: clear relevant local storage and redirect to /auth
   const handleLogout = () => {
@@ -213,6 +214,46 @@ export default function ParentDashboard() {
 
         {/* Right Section - Navigation and Profile */}
         <div className="flex items-center gap-6">
+          {/* Notifications Button + Dropdown */}
+          <div className="relative notifications-dropdown">
+            <button
+              onClick={() => setNotificationsOpen(o => !o)}
+              className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              aria-haspopup="true"
+              aria-expanded={notificationsOpen}
+              aria-label="Open notifications"
+            >
+              <Bell className="w-5 h-5 text-gray-700" />
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-4 px-1.5 py-0.5 rounded-full">3</span>
+            </button>
+            {notificationsOpen && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+                <div className="px-4 py-2 border-b border-gray-100">
+                  <h3 className="text-sm font-semibold text-[#1A1A1A]">Notifications</h3>
+                </div>
+                <ul className="max-h-80 overflow-auto divide-y divide-gray-100">
+                  {[
+                    { title: 'Report cards available for download', date: 'Dec 14, 2025', priority: 'high' },
+                    { title: 'Parent-teacher meet schedule released', date: 'Dec 18, 2025', priority: 'medium' },
+                    { title: 'Winter break begins next week', date: 'Dec 22, 2025', priority: 'low' },
+                  ].map((a, i) => (
+                    <li key={i} className="flex items-start gap-3 p-3 hover:bg-gray-50">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${a.priority === 'high' ? 'bg-red-100 text-red-600' : a.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}`}>
+                        <Bell className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm text-[#1A1A1A] font-medium truncate">{a.title}</p>
+                        <p className="text-[11px] text-[#6B7280] mt-0.5">{a.date}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <button onClick={() => setNotificationsOpen(false)} className="text-xs text-[#5D5FEF] font-medium hover:underline">Close</button>
+                </div>
+              </div>
+            )}
+          </div>
           <FloatingDock
             items={navItems.map(item => ({
               ...item,
