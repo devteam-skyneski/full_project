@@ -618,7 +618,22 @@ const UniversityPrograms = () => {
             <div className="pt-4">
               <Link
                 href={"/auth" as Route}
-                className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors inline-block"
+                className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
+                style={{
+                  boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                }}
               >
                 Explore Degree Programs
               </Link>
@@ -866,7 +881,22 @@ const HowItWorks = () => {
         >
           <Link
             href={{ pathname: "/auth", query: { mode: "signup" } }}
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+            className="inline-flex items-center px-8 py-4 bg-slate-800/60 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            style={{
+              boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+            }}
           >
             Get Started Today
             <motion.span
@@ -944,26 +974,38 @@ const FeaturesSection = () => {
             >
               <div className="w-full space-y-8 text-left">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-                  Self‑Paced Learning, Built for Modern Life
+                  Learn Without Limits, Wherever You Are
                 </h2>
                 
                 <p className="text-lg text-slate-700 leading-relaxed">
-                  Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
+                  Experience freedom in learning with courses designed to fit your lifestyle. Study at your own rhythm, access materials from any device, and keep your progress in sync as you grow at your pace.
                 </p>
 
                 <div className="space-y-4">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle className="w-4 h-4 text-white" />
-                      </div>
-                      <p className="text-slate-800">
-                        {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
-                        {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
-                        {index === 2 && 'Get timely support from instructors and peers in our community.'}
-                      </p>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
                     </div>
-                  ))}
+                    <p className="text-slate-800">
+                      Access lessons anytime, anywhere—your progress stays updated.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-800">
+                      Study flexibly to match your personal and professional goals.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-800">
+                      Get guidance and motivation from expert mentors and peers.
+                    </p>
+                  </div>
                 </div>
               </div>
             </MaskContainer>
