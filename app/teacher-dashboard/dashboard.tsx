@@ -7,7 +7,7 @@ import { Calendar, Clock, Users, FileText, CheckCircle, AlertCircle, TrendingUp,
 import Link from 'next/link';
 import Navbar from './navbar';
 import teacherDashboardAnimation from '../../login(animations)/TeacherDashboard.json';
-import ParticlesBackground from '../student-dashboard/components/ParticlesBackground';
+import TeacherParticlesBackground from './components/TeacherParticlesBackground';
 
 export default function TeacherDashboard() {
   const [selectedDay, setSelectedDay] = useState<'Today' | 'Tomorrow' | 'Wednesday'>('Today');
@@ -238,16 +238,16 @@ export default function TeacherDashboard() {
       <Navbar />
       {/* Blue Gradient Background to match Student Dashboard */}
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
-      <ParticlesBackground />
+      <TeacherParticlesBackground />
 
       <div className="min-h-screen pt-20">
         <div className="p-6">
           <div className="max-w-9x1 mx-auto">
             {/* Welcome Section and Classes - Side by Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 mb-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-2">
               {/* Welcome Card - Takes 2 columns WITH ANIMATED SPLIT TEXT (NO BLUR) */}
               <motion.div 
-                className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6"
+                className="lg:col-span-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                 style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -329,7 +329,7 @@ export default function TeacherDashboard() {
 
               {/* Classes Card - Takes 1 column (Right Side) */}
               <motion.div 
-                className="bg-white rounded-xl shadow-sm p-6"
+                className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                 style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -343,12 +343,12 @@ export default function TeacherDashboard() {
                   <h2 className="text-xl font-bold text-jetblack-900">Classes</h2>
                   <select
                     value={selectedDay}
-                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Wednesday')}
+                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Day after tomorrow')}
                     className="text-sm text-blue-600 bg-transparent border-none cursor-pointer font-medium focus:outline-none"
                   >
                     <option value="Today">Today</option>
                     <option value="Tomorrow">Tomorrow</option>
-                    <option value="Wednesday">Wednesday</option>
+                    <option value="Day after tomorrow">Day after tomorrow</option>
                   </select>
                 </div>
                 <div className="space-y-3">
@@ -419,12 +419,12 @@ export default function TeacherDashboard() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Left Column - Performance & Progress */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Class Performance with Bar Graph */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6 cursor-pointer relative overflow-hidden"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6 cursor-pointer relative overflow-hidden"
                   style={{ willChange: 'transform, box-shadow', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -549,7 +549,7 @@ export default function TeacherDashboard() {
                 </motion.div>
 
                 {/* Pending Approvals - React Vertical Timeline Style */}
-                <div className="bg-white rounded-xl shadow-sm p-6" style={{ backfaceVisibility: 'hidden' }}>
+                <div className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6" style={{ backfaceVisibility: 'hidden' }}>
                   <h2 className="text-xl font-bold text-gray-900 mb-8">Pending Approvals</h2>
                   
                   <div className="relative">
@@ -792,7 +792,7 @@ export default function TeacherDashboard() {
 
                 {/* Recent Activities - SLIDE IN FROM LEFT ON SCROLL */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: -100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -888,7 +888,7 @@ export default function TeacherDashboard() {
               <div className="space-y-6">
                 {/* Full Schedule with View More - SLIDE IN FROM RIGHT ON SCROLL */}
                 <motion.div 
-                  className="bg-white rounded-xl shadow-sm p-6"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-lg p-6"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -1048,7 +1048,7 @@ export default function TeacherDashboard() {
 
                 {/* Quick Stats - SLIDE IN FROM RIGHT ON SCROLL */}
                 <motion.div 
-                  className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200"
+                  className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20 shadow-lg"
                   style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
                   initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -1170,7 +1170,7 @@ export default function TeacherDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mr-6 ml-6">
                 {/* Math Course Card */}
                 <Link 
-                  href="/teacher/courses/math" 
+                  href="/teacher-dashboard/teacher/courses/Mathematics" 
                   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
                     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
@@ -1202,7 +1202,7 @@ export default function TeacherDashboard() {
                   </div>
 
                   {/* Middle White Section with Stats */}
-                  <div className="bg-white p-6">
+                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -1273,7 +1273,7 @@ export default function TeacherDashboard() {
 
                 {/* Physics Course Card - Now Abstract Blue */}
 <Link 
-  href="/teacher/courses/physics" 
+  href="/teacher-dashboard/teacher/courses/physics" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
@@ -1301,14 +1301,14 @@ export default function TeacherDashboard() {
       <div className="absolute top-10 right-20 text-lg">λ</div>
     </div>
 
-    <div className="relative z-10">
+   <div className="relative z-10">
       <p className="text-sm text-white/90 mb-1 font-bold">Course</p>
       <h3 className="text-2xl font-bold text-white">Physics</h3>
     </div>
   </div>
 
   {/* Middle White Section */}
-  <div className="bg-white p-6">
+  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
     <div className="flex items-center gap-3 mb-4">
       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -1380,9 +1380,8 @@ export default function TeacherDashboard() {
 
 
                 {/* Chemistry Course Card */}
-                {/* Chemistry Course Card */}
 <Link 
-  href="/teacher-dashboard/courses/chemistry" 
+  href="/teacher-dashboard/teacher/courses/chemistry" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
@@ -1426,7 +1425,7 @@ export default function TeacherDashboard() {
   </div>
 
   {/* Middle White Section */}
-  <div className="bg-white p-6">
+  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6">
     <div className="flex items-center gap-3 mb-4">
       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
         <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">

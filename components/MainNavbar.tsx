@@ -2,7 +2,7 @@
 import React from "react"
 import Link from "next/link"
 import { FloatingDock } from "@/components/ui/floating-dock"
-import { Home, Clock, BarChart3, CheckSquare, Bell, MessageSquare } from "lucide-react"
+import { Home, Clock, BarChart3, CheckSquare, Bell, MessageSquare, User } from "lucide-react"
 
 export default function MainNavbar() {
   const items = [
@@ -26,6 +26,9 @@ export default function MainNavbar() {
         <FloatingDock items={items} desktopClassName="flex gap-4" mobileClassName="grid grid-cols-4 gap-4" />
         <Link href="/notifications" className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
           <Bell className="w-5 h-5 text-gray-700" />
+        </Link>
+        <Link href="/parent/profile" className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+          <User className="w-5 h-5 text-gray-700" />
         </Link>
       </div>
     </nav>

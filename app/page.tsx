@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
+import { AnimatePresence, motion } from 'framer-motion';
+import LoadingScreen from '@/app/components/LoadingScreen';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
@@ -24,10 +26,42 @@ const useScrollShadow = () => {
 };
 
 // Navbar Component
-const LandingNavbar = () => {
+const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasShadow = useScrollShadow();
   const [activeHash, setActiveHash] = useState<string>('');
+
+  // Framer Motion variants for staggered pop-up reveal
+  const parentVariants = {
+    show: {
+      transition: {
+        staggerChildren: 0.14,
+        when: 'beforeChildren',
+      },
+    },
+  } as const;
+
+  const groupVariants = {
+    show: {
+      transition: {
+        staggerChildren: 0.14,
+        when: 'beforeChildren',
+      },
+    },
+  } as const;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 24, scale: 0.92 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.175, 0.885, 0.32, 1.275],
+      },
+    },
+  } as const;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -39,76 +73,105 @@ const LandingNavbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 ${
-        hasShadow ? 'shadow-sm' : ''
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        hasShadow
+          ? 'bg-white/80 supports-[backdrop-filter]:bg-white/60 backdrop-blur-md shadow-sm border-b border-gray-200/70'
+          : 'bg-transparent'
       }`}
       aria-label="Primary"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
+        <motion.div
+          variants={parentVariants}
+          initial="hidden"
+          animate={reveal ? 'show' : 'hidden'}
+          className="flex justify-between items-center h-16"
+        >
+          <motion.div variants={itemVariants} className="flex-shrink-0">
             <Link href="/" className="text-2xl font-bold text-blue-600">
               EduLearn
             </Link>
-          </div>
+          </motion.div>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <Link
-                href="#courses"
-                className={`px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                  activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
-                }`}
-              >
-                Courses
-              </Link>
-              <Link
-                href="#universities"
-                className={`px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                  activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
-                }`}
-              >
-                Universities
-              </Link>
-              <Link
-                href="#how-it-works"
-                className={`px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                  activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
-                }`}
-              >
-                How it Works
-              </Link>
-              <Link
-                href="#about"
-                className={`px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                  activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
-                }`}
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                Contact
-              </Link>
+          <motion.div variants={groupVariants} className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-6">
+              <motion.div variants={itemVariants}>
+                <Link
+                  href="#courses"
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#courses' ? 'after:scale-x-100' : ''
+                  }`}
+                >
+                  Courses
+                </Link>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Link
+                  href="#universities"
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#universities' ? 'after:scale-x-100' : ''
+                  }`}
+                >
+                  Universities
+                </Link>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Link
+                  href="#how-it-works"
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#how-it-works' ? 'after:scale-x-100' : ''
+                  }`}
+                >
+                  How it Works
+                </Link>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Link
+                  href="#about"
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#about' ? 'after:scale-x-100' : ''
+                  }`}
+                >
+                  About
+                </Link>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Link
+                  href="/contact"
+                  className="group relative text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left"
+                >
+                  Contact
+                </Link>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              href="/auth"
-              className="text-gray-700 hover:text-blue-600 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:border-blue-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-            >
-              Login
-            </Link>
-            <Link
-              href="/auth?mode=signup"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-            >
-              Sign Up
-            </Link>
-          </div>
+          <motion.div variants={groupVariants} className="hidden md:flex items-center space-x-4">
+            <motion.div variants={itemVariants}>
+              <Link
+                href="/auth"
+                className="text-gray-700 hover:text-gray-900 px-4 py-2 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-gray-300 hover:border-gray-400 bg-white/60"
+              >
+                Login
+              </Link>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <Link
+                href="/auth?mode=signup"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm hover:shadow"
+              >
+                Sign Up
+              </Link>
+            </motion.div>
+          </motion.div>
 
           <div className="md:hidden">
             <button
@@ -121,12 +184,12 @@ const LandingNavbar = () => {
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {isMenuOpen && (
           <div className="md:hidden" id="mobile-menu">
-            <div className="fixed inset-0 bg-black/30" onClick={() => setIsMenuOpen(false)} />
-            <div className="fixed inset-y-0 right-0 w-72 max-w-[80vw] bg-white shadow-xl p-4 transform transition-transform duration-200 ease-out">
+            <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px]" onClick={() => setIsMenuOpen(false)} />
+            <div className="fixed inset-y-0 right-0 w-72 max-w-[80vw] bg-white/90 supports-[backdrop-filter]:bg-white/70 backdrop-blur-md shadow-xl ring-1 ring-gray-200 p-4 transform transition-transform duration-200 ease-out">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-lg font-semibold text-gray-800">Menu</span>
                 <button
@@ -137,33 +200,47 @@ const LandingNavbar = () => {
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              <nav className="space-y-1">
-                <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
-                  Courses
-                </Link>
-                <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
-                  Universities
-                </Link>
-                <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
-                  How it Works
-                </Link>
-                <Link href="#about" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
-                  About
-                </Link>
-                <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
-                  Contact
-                </Link>
-              </nav>
-              <div className="mt-4 border-t pt-4">
+              <motion.nav variants={parentVariants} initial="hidden" animate="show" className="space-y-1">
+                <motion.div variants={itemVariants}>
+                  <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                    Courses
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                    Universities
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                    How it Works
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link href="#about" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                    About
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                    Contact
+                  </Link>
+                </motion.div>
+              </motion.nav>
+              <motion.div variants={groupVariants} initial="hidden" animate="show" className="mt-4 border-t pt-4">
                 <div className="flex gap-2">
-                  <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-blue-600 hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                    Login
-                  </Link>
-                  <Link href="/auth?mode=signup" onClick={() => setIsMenuOpen(false)} className="flex-1 rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                    Sign Up
-                  </Link>
+                  <motion.div variants={itemVariants} className="flex-1">
+                    <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
+                      Login
+                    </Link>
+                  </motion.div>
+                  <motion.div variants={itemVariants} className="flex-1">
+                    <Link href="/auth?mode=signup" onClick={() => setIsMenuOpen(false)} className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm">
+                      Sign Up
+                    </Link>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         )}
@@ -173,63 +250,87 @@ const LandingNavbar = () => {
 };
 
 // Hero Section Component
-const HeroSection = () => {
+const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
   const { ref, inView } = useInView({ triggerOnce: true });
   const [start, setStart] = useState(false);
 
+  // Start counters when revealed (landing finished) or when in view as a fallback
   useEffect(() => {
-    if (inView) setStart(true);
-  }, [inView]);
+    if (reveal || inView) setStart(true);
+  }, [reveal, inView]);
+
+  // Framer Motion variants for hero pop-up from bottom with slight zoom overshoot
+  const heroParent = {
+    show: { transition: { staggerChildren: 0.12, when: 'beforeChildren' } },
+  } as const;
+
+  const heroGroup = {
+    show: { transition: { staggerChildren: 0.12, when: 'beforeChildren' } },
+  } as const;
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 40, scale: 0.94 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: [0.175, 0.885, 0.32, 1.275] },
+    },
+  } as const;
 
   return (
-    <section className="bg-gradient-to-br from-blue-50 to-white py-20">
+    <section className="bg-gradient-to-br from-blue-50 to-blue-200 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+          <motion.div variants={heroParent} initial="hidden" animate={reveal ? 'show' : 'hidden'} className="space-y-8">
+            <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Transform Your Future with World-Class Education
-            </h1>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+            <motion.p variants={heroItem} className="text-lg md:text-xl text-gray-600 leading-relaxed">
               Access premium courses from top universities worldwide. Learn at your own pace or pursue university registration for recognized degrees.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/admin"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
-              >
-                Get Started
-              </Link>
-              <Link
-                href="https://listofcourses.netlify.app/"
-                className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
-              >
-                Explore Courses
-              </Link>
-            </div>
+            <motion.div variants={heroGroup} className="flex flex-col sm:flex-row gap-4">
+              <motion.div variants={heroItem}>
+                <Link
+                  href="/admin"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
+                >
+                  Get Started
+                </Link>
+              </motion.div>
+              <motion.div variants={heroItem}>
+                <Link
+                  href="https://listofcourses.netlify.app/"
+                  className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
+                >
+                  Explore Courses
+                </Link>
+              </motion.div>
+            </motion.div>
 
-            <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8">
-              <div className="text-center sm:text-left">
+            <motion.div ref={ref} variants={heroGroup} className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8">
+              <motion.div variants={heroItem} className="text-center sm:text-left">
                 <div className="text-3xl font-bold text-gray-900">
                   {start && <CountUp end={5000} duration={2} separator="," />}+
                 </div>
                 <div className="text-gray-600">Active Students</div>
-              </div>
-              <div className="text-center sm:text-left">
+              </motion.div>
+              <motion.div variants={heroItem} className="text-center sm:text-left">
                 <div className="text-3xl font-bold text-gray-900">
                   {start && <CountUp end={300} duration={2} />}+
                 </div>
                 <div className="text-gray-600">Courses</div>
-              </div>
-              <div className="text-center sm:text-left">
+              </motion.div>
+              <motion.div variants={heroItem} className="text-center sm:text-left">
                 <div className="text-3xl font-bold text-gray-900">
                   {start && <CountUp end={100} duration={2} />}+
                 </div>
                 <div className="text-gray-600">Universities</div>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
@@ -250,6 +351,8 @@ const HeroSection = () => {
 
 // University Partners Component
 const UniversityPartners = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const universities = [
     "Stanford University",
     "MIT",
@@ -262,11 +365,34 @@ const UniversityPartners = () => {
   ];
   const scrollingList = [...universities, ...universities, ...universities];
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (hasAnimated) return;
+
+    const handleScroll = () => {
+      const sectionEl = sectionRef.current;
+      if (!sectionEl || hasAnimated) return;
+      const rect = sectionEl.getBoundingClientRect();
+      const triggerPoint = window.innerHeight * 0.8;
+      if (rect.top <= triggerPoint) {
+        setHasAnimated(true);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true } as any);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll as any);
+      window.removeEventListener('resize', handleScroll as any);
+    };
+  }, [hasAnimated]);
+
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section ref={sectionRef} className="py-16 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-gray-900 mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
             Top Universities We Partner With
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -306,6 +432,28 @@ const UniversityPartners = () => {
         .animate-scroll-continuous {
           animation: scroll-continuous 30s linear infinite;
         }
+
+        @keyframes universities-zoom-settle {
+          0% {
+            transform: scale(1) translateY(0);
+          }
+          45% {
+            transform: scale(1.4) translateY(-20px);
+          }
+          75% {
+            transform: scale(0.98) translateY(0);
+          }
+          100% {
+            transform: scale(1) translateY(0);
+          }
+        }
+        .universities-heading {
+          will-change: transform;
+          transform-origin: center center;
+        }
+        .animate-universities-zoom {
+          animation: universities-zoom-settle 1.2s cubic-bezier(0.22, 0.61, 0.36, 1.2) both;
+        }
       `}</style>
     </section>
   );
@@ -314,7 +462,7 @@ const UniversityPartners = () => {
 // University Programs Component
 const UniversityPrograms = () => {
   return (
-    <section id="universities" className="py-20 bg-gradient-to-br from-blue-50 to-white">
+    <section id="universities" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
@@ -395,7 +543,7 @@ const CourseCategories = () => {
   ];
 
   return (
-    <section id="courses" className="py-20 bg-gray-50">
+    <section id="courses" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -460,7 +608,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-white">
+    <section id="how-it-works" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -514,7 +662,7 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-white">
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
@@ -608,7 +756,7 @@ const LearningStyles = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -704,7 +852,7 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800">
+    <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 landing-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="bg-white rounded-2xl p-8 shadow-xl">
@@ -998,21 +1146,127 @@ const LandingFooter = () => {
 
 // Main Landing Page Component
 export default function Page() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasLandingRevealed, setHasLandingRevealed] = useState(false);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  // Ensure the browser doesn't auto-restore scroll position on reload
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const { history } = window;
+    const prev = history.scrollRestoration;
+    history.scrollRestoration = 'manual';
+    return () => {
+      history.scrollRestoration = prev || 'auto';
+    };
+  }, []);
+
+  // Prevent hash jump during initial load
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
+  // After slide-up reveal completes, ensure viewport at top smoothly
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1500); // match slide-up duration
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
   return (
-    <div className="min-h-screen">
-      <LandingNavbar />
-      <main>
-        <HeroSection />
-        <UniversityPartners />
-        <UniversityPrograms />
-        <CourseCategories />
-        <HowItWorks />
-        <FeaturesSection />
-        <LearningStyles />
-        <ContactForm />
-      </main>
-      <LandingFooter />
-    </div>
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <LoadingScreen onComplete={handleLoadingComplete} />
+        )}
+      </AnimatePresence>
+      
+      <motion.div
+        initial={{ y: '100vh', opacity: 0 }}
+        animate={{ y: isLoading ? '100vh' : 0, opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 1.5, ease: [0.25, 0.8, 0.25, 1] }}
+        onAnimationComplete={() => {
+          if (!isLoading && typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setHasLandingRevealed(true);
+          }
+        }}
+        style={{ willChange: 'transform, opacity' }}
+        className="min-h-screen overflow-x-hidden bg-gradient-to-br from-blue-50 to-blue-200 landing-root"
+      >
+        <LandingNavbar reveal={hasLandingRevealed} />
+        <main>
+          <HeroSection reveal={hasLandingRevealed} />
+          <UniversityPartners />
+          <UniversityPrograms />
+          <CourseCategories />
+          <HowItWorks />
+          <FeaturesSection />
+          <LearningStyles />
+          <ContactForm />
+        </main>
+        <LandingFooter />
+        <style jsx global>{`
+          /* Default: all headings in landing use jet black */
+          .landing-root h1,
+          .landing-root h2,
+          .landing-root h3,
+          .landing-root h4,
+          .landing-root h5,
+          .landing-root h6 {
+            color: #000 !important;
+          }
+
+          /* Headings inside dark-colored areas should be white */
+          .landing-root .bg-blue-600 h1,
+          .landing-root .bg-blue-600 h2,
+          .landing-root .bg-blue-600 h3,
+          .landing-root .bg-blue-600 h4,
+          .landing-root .bg-blue-600 h5,
+          .landing-root .bg-blue-600 h6,
+          .landing-root .bg-blue-700 h1,
+          .landing-root .bg-blue-700 h2,
+          .landing-root .bg-blue-700 h3,
+          .landing-root .bg-blue-700 h4,
+          .landing-root .bg-blue-700 h5,
+          .landing-root .bg-blue-700 h6,
+          .landing-root .bg-blue-800 h1,
+          .landing-root .bg-blue-800 h2,
+          .landing-root .bg-blue-800 h3,
+          .landing-root .bg-blue-800 h4,
+          .landing-root .bg-blue-800 h5,
+          .landing-root .bg-blue-800 h6,
+          .landing-root .landing-dark h1,
+          .landing-root .landing-dark h2,
+          .landing-root .landing-dark h3,
+          .landing-root .landing-dark h4,
+          .landing-root .landing-dark h5,
+          .landing-root .landing-dark h6 {
+            color: #fff !important;
+          }
+
+          /* But if there's a white card inside dark section, keep headings black */
+          .landing-root .landing-dark .bg-white h1,
+          .landing-root .landing-dark .bg-white h2,
+          .landing-root .landing-dark .bg-white h3,
+          .landing-root .landing-dark .bg-white h4,
+          .landing-root .landing-dark .bg-white h5,
+          .landing-root .landing-dark .bg-white h6 {
+            color: #000 !important;
+          }
+        `}</style>
+      </motion.div>
+    </>
   );
 }
 

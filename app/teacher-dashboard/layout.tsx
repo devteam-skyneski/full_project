@@ -8,7 +8,7 @@ export default function TeacherDashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen teacher-dashboard">
       <Navbar />
       <main>{children}</main>
     </div>
