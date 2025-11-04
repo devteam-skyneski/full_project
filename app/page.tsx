@@ -10,8 +10,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import { ThreeDMarquee } from '@/components/ui/3d-marquee';
 import { cn } from '@/lib/utils';
-import AuthParticlesBackground from '@/app/auth/components/AuthParticlesBackground';
-import SectionParticlesBackground from '@/app/components/SectionParticlesBackground';
+import { Boxes } from '@/components/ui/background-boxes';
+import Chatbot from '@/components/ui/chatbot';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
@@ -360,31 +360,24 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
   } as const;
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 to-blue-200 py-20 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="relative bg-slate-900 py-20 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div variants={heroParent} initial="hidden" animate={reveal ? 'show' : 'hidden'} className="space-y-8">
-            <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
               Transform Your Future with World-Class Education
             </motion.h1>
 
-            <motion.p variants={heroItem} className="text-lg md:text-xl text-gray-600 leading-relaxed">
+            <motion.p variants={heroItem} className="text-lg md:text-xl text-neutral-300 leading-relaxed">
               Access premium courses from top universities worldwide. Learn at your own pace or pursue university registration for recognized degrees.
             </motion.p>
 
             <motion.div variants={heroGroup} className="flex flex-col sm:flex-row gap-4">
               <motion.div variants={heroItem}>
                 <Link
-                  href={"/admin" as Route}
+                  href={"/auth" as Route}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Get Started
@@ -392,8 +385,8 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={heroItem}>
                 <Link
-                  href="https://listofcourses.netlify.app/"
-                  className="border-2 border-white hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
+                  href={"/auth" as Route}
+                  className="border-2 border-white hover:border-blue-600 text-white hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Explore Courses
                 </Link>
@@ -402,22 +395,22 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
 
             <motion.div ref={ref} variants={heroGroup} className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8">
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={5000} duration={2} separator="," />}+
                 </div>
-                <div className="text-gray-600">Active Students</div>
+                <div className="text-neutral-300">Active Students</div>
               </motion.div>
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={300} duration={2} />}+
                 </div>
-                <div className="text-gray-600">Courses</div>
+                <div className="text-neutral-300">Courses</div>
               </motion.div>
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={100} duration={2} />}+
                 </div>
-                <div className="text-gray-600">Universities</div>
+                <div className="text-neutral-300">Universities</div>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -479,22 +472,15 @@ const UniversityPartners = () => {
   }, [hasAnimated]);
 
   return (
-    <section ref={sectionRef} className="relative py-16 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section ref={sectionRef} className="relative py-16 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center mb-12">
-          <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-gray-900 mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
+          <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-white mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
             Top Universities We Partner With
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Learn from the world&apos;s leading institutions and earn recognized credentials.
           </p>
         </div>
@@ -561,17 +547,10 @@ const UniversityPartners = () => {
 // University Programs Component
 const UniversityPrograms = () => {
   return (
-    <section id="universities" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
@@ -593,11 +572,11 @@ const UniversityPrograms = () => {
           </div>
 
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               University Registration & Accredited Degrees
             </h2>
             
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-lg text-neutral-300 leading-relaxed">
               Take your education to the next level with our university registration program. Earn fully accredited degrees from renowned institutions without relocating or giving up your current commitments.
             </p>
 
@@ -636,9 +615,12 @@ const UniversityPrograms = () => {
             </div>
 
             <div className="pt-4">
-              <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors">
+              <Link
+                href={"/auth" as Route}
+                className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors inline-block"
+              >
                 Explore Degree Programs
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -659,29 +641,16 @@ const CourseCategories = () => {
   ];
 
   return (
-    <section id="courses" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 landing-dark overflow-hidden">
-      <div
-        className="absolute top-20 left-1/2 -translate-x-1/2 w-screen bottom-0 pointer-events-none z-0 opacity-80"
-        style={{ transform: 'translateX(-50%) translateZ(0)', willChange: 'transform' }}
-      >
-        <ThreeDMarquee images={MARQUEE_IMAGES} className="h-full" />
-      </div>
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="relative z-10">
+    <section id="courses" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">
+        <div className="relative z-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Explore Our Course Categories
           </h2>
-          <p className="text-lg text-white max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Choose from a wide range of subjects designed to help you achieve your learning goals
           </p>
         </div>
@@ -711,14 +680,12 @@ const CourseCategories = () => {
                     <span className="text-sm text-gray-500">
                       {category.courseCount}
                     </span>
-                    <a
-                      href="https://listofcourses.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href={"/auth" as Route}
                       className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                     >
                       Explore →
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -741,22 +708,15 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="how-it-works" className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Get started with your learning journey in 4 simple steps
           </p>
         </div>
@@ -775,13 +735,13 @@ const HowItWorks = () => {
                     <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <div className="text-blue-600 font-semibold text-sm mb-2">
+                    <div className="text-blue-400 font-semibold text-sm mb-2">
                       Step {index + 1}
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
+                    <p className="text-neutral-300 text-sm leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -819,24 +779,17 @@ const FeaturesSection = () => {
   }, []);
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               Self‑Paced Learning, Built for Modern Life
             </h2>
             
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-lg text-neutral-300 leading-relaxed">
               Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
             </p>
 
@@ -846,7 +799,7 @@ const FeaturesSection = () => {
                   <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <CheckCircle className="w-4 h-4 text-green-600" />
                   </div>
-                  <p className="text-gray-800">
+                  <p className="text-neutral-200">
                     {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
                     {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
                     {index === 2 && 'Get timely support from instructors and peers in our community.'}
@@ -959,23 +912,16 @@ const LearningStyles = () => {
   ];
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
+    <section className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10">
+        <div className="relative z-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Classes Available for Every Learning Style
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Choose the learning format that best fits your schedule and goals
           </p>
         </div>
@@ -1055,11 +1001,12 @@ const LearningStyles = () => {
                 </div>
               </div>
 
-              <button
-                className="w-full py-3 px-6 rounded-lg font-medium transition-colors relative z-50 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600"
+              <Link
+                href={"/auth" as Route}
+                className="w-full py-3 px-6 rounded-lg font-medium transition-colors relative z-50 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 inline-block text-center"
               >
                 {program.buttonText}
-              </button>
+              </Link>
               </div>
               </div>
             </div>
@@ -1096,17 +1043,10 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-blue-600 to-blue-800 landing-dark overflow-hidden">
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-        style={{
-          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-        }}
-      >
-        <SectionParticlesBackground />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="bg-white rounded-2xl p-8 shadow-xl">
             <div className="text-center mb-8">
@@ -1203,12 +1143,12 @@ const ContactForm = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 px-6 rounded-lg font-semibold transition-colors"
+              <Link
+                href={"/auth" as Route}
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 px-6 rounded-lg font-semibold transition-colors inline-block text-center"
               >
                 Submit Enquiry
-              </button>
+              </Link>
             </form>
           </div>
 
@@ -1455,51 +1395,9 @@ export default function Page() {
           }
         }}
         style={{ willChange: 'transform, opacity' }}
-        className="min-h-screen overflow-x-hidden bg-gradient-to-br from-blue-50 to-blue-200 landing-root relative overflow-hidden"
+        className="min-h-screen overflow-x-hidden bg-slate-900 landing-root relative overflow-hidden"
       >
-        {/* Particles background - constrained to left and right sides with mask */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div 
-            className="absolute inset-0"
-            style={{
-              maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
-            }}
-          >
-            <AuthParticlesBackground />
-          </div>
-        </div>
-        {/* Floating parallax background elements - constrained to left and right sides */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{ transform: 'translate(0px, 0px)' }}
-        >
-          {/* Left side blobs */}
-          <div className="absolute top-20 -left-32 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute top-60 -left-24 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-20 -left-28 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-          
-          {/* Right side blobs */}
-          <div className="absolute top-40 -right-32 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-80 -right-24 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute bottom-40 -right-28 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-        </div>
-
-        {/* Additional floating elements - constrained to left and right sides */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{ transform: 'translate(0px, 0px)' }}
-        >
-          {/* Left side floating circles */}
-          <div className="absolute top-1/4 left-0 w-32 h-32 bg-blue-300 rounded-full opacity-10 animate-float"></div>
-          <div className="absolute bottom-1/4 left-4 w-24 h-24 bg-purple-300 rounded-full opacity-10 animate-float-delayed"></div>
-          <div className="absolute top-1/2 left-0 w-20 h-20 bg-pink-300 rounded-full opacity-10 animate-float"></div>
-          
-          {/* Right side floating circles */}
-          <div className="absolute top-1/3 right-0 w-32 h-32 bg-purple-300 rounded-full opacity-10 animate-float"></div>
-          <div className="absolute bottom-1/3 right-4 w-24 h-24 bg-blue-300 rounded-full opacity-10 animate-float-delayed"></div>
-          <div className="absolute top-2/3 right-0 w-20 h-20 bg-pink-300 rounded-full opacity-10 animate-float"></div>
-        </div>
+        {/* Removed redundant background animations - using Boxes component in sections instead */}
         <LandingNavbar reveal={hasLandingRevealed} />
         <main>
           <HeroSection reveal={hasLandingRevealed} />
@@ -1512,15 +1410,16 @@ export default function Page() {
           <ContactForm />
         </main>
         <LandingFooter />
+        <Chatbot />
         <style jsx global>{`
-          /* Default: all headings in landing use jet black */
+          /* Default: all headings in landing use white for dark theme */
           .landing-root h1,
           .landing-root h2,
           .landing-root h3,
           .landing-root h4,
           .landing-root h5,
           .landing-root h6 {
-            color: #000 !important;
+            color: #fff !important;
           }
 
           /* Headings inside dark-colored areas should be white */
