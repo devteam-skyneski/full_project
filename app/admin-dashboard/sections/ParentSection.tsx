@@ -8,7 +8,7 @@ import {
   Search,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 interface ParentData {
   name: string;
