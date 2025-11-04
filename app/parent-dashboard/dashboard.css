@@ -396,6 +396,25 @@ html {
 /* Parent Dashboard overrides for Tasks section: make it use full width/height */
 .parent-dashboard #tasks .section-inner { max-width: 100%; padding-left: 1.5rem; padding-right: 1.5rem; }
 .parent-dashboard #tasks .grid { height: 100%; }
+/* --- Compact, viewport-fit overrides (parent dashboard only) --- */
+.parent-dashboard .scroll-container { padding-top: 70px; }
+.parent-dashboard .dashboard-section {
+  min-height: calc(95vh - 70px);
+  max-height: calc(95vh - 70px);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.parent-dashboard .dashboard-section > .w-full { max-width: 95vw; margin-left: auto; margin-right: auto; }
+.parent-dashboard .dashboard-card { max-height: 80vh; overflow: auto; }
+.parent-dashboard .dashboard-grid, .parent-dashboard .grid { gap: 0.5rem !important; }
+
+@media (max-width: 1280px) {
+  .parent-dashboard .dashboard-section { min-height: calc(94vh - 70px); max-height: calc(94vh - 70px); }
+}
+@media (max-width: 768px) {
+  .parent-dashboard .dashboard-section { min-height: calc(92vh - 70px); max-height: calc(92vh - 70px); }
+  .parent-dashboard .dashboard-card { max-height: 78vh; }
+}
 /* Custom styles for parent dashboard - pixel perfect matching */
 
 /* Smooth scroll behavior */
