@@ -343,7 +343,7 @@ export default function TeacherDashboard() {
                   <h2 className="text-xl font-bold text-jetblack-900">Classes</h2>
                   <select
                     value={selectedDay}
-                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Day after tomorrow')}
+                    onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'Day after tomorrow' )}
                     className="text-sm text-blue-600 bg-transparent border-none cursor-pointer font-medium focus:outline-none"
                   >
                     <option value="Today">Today</option>
@@ -1170,15 +1170,11 @@ export default function TeacherDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mr-6 ml-6">
                 {/* Math Course Card */}
                 <Link 
-                  href="/teacher-dashboard/teacher/courses/Mathematics" 
-                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
-                    isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                  }`}
+                  href="/teacher-dashboard/teacher/courses/math" 
+                  className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group"
                   style={{ transitionDelay: '1ms' }}
                 >
-                  {/* Top Colored Section with Math Formulas */}
                   <div className="relative bg-gradient-to-br from-blue-400 to-blue-600 group-hover:from-blue-500 group-hover:to-blue-700 transition-all duration-700 p-6 overflow-hidden">
-                    {/* Mathematical formulas and symbols */}
                     <div className="absolute inset-0 text-white/80 font-bold pointer-events-none">
                       <div className="absolute top-3 right-4 text-3xl">π</div>
                       <div className="absolute top-14 right-14 text-2xl">∫</div>
@@ -1273,7 +1269,7 @@ export default function TeacherDashboard() {
 
                 {/* Physics Course Card - Now Abstract Blue */}
 <Link 
-  href="/teacher-dashboard/teacher/courses/physics" 
+    href="/teacher-dashboard/teacher/courses/Physics" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
@@ -1301,7 +1297,7 @@ export default function TeacherDashboard() {
       <div className="absolute top-10 right-20 text-lg">λ</div>
     </div>
 
-   <div className="relative z-10">
+    <div className="relative z-10">
       <p className="text-sm text-white/90 mb-1 font-bold">Course</p>
       <h3 className="text-2xl font-bold text-white">Physics</h3>
     </div>
@@ -1381,7 +1377,7 @@ export default function TeacherDashboard() {
 
                 {/* Chemistry Course Card */}
 <Link 
-  href="/teacher-dashboard/teacher/courses/chemistry" 
+            href="/teacher-dashboard/teacher/courses/Chemistry" 
   className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 relative focus:outline-none focus:ring-4 focus:ring-blue-300 group ${
     isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
   }`}
