@@ -4,7 +4,7 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import { useState, useRef, useEffect } from "react";
-import { Upload, Calendar as CalendarIcon } from "lucide-react";
+import { Upload, Calendar as CalendarIcon, Download } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 
@@ -488,6 +488,22 @@ function TimelineCard({
     </div>
   );
 
+  const handleDownload = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const content = `Assignment: ${assignment.title}\nSubject: ${assignment.subject} (${assignment.subjectId})\nDue: ${assignment.dueDate}, ${assignment.year}\nStatus: ${assignment.status}${assignment.status === "graded" && assignment.grade ? ` (Grade: ${assignment.grade})` : ""}\n\nDescription:\n${assignment.description}\n`;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const safeTitle = assignment.title.replace(/[^a-z0-9\-_. ]/gi, "").replace(/\s+/g, "_");
+    link.href = url;
+    link.download = `${safeTitle || "assignment"}_details.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div
       ref={cardRef}
@@ -573,17 +589,26 @@ function TimelineCard({
 
 
           {assignment.status !== "graded" && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onSubmitClick();
-              }}
-              className="w-full px-2 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-medium flex items-center justify-center gap-1.5 text-xs"
-            >
-              <Upload className="w-3 h-3" />
-              Submit Assignment
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleDownload}
+                className="flex-1 px-2 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-medium flex items-center justify-center gap-1.5 text-xs"
+              >
+                <Download className="w-3 h-3" />
+                Download Details
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSubmitClick();
+                }}
+                className="flex-1 px-2 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-medium flex items-center justify-center gap-1.5 text-xs"
+              >
+                <Upload className="w-3 h-3" />
+                Submit Assignment
+              </button>
+            </div>
           )}
         </div>
       </VerticalTimelineElement>
@@ -623,9 +648,9 @@ export default function Assignments() {
   const filteredAssignments = assignmentsData.filter((a) => `${a.dueDate} ${a.year}` === selectedDate);
 
   return (
-    <section id="assignments" className="py-20 min-h-screen">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Assignments Timeline</h2>
+    <section id="assignments" className="py-12 sm:py-16 min-h-screen font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12 text-center">Assignments Timeline</h2>
 
         <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
           {/* Date Filter */}

@@ -27,8 +27,8 @@ export default function RootLayout({
 
   return (
 
-    <html lang="en">
-      <body className="min-h-screen">
+    <html lang="en" className="overflow-x-hidden">
+      <body className="min-h-screen overflow-x-hidden w-full max-w-full">
         <ClickSpark sparkColor="#fff" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
           {children}
         </ClickSpark>
