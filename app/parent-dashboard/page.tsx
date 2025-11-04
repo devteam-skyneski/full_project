@@ -59,6 +59,7 @@ export default function ParentDashboard() {
   const [navHidden, setNavHidden] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [monthOpen, setMonthOpen] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState('October');
   const [todayOpen, setTodayOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -321,11 +322,34 @@ export default function ParentDashboard() {
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-[#1A1A1A]">Performance</h3>
-                    <div className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition border border-gray-200">
-                      <span className="text-gray-700 text-sm">October</span>
-                      <ChevronDown className="w-4 h-4 text-gray-700" />
+                    <div className="relative dropdown-container">
+                      <button
+                        onClick={() => setMonthOpen(!monthOpen)}
+                        className="flex items-center gap-2 rounded-lg px-3 py-1 cursor-pointer transition border border-gray-200 hover:bg-gray-50"
+                        aria-haspopup="listbox"
+                        aria-expanded={monthOpen}
+                        aria-label="Select month"
+                      >
+                        <span className="text-gray-700 text-sm">{selectedMonth}</span>
+                        <ChevronDown className="w-4 h-4 text-gray-700" />
+                      </button>
+                      {monthOpen && (
+                        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[140px] z-50 dropdown-menu">
+                          {['September','October','November','December'].map((m) => (
+                            <button
+                              key={m}
+                              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${m===selectedMonth ? 'font-semibold text-gray-800' : 'text-gray-700'}`}
+                              onClick={() => { setSelectedMonth(m); setMonthOpen(false); }}
+                              role="option"
+                              aria-selected={m===selectedMonth}
+                            >
+                              {m}
+                            </button>
+                          ))}
                         </div>
+                      )}
                     </div>
+                  </div>
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                   <div>
