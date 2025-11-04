@@ -12,6 +12,7 @@ import { ThreeDMarquee } from '@/components/ui/3d-marquee';
 import { cn } from '@/lib/utils';
 import { Boxes } from '@/components/ui/background-boxes';
 import Chatbot from '@/components/ui/chatbot';
+import { MaskContainer } from '@/components/ui/svg-mask-effect';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
@@ -700,56 +701,183 @@ const CourseCategories = () => {
 
 // How It Works Component
 const HowItWorks = () => {
+  const { ref, inView } = useInView({
+    threshold: 0.2,
+    triggerOnce: false,
+  });
+
   const steps = [
-    { icon: UserPlus, title: 'Create Your Account', description: 'Sign up in minutes and set up your personalized learning profile.' },
-    { icon: Search, title: 'Choose Your Path', description: 'Browse courses or select a university program that matches your goals.' },
-    { icon: BookOpen, title: 'Start Learning', description: 'Access course materials, attend live sessions, or learn at your own pace.' },
-    { icon: Award, title: 'Earn Credentials', description: 'Complete courses to earn certificates or degrees from top universities.' }
+    { 
+      icon: UserPlus, 
+      title: 'Create Your Account', 
+      description: 'Sign up in minutes with just your email and set up your personalized learning profile. Choose your interests and learning goals to get tailored course recommendations.'
+    },
+    { 
+      icon: Search, 
+      title: 'Choose Your Path', 
+      description: 'Browse through thousands of courses or explore university programs that match your career goals. Use our smart filters to find exactly what you need.'
+    },
+    { 
+      icon: BookOpen, 
+      title: 'Start Learning', 
+      description: 'Access comprehensive course materials, join live interactive sessions, or learn at your own pace. Track your progress with our intuitive dashboard.'
+    },
+    { 
+      icon: Award, 
+      title: 'Earn Credentials', 
+      description: 'Complete courses and assessments to earn industry-recognized certificates or accredited degrees from top universities worldwide.'
+    }
   ];
 
   return (
-    <section id="how-it-works" className="relative py-20 bg-slate-900 overflow-hidden">
+    <section id="how-it-works" className="relative py-24 bg-slate-900 overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            How It Works
-          </h2>
-          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
-            Get started with your learning journey in 4 simple steps
-          </p>
-        </div>
+        <motion.div 
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
+        >
+          <motion.div
+            initial={{ scale: 0.9 }}
+            animate={inView ? { scale: 1 } : { scale: 0.9 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+              How It Works
+            </h2>
+            <p className="text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
+              Transform your career with our streamlined learning platform. Get started in just 4 simple steps.
+            </p>
+          </motion.div>
+        </motion.div>
 
         <div className="relative">
-          <div className="hidden lg:block absolute top-16 left-0 right-0 h-0.5 bg-gray-200">
-            <div className="absolute top-0 left-1/4 w-1/2 h-0.5 bg-blue-600"></div>
+          {/* Animated connecting line */}
+          <div className="hidden lg:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gray-700 to-transparent opacity-30">
+            <motion.div 
+              className="absolute top-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"
+              initial={{ width: '0%' }}
+              animate={inView ? { width: '100%' } : { width: '0%' }}
+              transition={{ duration: 1.5, delay: 0.3, ease: 'easeInOut' }}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+          {/* Step indicators on the line */}
+          <div className="hidden lg:block absolute top-20 left-0 right-0">
+            {steps.map((_, index) => (
+              <motion.div
+                key={index}
+                className="absolute w-4 h-4 bg-blue-600 rounded-full -top-1.5 border-4 border-slate-900 shadow-lg"
+                style={{ left: `${(index * 33.33) + 0}%` }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.5 + (index * 0.2),
+                  type: 'spring',
+                  stiffness: 200
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
             {steps.map((step, index) => {
               const IconComponent = step.icon;
+              const { ref: stepRef, inView: stepInView } = useInView({
+                threshold: 0.3,
+                triggerOnce: false,
+              });
+
               return (
-                <div key={index} className="relative">
+                <motion.div
+                  key={index}
+                  ref={stepRef}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={stepInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.15,
+                    type: 'spring',
+                    stiffness: 100
+                  }}
+                  className="relative group"
+                >
                   <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="text-blue-400 font-semibold text-sm mb-2">
-                      Step {index + 1}
-                    </div>
-                    <h3 className="text-lg font-semibold text-white mb-2">
+                    {/* Animated icon container */}
+                    <motion.div
+                      className="w-20 h-20 bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 relative z-10 shadow-lg group-hover:shadow-xl transition-all duration-300"
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotate: [0, -5, 5, -5, 0],
+                        transition: { duration: 0.5 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <IconComponent className="w-10 h-10 text-white" />
+                      {/* Glow effect */}
+                      <div className="absolute inset-0 bg-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300" />
+                    </motion.div>
+
+                    {/* Step number badge */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={stepInView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ 
+                        duration: 0.4, 
+                        delay: 0.3 + (index * 0.15),
+                        type: 'spring',
+                        stiffness: 200
+                      }}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600/20 text-blue-400 font-bold text-sm mb-3 border border-blue-500/30"
+                    >
+                      {index + 1}
+                    </motion.div>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
                       {step.title}
                     </h3>
-                    <p className="text-neutral-300 text-sm leading-relaxed">
+
+                    {/* Description */}
+                    <p className="text-neutral-400 text-sm leading-relaxed px-2 group-hover:text-neutral-300 transition-colors duration-300">
                       {step.description}
                     </p>
                   </div>
-                </div>
+
+                  {/* Hover effect background */}
+                  <div className="absolute inset-0 -z-10 rounded-2xl bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                </motion.div>
               );
             })}
           </div>
         </div>
+
+        {/* Call to action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-16"
+        >
+          <Link
+            href={{ pathname: "/auth", query: { mode: "signup" } }}
+            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+          >
+            Get Started Today
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+              className="ml-2"
+            >
+              →
+            </motion.span>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
@@ -784,29 +912,61 @@ const FeaturesSection = () => {
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-          <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Self‑Paced Learning, Built for Modern Life
-            </h2>
-            
-            <p className="text-lg text-neutral-300 leading-relaxed">
-              Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
-            </p>
-
-            <div className="space-y-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <p className="text-neutral-200">
-                    {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
-                    {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
-                    {index === 2 && 'Get timely support from instructors and peers in our community.'}
+          <div className="relative w-full min-h-[32rem] overflow-hidden">
+            <MaskContainer
+              revealText={
+                <div className="w-full space-y-8 text-left">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">
+                    Self‑Paced Learning, Built for Modern Life
+                  </h2>
+                  
+                  <p className="text-lg text-neutral-300 leading-relaxed">
+                    Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
                   </p>
+
+                  <div className="space-y-4">
+                    {features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        </div>
+                        <p className="text-neutral-200">
+                          {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
+                          {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
+                          {index === 2 && 'Get timely support from instructors and peers in our community.'}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              }
+              className="h-full w-full"
+            >
+              <div className="w-full space-y-8 text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+                  Self‑Paced Learning, Built for Modern Life
+                </h2>
+                
+                <p className="text-lg text-slate-700 leading-relaxed">
+                  Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
+                </p>
+
+                <div className="space-y-4">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <p className="text-slate-800">
+                        {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
+                        {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
+                        {index === 2 && 'Get timely support from instructors and peers in our community.'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </MaskContainer>
           </div>
 
           <div className="relative">
