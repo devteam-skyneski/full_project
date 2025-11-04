@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
+import { AnimatePresence, motion } from 'framer-motion';
+import LoadingScreen from '@/app/components/LoadingScreen';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
@@ -998,21 +1000,76 @@ const LandingFooter = () => {
 
 // Main Landing Page Component
 export default function Page() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  // Ensure the browser doesn't auto-restore scroll position on reload
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const { history } = window;
+    const prev = history.scrollRestoration;
+    history.scrollRestoration = 'manual';
+    return () => {
+      history.scrollRestoration = prev || 'auto';
+    };
+  }, []);
+
+  // Prevent hash jump during initial load
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
+  // After slide-up reveal completes, ensure viewport at top smoothly
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1500); // match slide-up duration
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
   return (
-    <div className="min-h-screen">
-      <LandingNavbar />
-      <main>
-        <HeroSection />
-        <UniversityPartners />
-        <UniversityPrograms />
-        <CourseCategories />
-        <HowItWorks />
-        <FeaturesSection />
-        <LearningStyles />
-        <ContactForm />
-      </main>
-      <LandingFooter />
-    </div>
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <LoadingScreen onComplete={handleLoadingComplete} />
+        )}
+      </AnimatePresence>
+      
+      <motion.div
+        initial={{ y: '100vh', opacity: 0 }}
+        animate={{ y: isLoading ? '100vh' : 0, opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 1.5, ease: [0.25, 0.8, 0.25, 1] }}
+        onAnimationComplete={() => {
+          if (!isLoading && typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        style={{ willChange: 'transform, opacity' }}
+        className="min-h-screen overflow-x-hidden"
+      >
+        <LandingNavbar />
+        <main>
+          <HeroSection />
+          <UniversityPartners />
+          <UniversityPrograms />
+          <CourseCategories />
+          <HowItWorks />
+          <FeaturesSection />
+          <LearningStyles />
+          <ContactForm />
+        </main>
+        <LandingFooter />
+      </motion.div>
+    </>
   );
 }
 
