@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import './globals.css'
+import ClickSpark from '@/components/ClickSpark'
 
 
 
@@ -27,7 +28,11 @@ export default function RootLayout({
   return (
 
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen">
+        <ClickSpark sparkColor="#fff" sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+          {children}
+        </ClickSpark>
+      </body>
     </html>
 
   )
