@@ -58,8 +58,8 @@ try {
 
 export default function ParentDashboard() {
   const NavIcon: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors">
-      <div className="text-black">
+    <div className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-colors">
+      <div className="text-white">
         {children}
       </div>
     </div>
@@ -77,11 +77,11 @@ export default function ParentDashboard() {
 
   // Navbar items for FloatingDock
   const navItems = [
-    { title: "Home", icon: <NavIcon><Home className="w-5 h-5 text-black" /></NavIcon>, href: "#home" },
-    { title: "Task", icon: <NavIcon><FileText className="w-5 h-5 text-black" /></NavIcon>, href: "#tasks" },
-    { title: "Report", icon: <NavIcon><BarChart3 className="w-5 h-5 text-black" /></NavIcon>, href: "#performance" },
-    { title: "Attendance", icon: <NavIcon><CheckSquare className="w-5 h-5 text-black" /></NavIcon>, href: "#attendance" },
-    { title: "Feedback", icon: <NavIcon><MessageSquare className="w-5 h-5 text-black" /></NavIcon>, href: "#feedback" },
+    { title: "Home", icon: <NavIcon><Home className="w-5 h-5 text-white" /></NavIcon>, href: "#home" },
+    { title: "Task", icon: <NavIcon><FileText className="w-5 h-5 text-white" /></NavIcon>, href: "#tasks" },
+    { title: "Report", icon: <NavIcon><BarChart3 className="w-5 h-5 text-white" /></NavIcon>, href: "#performance" },
+    { title: "Attendance", icon: <NavIcon><CheckSquare className="w-5 h-5 text-white" /></NavIcon>, href: "#attendance" },
+    { title: "Feedback", icon: <NavIcon><MessageSquare className="w-5 h-5 text-white" /></NavIcon>, href: "#feedback" },
   ];
 
   // Animation variants for cards
@@ -146,35 +146,10 @@ export default function ParentDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Navbar hide/show on scroll (hide on scroll DOWN, show on scroll UP)
+  // Keep navbar always visible; disable previous hide-on-scroll behavior
   useEffect(() => {
-    const container = scrollContainerRef.current || document.querySelector('.scroll-container');
-    if (!container) return;
-
-    let last = 0;
-    const onScroll = () => {
-      // Keep navbar visible while any dropdown is open
-      if (profileOpen || monthOpen || todayOpen || notificationsOpen) {
-        setNavHidden(false);
-        return;
-      }
-
-      const st = (container as HTMLElement).scrollTop || 0;
-      // small threshold to avoid flicker
-      if (st > last + 10) {
-        // scrolling down -> hide
-        setNavHidden(true);
-      } else if (st < last - 10) {
-        // scrolling up -> show
-        setNavHidden(false);
-      }
-      last = st <= 0 ? 0 : st;
-      setLastScrollTop(last);
-    };
-
-    container.addEventListener('scroll', onScroll, { passive: true });
-    return () => container.removeEventListener('scroll', onScroll);
-  }, [profileOpen, monthOpen, todayOpen, notificationsOpen]);
+    setNavHidden(false);
+  }, []);
 
   // Logout handler: clear relevant local storage and redirect to /auth
   const handleLogout = () => {
@@ -215,13 +190,13 @@ export default function ParentDashboard() {
   return (
     <div className="parent-dashboard">
       {/* Fixed Navbar with FloatingDock */}
-  <nav className={`w-full bg-white shadow-sm py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 border-b border-gray-100 fixed-navbar ${navHidden ? 'hidden' : ''}`}>
+  <nav className={`w-full bg-transparent shadow-none py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 fixed-navbar`}>
         {/* Left Section - Logo */}
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-[#6C5CE7] text-white flex items-center justify-center font-bold text-lg rounded-lg">
             P
           </div>
-          <h1 className="text-xl font-semibold text-gray-800">Parent Portal</h1>
+          <h1 className="text-xl font-semibold text-white">Parent Portal</h1>
         </div>
 
         {/* Right Section - Navigation and Profile */}
@@ -230,12 +205,12 @@ export default function ParentDashboard() {
           <div className="relative notifications-dropdown">
             <button
               onClick={() => setNotificationsOpen(o => !o)}
-              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-white/20"
               aria-haspopup="true"
               aria-expanded={notificationsOpen}
               aria-label="Open notifications"
             >
-              <Bell className="w-5 h-5 text-black" />
+              <Bell className="w-5 h-5 text-white" />
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-4 px-1.5 py-0.5 rounded-full">3</span>
             </button>
             {notificationsOpen && (
@@ -282,20 +257,20 @@ export default function ParentDashboard() {
           <div className="relative profile-dropdown">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors"
             >
-              <User className="w-5 h-5 text-gray-700" />
+              <User className="w-5 h-5 text-white" />
               {profileOpen ? (
-                <ChevronUp className="w-4 h-4 text-gray-600" />
+                <ChevronUp className="w-4 h-4 text-white" />
               ) : (
-                <ChevronDown className="w-4 h-4 text-gray-600" />
+                <ChevronDown className="w-4 h-4 text-white" />
               )}
             </button>
             
             {profileOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+              <div className="absolute right-0 mt-2 w-64 bg-slate-800 rounded-lg shadow-lg border border-white/20 py-2 z-50 text-white">
                 {/* User Info Section */}
-                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
                   <div className="w-10 h-10 rounded-full bg-[#6C5CE7] text-white flex items-center justify-center font-semibold">
                     P
                   </div>
@@ -307,11 +282,11 @@ export default function ParentDashboard() {
                 
                 {/* Menu Items */}
                 <div className="py-1">
-                  <button onClick={() => window.location.assign('/parent/profile')} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-50 transition-colors" aria-label="Open parent profile">
+                  <button onClick={() => window.location.assign('/parent/profile')} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors" aria-label="Open parent profile">
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
-                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-50 transition-colors">
+                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
@@ -374,12 +349,12 @@ export default function ParentDashboard() {
 
                 {/* Performance Section (from Student Dashboard) */}
                 <motion.div 
-                  className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1"
+                  className="bg-white rounded-2xl p-0 shadow-sm dashboard-card flex-1 overflow-hidden"
                   initial={variants.fadeUp.initial}
                   animate={variants.fadeUp.animate}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between p-5 pb-3">
                     <h3 className="text-lg font-semibold text-white">Performance</h3>
                     <div className="relative dropdown-container">
                       <button
@@ -409,8 +384,8 @@ export default function ParentDashboard() {
                       )}
                     </div>
                   </div>
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
+                  <div className="px-5">
+                    <div className="flex items-center justify-between mb-3">
                   <div>
                         <span className="text-3xl font-bold text-white">95.4</span>
                         <p className="text-[#6B7280] text-xs mt-1">Introduction to programming</p>
@@ -420,15 +395,15 @@ export default function ParentDashboard() {
                       </button>
                             </div>
                           </div>
-                  <div className="h-56">
+                  <div className="h-[22rem] px-5 pb-5">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={performanceData.map(item => ({
                           ...item,
                           remaining: 100 - item.score
                         }))}
-                        barSize={70}
-                        margin={{ top: 30, right: 30, left: 20, bottom: 65 }}
+                        barSize={48}
+                        margin={{ top: 16, right: 12, left: 12, bottom: 40 }}
                       >
                         <XAxis
                           dataKey="name"

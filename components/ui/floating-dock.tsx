@@ -133,14 +133,15 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
-  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+  // Make all icons consistent like the notification button (no grow effect)
+  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 40, 40]);
+  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 40, 40]);
 
-  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 30, 20]);
+  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 20, 20]);
   let heightTransformIcon = useTransform(
     distance,
     [-150, 0, 150],
-    [20, 30, 20],
+    [20, 20, 20],
   );
 
   let width = useSpring(widthTransform, {
@@ -181,7 +182,7 @@ function IconContainer({
         style={{ width, height }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800"
+        className="relative flex aspect-square items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
       >
         <AnimatePresence>
           {hovered && (
