@@ -153,8 +153,8 @@ const GradeAndReportPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
+    <div className="relative min-h-screen p-4 sm:p-6 lg:p-8 text-slate-100">
+      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-black"></div>
       {/* Header */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -162,10 +162,10 @@ const GradeAndReportPage = () => {
         transition={{ duration: 0.5 }}
         className="max-w-9xl mx-auto mb-8"
       >
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-fuchsia-500 bg-clip-text text-transparent">
           Grading & Report Card Management
         </h1>
-        <p className="text-gray-600 mt-2">Submit grades and upload student report cards</p>
+        <p className="text-slate-300/80 mt-2">Submit grades and upload student report cards</p>
       </motion.div>
 
       {/* Success Message */}
@@ -175,7 +175,7 @@ const GradeAndReportPage = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="max-w-7xl mx-auto mb-6 p-4 bg-green-100 border-2 border-green-300 text-green-700 rounded-xl"
+            className="max-w-7xl mx-auto mb-6 p-4 bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 rounded-xl backdrop-blur-xl"
           >
             {successMessage}
           </motion.div>
@@ -188,22 +188,22 @@ const GradeAndReportPage = () => {
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 shadow-lg p-6 lg:p-8"
+          className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 ring-1 ring-white/10 shadow-xl shadow-black/30 p-6 lg:p-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/30">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                 <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Grade Now</h2>
+            <h2 className="text-2xl font-bold text-slate-100">Grade Now</h2>
           </div>
 
           <form onSubmit={handleGradeSubmit} className="space-y-6">
             {/* Student Roll Number */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-200 mb-2">
                 Student Roll Number
               </label>
               <input
@@ -211,7 +211,7 @@ const GradeAndReportPage = () => {
                 value={gradeForm.studentRollNumber}
                 onChange={(e) => handleStudentRollNumberChange(e.target.value)}
                 placeholder="Enter student roll number"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/40 transition-all"
                 required
               />
             </div>
@@ -219,10 +219,10 @@ const GradeAndReportPage = () => {
             {/* Subjects */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-slate-200">
                   Subjects
                 </label>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-slate-300/70">
                   {gradeForm.subjects.length} subject{gradeForm.subjects.length !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -234,10 +234,10 @@ const GradeAndReportPage = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-gray-200 space-y-4"
+                    className="p-4 bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 space-y-4"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-gray-600">
+                      <span className="text-sm font-semibold text-slate-300">
                         Subject {index + 1}
                       </span>
                       {gradeForm.subjects.length > 1 && (
@@ -246,7 +246,7 @@ const GradeAndReportPage = () => {
                           whileTap={{ scale: 0.95 }}
                           type="button"
                           onClick={() => removeSubject(subject.id)}
-                          className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                          className="px-3 py-1 text-xs rounded-lg transition-colors bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 border border-rose-300/30"
                         >
                           Remove
                         </motion.button>
@@ -260,7 +260,7 @@ const GradeAndReportPage = () => {
                         value={subject.subjectName}
                         onChange={(e) => handleSubjectChange(subject.id, 'subjectName', e.target.value)}
                         placeholder="Subject Name"
-                        className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+                        className="px-3 py-2 rounded-lg bg-white/5 border border-white/15 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/40 transition-all text-sm"
                         required
                       />
 
@@ -270,7 +270,7 @@ const GradeAndReportPage = () => {
                         value={subject.testTitle}
                         onChange={(e) => handleSubjectChange(subject.id, 'testTitle', e.target.value)}
                         placeholder="Test Title"
-                        className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+                        className="px-3 py-2 rounded-lg bg-white/5 border border-white/15 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/40 transition-all text-sm"
                         required
                       />
 
@@ -280,7 +280,7 @@ const GradeAndReportPage = () => {
                         value={subject.obtainedMarks}
                         onChange={(e) => handleSubjectChange(subject.id, 'obtainedMarks', e.target.value)}
                         placeholder="Obtained Marks"
-                        className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+                        className="px-3 py-2 rounded-lg bg-white/5 border border-white/15 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/40 transition-all text-sm"
                         required
                       />
 
@@ -290,7 +290,7 @@ const GradeAndReportPage = () => {
                         value={subject.totalMarks}
                         onChange={(e) => handleSubjectChange(subject.id, 'totalMarks', e.target.value)}
                         placeholder="Total Marks"
-                        className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+                        className="px-3 py-2 rounded-lg bg-white/5 border border-white/15 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-indigo-400/40 focus:border-indigo-400/40 transition-all text-sm"
                         required
                       />
                     </div>
@@ -304,7 +304,7 @@ const GradeAndReportPage = () => {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={addSubject}
-                className="w-full py-2 px-4 border-2 border-dashed border-indigo-300 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-all font-medium flex items-center justify-center gap-2"
+                className="w-full py-2 px-4 border border-dashed border-indigo-400/50 text-indigo-300 rounded-xl hover:bg-indigo-400/10 transition-all font-medium flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -318,7 +318,7 @@ const GradeAndReportPage = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-semibold flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white rounded-xl hover:from-indigo-700 hover:to-fuchsia-700 transition-all font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 13a3 3 0 105.119-6H9m-1 0a4 4 0 00-4.535 4M15 13l-3-3m0 0l-3 3m3-3v6m3 0a6 6 0 11-12 0"/>
@@ -333,21 +333,21 @@ const GradeAndReportPage = () => {
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 shadow-lg p-6 lg:p-8"
+          className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 ring-1 ring-white/10 shadow-xl shadow-black/30 p-6 lg:p-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/30">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd"/>
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Upload Report Card</h2>
+            <h2 className="text-2xl font-bold text-slate-100">Upload Report Card</h2>
           </div>
 
           <form onSubmit={handleReportSubmit} className="space-y-6">
             {/* Student ID */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-200 mb-2">
                 Student ID
               </label>
               <input
@@ -355,14 +355,14 @@ const GradeAndReportPage = () => {
                 value={reportForm.studentId}
                 onChange={(e) => handleReportStudentIdChange(e.target.value)}
                 placeholder="Enter student ID"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 placeholder-slate-400 text-slate-100 focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/40 transition-all"
                 required
               />
             </div>
 
             {/* PDF Upload */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-200 mb-2">
                 Upload Report Card (PDF)
               </label>
               <div className="relative">
@@ -376,16 +376,16 @@ const GradeAndReportPage = () => {
                 />
                 <label
                   htmlFor="pdf-upload"
-                  className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-green-300 rounded-xl cursor-pointer hover:bg-green-50 transition-all"
+                  className="flex flex-col items-center justify-center w-full p-8 border border-dashed border-emerald-400/40 rounded-xl cursor-pointer hover:bg-emerald-400/10 transition-all bg-white/5 backdrop-blur-lg"
                 >
                   <div className="flex flex-col items-center justify-center">
-                    <svg className="w-10 h-10 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-10 h-10 text-emerald-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-slate-100">
                       {reportForm.file ? reportForm.file.name : 'Click to upload PDF'}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">Maximum file size: 10MB</p>
+                    <p className="text-xs text-slate-300/70 mt-1">Maximum file size: 10MB</p>
                   </div>
                 </label>
               </div>
@@ -398,7 +398,7 @@ const GradeAndReportPage = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="p-3 bg-red-100 border-2 border-red-300 text-red-700 rounded-lg text-sm"
+                  className="p-3 bg-rose-500/10 border border-rose-400/30 text-rose-300 rounded-lg text-sm backdrop-blur-xl"
                 >
                   {fileError}
                 </motion.div>
@@ -410,12 +410,12 @@ const GradeAndReportPage = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="p-3 bg-green-50 border-2 border-green-200 rounded-lg"
+                className="p-3 bg-emerald-500/10 border border-emerald-400/30 rounded-lg backdrop-blur-xl"
               >
-                <p className="text-sm text-green-800">
+                <p className="text-sm text-emerald-300">
                   <span className="font-semibold">File selected:</span> {reportForm.file.name}
                 </p>
-                <p className="text-xs text-green-600 mt-1">
+                <p className="text-xs text-emerald-300/80 mt-1">
                   Size: {(reportForm.file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </motion.div>
@@ -427,7 +427,7 @@ const GradeAndReportPage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={!reportForm.file}
-              className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 disabled:from-gray-500 disabled:to-gray-500 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 13a3 3 0 105.119-6H9m-1 0a4 4 0 00-4.535 4M15 13l-3-3m0 0l-3 3m3-3v6m3 0a6 6 0 11-12 0"/>

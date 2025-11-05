@@ -404,8 +404,22 @@ export default function AdminDashboard() {
   const timeOptions = ['Today', 'Yesterday', 'Past Week'];
 
   return (
-    <div className={`bg-gray-50 relative z-0 ${montserrat.className}`}>
-      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
+	    <div className={`bg-gray-50 relative z-0 ${montserrat.className}`}>
+	      <video
+	        className="fixed inset-0 -z-10 w-full h-full object-cover"
+	        src="/hero2.mp4"
+	        autoPlay
+	        muted
+	        loop
+	        playsInline
+	        preload="auto"
+	        controls={false}
+	        controlsList="nodownload nofullscreen noplaybackrate"
+	        disablePictureInPicture
+	        disableRemotePlayback
+	        aria-label="Admin dashboard background video"
+	      />
+	      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900/60"></div>
       <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

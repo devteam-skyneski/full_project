@@ -10,6 +10,9 @@ import teacherAnimation from '../../login(animations)/Teacher.json';
 import parentAnimation from '../../login(animations)/Parenting.json';
 import adminAnimation from '../../login(animations)/admin.json';
 import AuthParticlesBackground from './components/AuthParticlesBackground';
+import OtpModal from './components/OtpModal';
+import { sendOtp, verifyOtp } from './lib/otp';
+import { maskEmail } from './lib/email';
 
 type Role = 'student' | 'parent' | 'teacher' | 'admin';
 type AuthMode = 'login' | 'signup';
@@ -64,6 +67,11 @@ const AuthPage = () => {
   const [isAdminInitialMount, setIsAdminInitialMount] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [formProgress, setFormProgress] = useState(0);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [emailForOtp, setEmailForOtp] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null } | null>(null);
   
   const [formData, setFormData] = useState({
     username: '',
@@ -564,32 +572,44 @@ const AuthPage = () => {
       return;
     }
 
+    if (authMode === 'signup') {
+      // Signup: send OTP and open modal
+      setIsSendingOtp(true);
+      try {
+        const res = await sendOtp(formData.email);
+        if (!res.ok) throw new Error('Failed to send OTP');
+        setEmailForOtp(formData.email);
+        setShowOtpModal(true);
+      } catch (err) {
+        setErrors({ submit: 'Failed to send OTP. Please try again.' });
+      } finally {
+        setIsSendingOtp(false);
+      }
+      return;
+    }
+
+    // Login flow remains as before
     setIsLoading(true);
-    
     try {
-      // Simulate API call (replace with actual authentication logic)
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Store user data in sessionStorage (in production, use proper auth state management)
-      // For teacher signup, use email as username since username field is not shown
-      const username = (authMode === 'signup' && selectedRole === 'teacher') 
-        ? formData.email 
+
+      const username = (authMode === 'signup' && selectedRole === 'teacher')
+        ? formData.email
         : formData.username;
-      
+
       const userData = {
         role: selectedRole,
         username: username,
         email: formData.email,
         isAuthenticated: true,
       };
-      
+
       try {
         sessionStorage.setItem('user', JSON.stringify(userData));
       } catch (error) {
         console.error('Failed to save user data to sessionStorage:', error);
       }
-      
-      // If Remember Me is checked, also store in localStorage
+
       if (authMode === 'login' && rememberMe && typeof window !== 'undefined') {
         try {
           localStorage.setItem('rememberedUser', JSON.stringify({
@@ -600,37 +620,76 @@ const AuthPage = () => {
           console.error('Failed to save remembered user to localStorage:', error);
         }
       } else if (authMode === 'login' && !rememberMe && typeof window !== 'undefined') {
-        // Clear remembered user if unchecked
         try {
           localStorage.removeItem('rememberedUser');
         } catch (error) {
           console.error('Failed to remove remembered user from localStorage:', error);
         }
       }
-      
-      // Clear saved form data on successful submission
-      if (authMode === 'signup' && typeof window !== 'undefined') {
-        try {
-          localStorage.removeItem('signupFormData');
-        } catch (error) {
-          console.error('Failed to remove signup form data from localStorage:', error);
-        }
-      }
-      
-      // Redirect to respective dashboard based on role
+
       const dashboardRoutes = {
         student: '/student-dashboard',
         parent: '/parent-dashboard',
         teacher: '/teacher-dashboard',
         admin: '/admin-dashboard',
       };
-      
+
       router.push(dashboardRoutes[selectedRole] as Route);
     } catch (error) {
       setErrors({ submit: 'An error occurred. Please try again.' });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleVerifyOtp = async (code: string) => {
+    setIsVerifyingOtp(true);
+    try {
+      const res = await verifyOtp(emailForOtp, code);
+      if (!res.ok) throw new Error('Invalid OTP');
+
+      // Simulate creating account and redirecting (reuse existing logic)
+      const username = (selectedRole === 'teacher') ? formData.email : formData.username;
+      const userData = {
+        role: selectedRole,
+        username: username,
+        email: formData.email,
+        isAuthenticated: true,
+      };
+      try {
+        sessionStorage.setItem('user', JSON.stringify(userData));
+      } catch (error) {
+        console.error('Failed to save user data to sessionStorage:', error);
+      }
+
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('signupFormData');
+        } catch (error) {
+          console.error('Failed to remove signup form data from localStorage:', error);
+        }
+      }
+
+      setShowOtpModal(false);
+      setToast({ message: 'Account created! Redirecting...', type: 'success' });
+
+      const dashboardRoutes = {
+        student: '/student-dashboard',
+        parent: '/parent-dashboard',
+        teacher: '/teacher-dashboard',
+        admin: '/admin-dashboard',
+      };
+      setTimeout(() => {
+        router.push(dashboardRoutes[selectedRole] as Route);
+      }, 1200);
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!emailForOtp) return;
+    await sendOtp(emailForOtp);
   };
 
   const roleConfig = {
@@ -790,6 +849,11 @@ const AuthPage = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4 relative overflow-hidden"
     >
       <AuthParticlesBackground />
+      {toast && (
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-lg shadow ${toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-slate-800 text-white'}`}>
+          {toast.message}
+        </div>
+      )}
       {/* Floating parallax background elements */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -1829,11 +1893,16 @@ const AuthPage = () => {
 
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || isSendingOtp}
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all ${currentRole.accent} hover:opacity-90 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900`}
                   aria-label={authMode === 'login' ? 'Login to your account' : 'Create new account'}
                 >
-                  {isLoading ? (
+                  {authMode === 'signup' && isSendingOtp ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Sending OTP...</span>
+                    </>
+                  ) : isLoading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
                       <span>Processing...</span>
@@ -1935,6 +2004,16 @@ const AuthPage = () => {
           </div>
         </div>
       </div>
+      <OtpModal
+        email={emailForOtp}
+        maskedEmail={maskEmail(emailForOtp)}
+        isOpen={showOtpModal}
+        isVerifying={isVerifyingOtp}
+        onClose={() => setShowOtpModal(false)}
+        onVerify={handleVerifyOtp}
+        onResend={handleResendOtp}
+        initialCooldownSeconds={30}
+      />
     </div>
   );
 };

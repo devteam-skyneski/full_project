@@ -188,7 +188,26 @@ export default function ParentDashboard() {
   };
 
   return (
-    <div className="parent-dashboard">
+    <div className="parent-dashboard relative">
+      {/* Background Video (same as landing page) */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/uni.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          controls={false}
+          controlsList="nodownload nofullscreen noplaybackrate"
+          disablePictureInPicture
+          disableRemotePlayback
+          aria-label="Background video"
+        />
+        {/* Optional subtle overlay for readability */}
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
       {/* Fixed Navbar with FloatingDock */}
   <nav className={`w-full bg-transparent shadow-none py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 fixed-navbar`}>
         {/* Left Section - Logo */}

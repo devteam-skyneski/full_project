@@ -197,7 +197,7 @@ const AssignmentsPage = () => {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40"
+        className="bg-white/10 backdrop-blur-xl border-b border-white/20 sticky top-0 z-40 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -233,7 +233,7 @@ const AssignmentsPage = () => {
           <motion.div 
             variants={statCardVariants}
             whileHover="hover"
-            className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-transparent bg-gradient-to-br from-blue-50 to-white hover:border-blue-200 transition-all"
+            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-white/30 shadow-lg transition-all"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -258,7 +258,7 @@ const AssignmentsPage = () => {
           <motion.div 
             variants={statCardVariants}
             whileHover="hover"
-            className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-transparent bg-gradient-to-br from-green-50 to-white hover:border-green-200 transition-all"
+            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-white/30 shadow-lg transition-all"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -283,7 +283,7 @@ const AssignmentsPage = () => {
           <motion.div 
             variants={statCardVariants}
             whileHover="hover"
-            className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-transparent bg-gradient-to-br from-orange-50 to-white hover:border-orange-200 transition-all"
+            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-white/30 shadow-lg transition-all"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -308,7 +308,7 @@ const AssignmentsPage = () => {
           <motion.div 
             variants={statCardVariants}
             whileHover="hover"
-            className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-transparent bg-gradient-to-br from-purple-50 to-white hover:border-purple-200 transition-all"
+            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-white/30 shadow-lg transition-all"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -336,7 +336,7 @@ const AssignmentsPage = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 p-4 mb-8"
+          className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-4 mb-8 shadow-lg"
         >
           <div className="flex flex-col sm:flex-row items-center gap-3">
             {/* Search */}
@@ -350,7 +350,7 @@ const AssignmentsPage = () => {
                   placeholder="Search assignments..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  className="w-full pl-10 pr-4 py-2 bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-white/30 text-white placeholder-white/60 transition-all"
                 />
               </div>
             </div>
@@ -359,7 +359,7 @@ const AssignmentsPage = () => {
             <select
               value={filterSubject}
               onChange={(e) => setFilterSubject(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all w-full sm:w-auto"
+              className="px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-white/30 text-sm text-white transition-all w-full sm:w-auto"
             >
               {subjects.map(subject => (
                 <option key={subject} value={subject}>{subject}</option>
@@ -370,7 +370,7 @@ const AssignmentsPage = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all w-full sm:w-auto"
+              className="px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-white/30 text-sm text-white transition-all w-full sm:w-auto"
             >
               <option value="All">All Status</option>
               <option value="Active">Active</option>
@@ -378,12 +378,12 @@ const AssignmentsPage = () => {
             </select>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 bg-gradient-to-r from-gray-50 to-gray-100 p-1 rounded-xl border-2 border-gray-200">
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl p-1 rounded-xl border border-white/20">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white border-2 border-indigo-200' : 'hover:bg-gray-200'}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white/20 border border-white/30' : 'hover:bg-white/10'}`}
                 title="Grid View"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -394,7 +394,7 @@ const AssignmentsPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode('table')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'table' ? 'bg-white border-2 border-indigo-200' : 'hover:bg-gray-200'}`}
+                className={`p-2 rounded-lg transition-all ${viewMode === 'table' ? 'bg-white/20 border border-white/30' : 'hover:bg-white/10'}`}
                 title="Table View"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -425,11 +425,11 @@ const AssignmentsPage = () => {
                     key={assignment.id}
                     variants={itemVariants}
                     whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 overflow-hidden hover:border-indigo-200 transition-all group h-full flex flex-col"
+                    className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 overflow-hidden hover:border-white/30 transition-all group h-full flex flex-col shadow-lg"
                   >
                     {/* Card Header with Gradient Background */}
-                    <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b-2 border-gray-100 relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/50 to-white/80"></div>
+                    <div className="p-6 bg-white/5 backdrop-blur-xl border-b border-white/20 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-white/10"></div>
                       
                       <div className="relative z-10">
                         <div className="flex items-start justify-between mb-3">
@@ -442,7 +442,7 @@ const AssignmentsPage = () => {
                         </div>
                         
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <span className="px-2 py-1 bg-white/80 backdrop-blur-sm border border-indigo-200 text-indigo-700 rounded-lg font-medium">
+                          <span className="px-2 py-1 bg-white/10 backdrop-blur-xl border border-white/20 text-indigo-200 rounded-lg font-medium">
                             {assignment.subject}
                           </span>
                           <span className="text-gray-400">•</span>
@@ -488,7 +488,7 @@ const AssignmentsPage = () => {
                             {assignment.submittedCount}/{assignment.totalStudents}
                           </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
                           <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${submissionPercentage}%` }}
@@ -521,11 +521,11 @@ const AssignmentsPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 overflow-hidden"
+              className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 overflow-hidden shadow-lg"
             >
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gradient-to-r from-gray-50 to-indigo-50 border-b-2 border-gray-200">
+                  <thead className="bg-white/5 backdrop-blur-xl border-b border-white/20">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Title</th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Subject</th>
@@ -574,7 +574,7 @@ const AssignmentsPage = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex-1 w-24 bg-gray-200 rounded-full h-2">
+                              <div className="flex-1 w-24 bg-white/10 rounded-full h-2">
                                 <motion.div 
                                   initial={{ width: 0 }}
                                   animate={{ width: `${submissionPercentage}%` }}
@@ -611,7 +611,7 @@ const AssignmentsPage = () => {
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-100 p-12 text-center"
+            className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-12 text-center shadow-lg"
           >
             <motion.svg 
               animate={{ y: [0, -10, 0] }}
@@ -644,7 +644,7 @@ const AssignmentsPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-xl flex items-center justify-center z-50 p-4"
             onClick={() => setShowCreateModal(false)}
           >
             <motion.div 
@@ -652,9 +652,9 @@ const AssignmentsPage = () => {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-gray-200"
+              className="bg-white/10 backdrop-blur-xl rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl"
             >
-              <div className="p-6 border-b-2 border-gray-200 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50">
+              <div className="p-6 border-b border-white/20 flex items-center justify-between bg-white/5 backdrop-blur-xl">
                 <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                   Create New Assignment
                 </h2>
@@ -662,7 +662,7 @@ const AssignmentsPage = () => {
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setShowCreateModal(false)}
-                  className="p-2 hover:bg-white rounded-lg transition-all"
+                  className="p-2 hover:bg-white/20 rounded-lg transition-all"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
