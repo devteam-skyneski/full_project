@@ -646,13 +646,21 @@ const UniversityPartners = () => {
 
 // University Programs Component
 const UniversityPrograms = () => {
+  const { ref, inView } = useInView({ threshold: 0.7, triggerOnce: false });
+
   return (
-    <section id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
+    <section ref={ref} id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative">
+          <motion.div
+            className="relative"
+            initial={{ x: -100, opacity: 0 }}
+            animate={inView ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
               <video
                 className="absolute inset-0 w-full h-full object-cover"
@@ -669,19 +677,41 @@ const UniversityPrograms = () => {
                 aria-label="University registration video"
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+          <motion.div
+            className="space-y-8"
+            initial={{ x: 100, opacity: 0 }}
+            animate={inView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold text-white"
+              initial={{ x: 60, opacity: 0 }}
+              animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
               University Registration & Accredited Degrees
-            </h2>
+            </motion.h2>
             
-            <p className="text-lg text-neutral-300 leading-relaxed">
+            <motion.p
+              className="text-lg text-neutral-300 leading-relaxed"
+              initial={{ x: 60, opacity: 0 }}
+              animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+            >
               Take your education to the next level with our university registration program. Earn fully accredited degrees from renowned institutions without relocating or giving up your current commitments.
-            </p>
+            </motion.p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
+                style={{ willChange: 'transform, opacity' }}
+              >
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <GraduationCap className="w-6 h-6 text-white" />
@@ -695,9 +725,15 @@ const UniversityPrograms = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.5 }}
+                style={{ willChange: 'transform, opacity' }}
+              >
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <Users className="w-6 h-6 text-white" />
@@ -711,33 +747,40 @@ const UniversityPrograms = () => {
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             <div className="pt-4">
-              <Link
-                href={"/auth" as Route}
-                className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
-                style={{
-                  boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
-                }}
+              <motion.div
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.7 }}
+                style={{ willChange: 'transform, opacity' }}
               >
-                Explore Degree Programs
-              </Link>
+                <Link
+                  href={"/auth" as Route}
+                  className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
+                  style={{
+                    boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                  }}
+                >
+                  Explore Degree Programs
+                </Link>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -755,6 +798,8 @@ const CourseCategories = () => {
     { icon: Book, title: 'Liberal Arts', description: 'Study humanities, social sciences, and develop critical thinking skills.', courseCount: '41 courses' }
   ];
 
+  // Animate items whenever they enter the viewport (up or down) without layout reflow
+
   return (
     <section id="courses" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
       <Boxes />
@@ -770,13 +815,24 @@ const CourseCategories = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className={cn(
+            "grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          )}
+          style={{ willChange: 'transform' }}
+        >
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                className={cn(
+                  "transform-gpu will-change-transform rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border bg-white/10 border-white/20 hover:border-white/30"
+                )}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ amount: 0.25, once: false, margin: '0px 0px -10% 0px' }}
+                transition={{ duration: 0.35, ease: 'easeOut', delay: (index % 3) * 0.06 }}
               >
                 <div className="flex flex-col h-full">
                   <div className="w-16 h-16 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-6 border border-blue-400/30">
@@ -803,10 +859,10 @@ const CourseCategories = () => {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
         </div>
       </div>
     </section>
@@ -1327,6 +1383,8 @@ const ContactForm = () => {
     message: ''
   });
 
+  const { ref: contactRef, inView: contactInView } = useInView({ threshold: 0.2, triggerOnce: false, rootMargin: '0px 0px -10% 0px' });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -1346,8 +1404,14 @@ const ContactForm = () => {
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300">
+        <div ref={contactRef} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <motion.div
+            className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300 transform-gpu"
+            initial={{ x: -60, opacity: 0 }}
+            animate={contactInView ? { x: 0, opacity: 1 } : { x: -60, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 0.7 }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div className="text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Ready to Start Your Learning Journey?
@@ -1449,9 +1513,15 @@ const ContactForm = () => {
                 Submit Enquiry
               </Link>
             </form>
-          </div>
+          </motion.div>
 
-          <div className="text-white space-y-8">
+          <motion.div
+            className="text-white space-y-8"
+            initial={{ x: 100, opacity: 0 }}
+            animate={contactInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div>
               <h3 className="text-2xl font-bold mb-4">Get in Touch</h3>
               <p className="text-blue-100 text-lg leading-relaxed">
@@ -1490,7 +1560,7 @@ const ContactForm = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
