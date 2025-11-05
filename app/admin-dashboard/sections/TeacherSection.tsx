@@ -3,19 +3,21 @@ import {
   UserCheck,
   FileText,
   Clock,
-  Check, 
+  Check,
   X,
   Bell,
   Eye,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion"; // <-- 1. IMPORT MOTION
 
 export default function TeacherSection() {
   const [activeTab, setActiveTab] = useState<"requests" | "teachers">(
     "requests",
   );
   const [requests, setRequests] = useState([
+    // ... all your requests data ...
     {
       id: "1",
       teacher: "Dr. Sarah Johnson",
@@ -140,6 +142,7 @@ export default function TeacherSection() {
 
   //PENDING teacher approvals
   const [teachers, setTeachers] = useState([
+    // ... all your teachers data ...
     {
       id: "1",
       name: "Dr. Sarah Johnson",
@@ -287,7 +290,16 @@ export default function TeacherSection() {
   const rejectedRequests = requests.filter((r) => r.status === "rejected");
 
   return (
-    <section id="teachers" className="py-10 sm:py-20">
+    // 2. WRAP YOUR WHOLE SECTION in <motion.section>
+    <motion.section
+      id="teachers"
+      className="py-10 sm:py-20"
+      // 3. ADD THESE ANIMATION PROPS
+      initial={{ opacity: 0, y: 50 }} // Start hidden and 50px down
+      whileInView={{ opacity: 1, y: 0 }} // Animate to visible and 0px
+      viewport={{ once: true, amount: 0.2 }} // Trigger once when 20% is visible
+      transition={{ duration: 0.6, ease: "easeOut" }} // Smooth animation
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
@@ -300,7 +312,7 @@ export default function TeacherSection() {
             </p>
           </div>
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
+            <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
               <div className="flex items-center gap-2">
                 <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-orange-300" />
                 <div>
@@ -316,14 +328,14 @@ export default function TeacherSection() {
           </div>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-white/20 overflow-hidden">
+        <div className="bg-white/20 backdrop-blur-md rounded-xl shadow-lg border border-white/20 overflow-hidden">
           <div className="flex border-b border-white/20">
             <button
               onClick={() => setActiveTab("requests")}
               className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "requests"
                   ? "text-blue-300 border-b-2 border-blue-300 bg-blue-500/20"
-                  : "text-gray-300 hover:bg-white/10"
+                  : "text-gray-300 hover:bg-white/20"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -342,7 +354,7 @@ export default function TeacherSection() {
               className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "teachers"
                   ? "text-blue-300 border-b-2 border-blue-300 bg-blue-500/20"
-                  : "text-gray-300 hover:bg-white/10"
+                  : "text-gray-300 hover:bg-white/20"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -374,7 +386,7 @@ export default function TeacherSection() {
                         {pendingRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white/10 border border-white/20 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
                           <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
@@ -400,7 +412,7 @@ export default function TeacherSection() {
                             {pendingRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-white/10 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
@@ -467,7 +479,7 @@ export default function TeacherSection() {
                         {approvedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white/10 border border-white/20 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
                           <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
@@ -493,7 +505,7 @@ export default function TeacherSection() {
                             {approvedRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-white/10 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
@@ -541,7 +553,7 @@ export default function TeacherSection() {
                         {rejectedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white/10 border border-white/20 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
                           <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
@@ -567,7 +579,7 @@ export default function TeacherSection() {
                             {rejectedRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-white/10 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
@@ -615,7 +627,7 @@ export default function TeacherSection() {
                 </div>
 
                 {/* Pending Teacher Approvals Table */}
-                <div className="bg-white/10 border border-white/20 rounded-lg overflow-hidden">
+                <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                   <div className="max-h-[600px] overflow-y-auto overflow-x-auto">
                     <table className="w-full">
                       <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
@@ -641,7 +653,7 @@ export default function TeacherSection() {
                         {teachers.map((teacher) => (
                           <tr
                             key={teacher.id}
-                            className="hover:bg-white/10 transition-colors"
+                            className="hover:bg-white/20 transition-colors"
                           >
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
@@ -701,6 +713,6 @@ export default function TeacherSection() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

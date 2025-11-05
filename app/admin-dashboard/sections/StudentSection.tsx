@@ -1,5 +1,7 @@
+"use client";
 import React, { useEffect, useId, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+// 1. IMPORT MOTION (FROM THE CORRECT LIBRARY)
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Users,
   GraduationCap,
@@ -12,7 +14,7 @@ import {
   ChevronDown,
   School,
   ArrowRight,
-  User, 
+  User,
 } from "lucide-react";
 
 
@@ -324,7 +326,7 @@ const InfoItem = ({
   label,
   value,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ElementType;
   label: string;
   value: string;
 }) => (
@@ -507,7 +509,7 @@ export default function StudentSection() {
                     >
                       View Parent Details
                     </button>
-                    <button className="flex-1 text-center py-2 px-3 bg-white/10 text-gray-200 rounded-lg hover:bg-white/20 transition-colors text-sm font-semibold">
+                    <button className="flex-1 text-center py-2 px-3 bg-white/20 text-gray-200 rounded-lg hover:bg-white/20 transition-colors text-sm font-semibold">
                       View Grades
                     </button>
                   </div>
@@ -576,7 +578,16 @@ export default function StudentSection() {
       </AnimatePresence>
 
       
-      <section id="students" className="py-20">
+      {/* 2. CHANGE <section> TO <motion.section> */}
+      <motion.section
+        id="students"
+        className="py-20"
+        // 3. ADD THE ANIMATION PROPS
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
             
@@ -590,7 +601,7 @@ export default function StudentSection() {
             </div>
             
             <div className="flex items-center gap-4 mt-4 sm:mt-0">
-              <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-4 py-2">
+              <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-4 py-2">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
                   <div>
@@ -619,7 +630,7 @@ export default function StudentSection() {
               name="classFilter"
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="block w-full max-w-xs pl-3 pr-10 py-2 text-base bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-md"
+              className="block w-full max-w-xs pl-3 pr-10 py-2 text-base bg-white/20 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-md"
             >
               {uniqueClasses.map((className) => (
                 <option key={className} value={className} className="text-black">
@@ -630,7 +641,7 @@ export default function StudentSection() {
           </div>
 
           
-          <div className="bg-white/10 backdrop-blur-md shadow-lg border border-white/20 rounded-lg overflow-hidden">
+          <div className="bg-white/20 backdrop-blur-md shadow-lg border border-white/20 rounded-lg overflow-hidden">
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto">
               <table className="w-full min-w-max">
                 <thead className="sticky top-0 bg-white/20 backdrop-blur-sm z-10">
@@ -659,7 +670,7 @@ export default function StudentSection() {
                       layoutId={`card-${student.name}-${id}`}
                       key={student.id}
                       onClick={() => setActive(student)}
-                      className="cursor-pointer hover:bg-white/10 transition-colors duration-200 group"
+                      className="cursor-pointer hover:bg-white/20 transition-colors duration-200 group"
                     >
                       
                       <td className="p-4 whitespace-nowrap">
@@ -687,7 +698,7 @@ export default function StudentSection() {
                         </div>
                       </td>
 
-                     
+                      
                       <td className="p-4 whitespace-nowrap">
                         <motion.div
                           layoutId={`class-${student.name}-${id}`}
@@ -697,7 +708,7 @@ export default function StudentSection() {
                         </motion.div>
                       </td>
 
-                     
+                      
                       <td className="p-4 whitespace-nowrap text-sm text-gray-300 hidden md:table-cell">
                         <div className="flex items-center gap-2">
                           <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -705,7 +716,7 @@ export default function StudentSection() {
                         </div>
                       </td>
 
-                     
+                      
                       <td className="p-4 whitespace-nowrap text-center">
                         <div className="flex items-center justify-center gap-2 w-full py-2 px-3 bg-blue-500/20 text-blue-200 rounded-lg group-hover:bg-blue-500/40 transition-colors">
                           <span className="text-sm font-semibold">View</span>
@@ -713,7 +724,7 @@ export default function StudentSection() {
                         </div>
                       </td>
 
-                     
+                      
                       <td className="p-4 whitespace-nowrap text-center">
                         <button
                           onClick={(e) => handleDelete(student.id, e)}
@@ -730,7 +741,7 @@ export default function StudentSection() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </>
   );
 }
