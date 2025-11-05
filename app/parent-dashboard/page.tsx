@@ -473,10 +473,10 @@ export default function ParentDashboard() {
               </div>
 
               {/* Right Column - Calendar & Events */}
-              <div className="flex flex-col gap-3 h-full min-h-0">
+              <div className="flex flex-col gap-3">
                 {/* Calendar Section */}
                 <motion.div 
-                  className="bg-white rounded-2xl p-5 shadow-sm dashboard-card flex-1 min-h-0 overflow-y-auto"
+                  className="bg-white rounded-2xl p-5 shadow-sm dashboard-card"
                   initial={variants.slideLeft.initial}
                   animate={variants.slideLeft.animate}
                   transition={{ duration: 0.6, delay: 0.1 }}
@@ -596,7 +596,7 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['tasks'] = el; }}
         >
-          <div className="w-full px-6 py-1 h-full flex items-center">
+          <div className="w-full px-6 py-3">
             {/* TaskSection already contains its own white cards and max-width container */}
             <TaskSection />
           </div>
@@ -608,8 +608,8 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['performance'] = el; }}
         >
-          <div className="w-full px-6 py-2 h-full">
-            <div className="grid grid-cols-2 gap-3 h-full">
+          <div className="w-full px-6 py-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Left Half - Subject Performance (unchanged) */}
               <motion.div 
                 initial={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -622,7 +622,7 @@ export default function ParentDashboard() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
-                  className="text-xl font-bold text-white mb-2 flex items-center gap-2"
+                  className="text-xl font-bold text-white mb-2 flex items-center gap-1"
                 >
                   📊 Subject Performance
                 </motion.h2>
@@ -664,12 +664,15 @@ export default function ParentDashboard() {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: '1px solid #DFE6E9', 
+                          backgroundColor: 'rgba(17,24,39,0.75)',
+                          border: '1px solid rgba(255,255,255,0.25)', 
                           borderRadius: '8px',
+                          color: '#ffffff',
                           fontSize: '12px',
                           padding: '6px 10px'
                         }}
+                        labelStyle={{ color: '#ffffff' }}
+                        itemStyle={{ color: '#ffffff' }}
                         formatter={(value: number) => `${value}%`}
                       />
                       <Bar dataKey="score" radius={[0, 8, 8, 0]} isAnimationActive animationBegin={200} animationDuration={1200} animationEasing="ease-out">
@@ -784,32 +787,32 @@ export default function ParentDashboard() {
                       <tbody>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">Python</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">A</td>
                           <td className="py-1.5 px-2 text-white text-xs">92/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">Java</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">A-</td>
                           <td className="py-1.5 px-2 text-white text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">JavaScript</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B+</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">B+</td>
                           <td className="py-1.5 px-2 text-white text-xs">85/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">React</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A-</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">A-</td>
                           <td className="py-1.5 px-2 text-white text-xs">88/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">HTML/CSS</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">A</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">A</td>
                           <td className="py-1.5 px-2 text-white text-xs">95/100</td>
                         </tr>
                         <tr className="border-b border-gray-200">
                           <td className="py-1.5 px-2 text-white font-medium text-xs">C++</td>
-                          <td className="py-1.5 px-2 font-bold text-blue-600 text-xs">B</td>
+                          <td className="py-1.5 px-2 font-bold text-white text-xs">B</td>
                           <td className="py-1.5 px-2 text-white text-xs">82/100</td>
                         </tr>
                       </tbody>
@@ -827,8 +830,8 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['attendance'] = el; }}
         >
-          <div className="w-full px-6 py-1 h-full flex items-center">
-            <div className="bg-white rounded-2xl p-2 shadow-sm dashboard-card w-full h-full flex flex-col">
+          <div className="w-full px-6 py-3">
+            <div className="bg-white rounded-2xl p-2 shadow-sm dashboard-card w-full flex flex-col">
               {/* Import and use Attendance component */}
               <Attendance />
             </div>
@@ -841,8 +844,8 @@ export default function ParentDashboard() {
           className="dashboard-section"
           ref={(el) => { sectionsRef.current['feedback'] = el; }}
         >
-          <div className="w-full px-6 py-1 h-full flex items-center">
-            <div className="bg-white rounded-2xl shadow-sm dashboard-card h-full w-full">
+          <div className="w-full px-6 py-3">
+            <div className="bg-white rounded-2xl shadow-sm dashboard-card w-full">
               {/* Import and use the Feedback component */}
               <Feedback />
             </div>

@@ -71,17 +71,17 @@ export default function TaskSection() {
   return (
     <div className="section-inner">
       {/* Recent Tasks and Recent Practice Section (copied exactly) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 h-full">
         {/* Recently Completed Tasks - Left Side */}
         <motion.div 
-          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full"
+          className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full dashboard-card"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-base font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-green-600" />
+          <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-green-400" />
             Recently Completed Tasks
           </h3>
 
@@ -89,33 +89,32 @@ export default function TaskSection() {
             {recentTasks.filter(t => t.status === "completed").map((task, idx) => (
               <motion.div
                 key={task.id}
-                className="flex items-start gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition border border-gray-200"
+                className="flex items-start gap-2 p-3 rounded-lg transition border bg-white/10 border-white/25 hover:bg-white/15"
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
-                <div className="mt-0.5 text-green-600">
+                <div className="mt-0.5 text-green-400">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 
                 <div className="flex-1">
-                  <div className="flex items-center gap-1 mb-0.5">
-                    <h4 className="font-semibold text-gray-800 text-xs">{task.title}</h4>
-                    <span className={`text-[10px] px-1 py-0.5 rounded-full ${
-                      task.priority === "high" ? "bg-red-100 text-red-700" :
-                      task.priority === "medium" ? "bg-yellow-100 text-yellow-700" :
-                      "bg-blue-100 text-blue-700"
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-white text-xs">{task.title}</h4>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                      task.priority === "high" ? "bg-red-200 text-red-800" :
+                      task.priority === "medium" ? "bg-yellow-200 text-yellow-800" :
+                      "bg-blue-200 text-blue-800"
                     }`}>
                       {task.priority}
                     </span>
                   </div>
-                  <p className="text-[10px] text-gray-600 mb-0.5">{task.subject}</p>
-                  <p className="text-[10px] text-gray-500">Due: {task.dueDate}</p>
-                  {/* no CTA for completed */}
+                  <p className="text-[11px] text-white/80 mb-0.5">{task.subject}</p>
+                  <p className="text-[10px] text-white/70">Due: {task.dueDate}</p>
                 </div>
                 
-                <div className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-700">Done</div>
+                <div className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-200 text-green-800">Done</div>
               </motion.div>
             ))}
           </div>
@@ -123,14 +122,14 @@ export default function TaskSection() {
 
         {/* Pending Tasks - Right Side */}
         <motion.div 
-          className="bg-white rounded-xl p-2 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full"
+          className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex flex-col min-h-0 overflow-y-auto h-full dashboard-card"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <h3 className="text-base font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-blue-600" />
+          <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-blue-400" />
             Pending Tasks
           </h3>
 
@@ -138,30 +137,30 @@ export default function TaskSection() {
             {recentTasks.filter(t => t.status === "pending").map((task, idx) => (
               <motion.div
                 key={task.id}
-                className="flex items-start gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
+                className="flex items-start gap-2 p-3 rounded-lg border bg-white/10 border-white/25 hover:bg-white/15 transition"
                 initial={{ opacity: 0, x: idx % 2 === 0 ? 20 : -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
-                <div className="mt-0.5 text-gray-500">
+                <div className="mt-0.5 text-white/80">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-1 mb-0.5">
-                    <h4 className="font-semibold text-gray-800 text-xs">{task.title}</h4>
-                    <span className={`text-[10px] px-1 py-0.5 rounded-full ${
-                      task.priority === "high" ? "bg-red-100 text-red-700" :
-                      task.priority === "medium" ? "bg-yellow-100 text-yellow-700" :
-                      "bg-blue-100 text-blue-700"
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-white text-xs">{task.title}</h4>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                      task.priority === "high" ? "bg-red-200 text-red-800" :
+                      task.priority === "medium" ? "bg-yellow-200 text-yellow-800" :
+                      "bg-blue-200 text-blue-800"
                     }`}>
                       {task.priority}
                     </span>
                   </div>
-                  <p className="text-[10px] text-gray-600 mb-0.5">{task.subject}</p>
-                  <p className="text-[10px] text-gray-500">Due: {task.dueDate}</p>
+                  <p className="text-[11px] text-white/80 mb-0.5">{task.subject}</p>
+                  <p className="text-[10px] text-white/70">Due: {task.dueDate}</p>
                 </div>
-                <div className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-700">Pending</div>
+                <div className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-200 text-gray-800">Pending</div>
               </motion.div>
             ))}
           </div>
