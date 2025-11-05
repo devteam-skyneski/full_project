@@ -93,7 +93,7 @@ export default function StudentDashboard() {
   return (
     <div className="relative min-h-screen font-sans overflow-x-hidden">
       {/* Blue Gradient Background */}
-      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       
       {/* Interactive Particles Background */}
       <ParticlesBackground />

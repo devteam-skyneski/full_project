@@ -236,8 +236,8 @@ export default function TeacherDashboard() {
   return (
     <>
       <Navbar />
-      {/* Blue Gradient Background to match Student Dashboard */}
-      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
+      {/* Background to match Landing Page */}
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       <TeacherParticlesBackground />
 
       <div className="min-h-screen pt-20">
