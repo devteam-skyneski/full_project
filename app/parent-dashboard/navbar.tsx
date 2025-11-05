@@ -39,7 +39,7 @@ export default function ParentNavbar() {
         <FloatingDock
           items={navItems}
           desktopClassName="flex gap-4"
-          mobileClassName="grid grid-cols-0 gap-4"
+          mobileClassName="grid grid-cols-4 gap-4"
         />
       </div>
     </nav>
