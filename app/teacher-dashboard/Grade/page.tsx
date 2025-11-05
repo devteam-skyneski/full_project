@@ -153,7 +153,8 @@ const GradeAndReportPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-4 sm:p-6 lg:p-8">
+    <div className="relative min-h-screen p-4 sm:p-6 lg:p-8">
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       {/* Header */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}

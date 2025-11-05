@@ -33,6 +33,7 @@ import Assignments from './sections/Assignments';
 import Results from './sections/Results';
 import Attendance from './sections/Attendance';
 import Exams from './sections/Exams';
+import Chatbot from '@/components/ui/chatbot';
 
 export default function StudentDashboard() {
   // Mock data for performance chart
@@ -315,6 +316,7 @@ export default function StudentDashboard() {
           <Attendance />
           <Results />
       </div>
+      <Chatbot />
     </div>
   );
 }
