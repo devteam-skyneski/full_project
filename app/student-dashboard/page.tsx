@@ -33,6 +33,7 @@ import Assignments from './sections/Assignments';
 import Results from './sections/Results';
 import Attendance from './sections/Attendance';
 import Exams from './sections/Exams';
+import Chatbot from '@/components/ui/chatbot';
 
 export default function StudentDashboard() {
   // Mock data for performance chart
@@ -93,7 +94,7 @@ export default function StudentDashboard() {
   return (
     <div className="relative min-h-screen font-sans overflow-x-hidden">
       {/* Blue Gradient Background */}
-      <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       
       {/* Interactive Particles Background */}
       <ParticlesBackground />
@@ -315,6 +316,7 @@ export default function StudentDashboard() {
           <Attendance />
           <Results />
       </div>
+      <Chatbot />
     </div>
   );
 }

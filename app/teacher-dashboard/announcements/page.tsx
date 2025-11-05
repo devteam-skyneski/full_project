@@ -69,7 +69,8 @@ export default function AnnouncementsPage() {
     <>
       <Navbar />
       
-      <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="relative min-h-screen pt-20">
+        <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
         <div className="max-w-5xl mx-auto p-6">
           {/* Header */}
           <div className="mb-6">

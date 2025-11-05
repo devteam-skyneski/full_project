@@ -52,6 +52,21 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
+      // Basic local intent: greetings -> describe the project/website
+      const lower = userMessage.content.toLowerCase().trim();
+      const isGreeting = /^(hi|hello|hey|heyy|hiya|hola|hallo|good\s*(morning|afternoon|evening))\b/.test(lower);
+      if (isGreeting) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content:
+            "Hi! This is EduLearn, an interactive learning platform with dashboards for students, parents, and admins. Explore personalized subjects, assignments, exams, results, and rich visuals on the student portal, plus helpful resources and contact options from the landing page. How can I help you get around?",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        return;
+      }
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {

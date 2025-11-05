@@ -137,7 +137,8 @@ const ClassesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       {/* Header */}
       <motion.div 
         className="bg-white border-b border-jetblack-200 sticky top-0 z-40"

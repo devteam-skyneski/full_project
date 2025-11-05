@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
 import CountUp from 'react-countup';
@@ -72,6 +71,33 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
   const hasShadow = useScrollShadow();
   const [activeHash, setActiveHash] = useState<string>('');
 
+  // Reliable smooth scroll helper with retry and navbar offset handling
+  const smoothScrollToSelector = (selector: string, options?: { offset?: number; retries?: number; delayMs?: number }) => {
+    const offset = options?.offset ?? 100;
+    const maxRetries = options?.retries ?? 4;
+    const retryDelay = options?.delayMs ?? 80;
+
+    let attempts = 0;
+
+    const attemptScroll = () => {
+      const target = document.querySelector(selector);
+      if (target) {
+        const top = (target as HTMLElement).getBoundingClientRect().top + window.pageYOffset - offset;
+        requestAnimationFrame(() => {
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+        return;
+      }
+
+      if (attempts < maxRetries) {
+        attempts += 1;
+        setTimeout(attemptScroll, retryDelay);
+      }
+    };
+
+    attemptScroll();
+  };
+
   // Framer Motion variants for staggered pop-up reveal
   const parentVariants = {
     show: {
@@ -111,18 +137,46 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
       const hash = window.location.hash;
       setActiveHash(hash || '');
     };
+    
+    // Update on scroll to highlight active section
+    const handleScroll = () => {
+      const sections = ['#courses', '#universities', '#how-it-works', '#about', '#contact'];
+      const scrollPosition = window.scrollY + 100;
+      
+      for (const section of sections) {
+        const element = document.querySelector(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element as HTMLElement;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveHash(section);
+            return;
+          }
+        }
+      }
+      // If scrolled to top, clear active hash
+      if (window.scrollY < 100) {
+        setActiveHash('');
+      }
+    };
+    
     update();
     window.addEventListener('hashchange', update);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     // Clear hash on page load to prevent constant active state
     if (window.location.hash) {
       const hash = window.location.hash;
       // Only set if it's a valid section
-      const validSections = ['#courses', '#universities', '#how-it-works', '#about'];
+      const validSections = ['#courses', '#universities', '#how-it-works', '#about', '#contact'];
       if (!validSections.includes(hash)) {
         setActiveHash('');
       }
     }
-    return () => window.removeEventListener('hashchange', update);
+    
+    return () => {
+      window.removeEventListener('hashchange', update);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -160,7 +214,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#courses' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#courses' ? 'after:scale-x-100' : ''
                   }`}
@@ -179,7 +233,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#universities' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#universities' ? 'after:scale-x-100' : ''
                   }`}
@@ -198,7 +252,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#how-it-works' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#how-it-works' ? 'after:scale-x-100' : ''
                   }`}
@@ -213,11 +267,16 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     e.preventDefault();
                     const element = document.querySelector('#about');
                     if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                      window.scrollTo({
+                        top: elementPosition - offset,
+                        behavior: 'smooth'
+                      });
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#about' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#about' ? 'after:scale-x-100' : ''
                   }`}
@@ -227,8 +286,16 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={itemVariants}>
                 <Link
-                  href={"/contact" as Route}
-                  className="group relative text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left"
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    smoothScrollToSelector('#contact');
+                  }}
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#contact' ? 'text-white' : 'text-white hover:text-blue-300'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#contact' ? 'after:scale-x-100' : ''
+                  }`}
                 >
                   Contact
                 </Link>
@@ -240,7 +307,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
             <motion.div variants={itemVariants}>
               <Link
                 href={"/auth" as Route}
-                className="text-gray-700 hover:text-gray-900 px-4 py-2 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-gray-300 hover:border-gray-400 bg-white/60"
+                className="text-white hover:text-white px-4 py-2 text-base font-medium rounded-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-white/60 hover:border-white bg-white/0 backdrop-blur-md shadow-lg hover:shadow-xl hover:bg-white/20"
               >
                 Login
               </Link>
@@ -284,27 +351,52 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </div>
               <motion.nav variants={parentVariants} initial="hidden" animate="show" className="space-y-1">
                 <motion.div variants={itemVariants}>
-                  <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     Courses
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     Universities
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     How it Works
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#about" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link 
+                    href="#about" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      const element = document.querySelector('#about');
+                      if (element) {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                        window.scrollTo({
+                          top: elementPosition - offset,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }} 
+                    className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50"
+                  >
                     About
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href={"/contact" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link 
+                    href="#contact" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      // Allow the menu close animation to start, then scroll
+                      requestAnimationFrame(() => smoothScrollToSelector('#contact'));
+                    }} 
+                    className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50"
+                  >
                     Contact
                   </Link>
                 </motion.div>
@@ -312,7 +404,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={groupVariants} initial="hidden" animate="show" className="mt-4 border-t pt-4">
                 <div className="flex gap-2">
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
+                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-white/60 hover:border-white px-3 py-2 text-center text-base font-medium text-gray-700 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/10 backdrop-blur-md shadow-lg hover:shadow-xl hover:bg-white/20 transition-all duration-300">
                       Login
                     </Link>
                   </motion.div>
@@ -418,12 +510,19 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
 
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/hero-student.jpg"
-                alt="Student learning with laptop"
-                fill
-                className="object-cover"
-                priority
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/hero2.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                aria-label="Hero background video"
               />
             </div>
           </div>
@@ -547,17 +646,25 @@ const UniversityPartners = () => {
 
 // University Programs Component
 const UniversityPrograms = () => {
+  const { ref, inView } = useInView({ threshold: 0.7, triggerOnce: false });
+
   return (
-    <section id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
+    <section ref={ref} id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative">
+          <motion.div
+            className="relative"
+            initial={{ x: -100, opacity: 0 }}
+            animate={inView ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
               <video
                 className="absolute inset-0 w-full h-full object-cover"
-                src="/uni2.webm"
+                src="/final.mp4"
                 autoPlay
                 muted
                 loop
@@ -570,19 +677,41 @@ const UniversityPrograms = () => {
                 aria-label="University registration video"
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+          <motion.div
+            className="space-y-8"
+            initial={{ x: 100, opacity: 0 }}
+            animate={inView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold text-white"
+              initial={{ x: 60, opacity: 0 }}
+              animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
               University Registration & Accredited Degrees
-            </h2>
+            </motion.h2>
             
-            <p className="text-lg text-neutral-300 leading-relaxed">
+            <motion.p
+              className="text-lg text-neutral-300 leading-relaxed"
+              initial={{ x: 60, opacity: 0 }}
+              animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+            >
               Take your education to the next level with our university registration program. Earn fully accredited degrees from renowned institutions without relocating or giving up your current commitments.
-            </p>
+            </motion.p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
+                style={{ willChange: 'transform, opacity' }}
+              >
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <GraduationCap className="w-6 h-6 text-white" />
@@ -596,9 +725,15 @@ const UniversityPrograms = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.5 }}
+                style={{ willChange: 'transform, opacity' }}
+              >
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <Users className="w-6 h-6 text-white" />
@@ -612,33 +747,40 @@ const UniversityPrograms = () => {
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             <div className="pt-4">
-              <Link
-                href={"/auth" as Route}
-                className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
-                style={{
-                  boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
-                }}
+              <motion.div
+                initial={{ x: 60, opacity: 0 }}
+                animate={inView ? { x: 0, opacity: 1 } : { x: 60, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.7 }}
+                style={{ willChange: 'transform, opacity' }}
               >
-                Explore Degree Programs
-              </Link>
+                <Link
+                  href={"/auth" as Route}
+                  className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
+                  style={{
+                    boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                  }}
+                >
+                  Explore Degree Programs
+                </Link>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -656,6 +798,8 @@ const CourseCategories = () => {
     { icon: Book, title: 'Liberal Arts', description: 'Study humanities, social sciences, and develop critical thinking skills.', courseCount: '41 courses' }
   ];
 
+  // Animate items whenever they enter the viewport (up or down) without layout reflow
+
   return (
     <section id="courses" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
       <Boxes />
@@ -671,13 +815,24 @@ const CourseCategories = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className={cn(
+            "grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          )}
+          style={{ willChange: 'transform' }}
+        >
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
+                className={cn(
+                  "transform-gpu will-change-transform rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border bg-white/10 border-white/20 hover:border-white/30"
+                )}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ amount: 0.25, once: false, margin: '0px 0px -10% 0px' }}
+                transition={{ duration: 0.35, ease: 'easeOut', delay: (index % 3) * 0.06 }}
               >
                 <div className="flex flex-col h-full">
                   <div className="w-16 h-16 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-6 border border-blue-400/30">
@@ -704,10 +859,10 @@ const CourseCategories = () => {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
         </div>
       </div>
     </section>
@@ -937,7 +1092,7 @@ const FeaturesSection = () => {
   }, []);
 
   return (
-    <section className="relative py-20 bg-slate-900 overflow-hidden">
+    <section id="about" className="relative py-20 bg-slate-900 overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1228,6 +1383,8 @@ const ContactForm = () => {
     message: ''
   });
 
+  const { ref: contactRef, inView: contactInView } = useInView({ threshold: 0.2, triggerOnce: false, rootMargin: '0px 0px -10% 0px' });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -1243,12 +1400,18 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+    <section id="contact" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300">
+        <div ref={contactRef} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <motion.div
+            className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300 transform-gpu"
+            initial={{ x: -60, opacity: 0 }}
+            animate={contactInView ? { x: 0, opacity: 1 } : { x: -60, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 0.7 }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div className="text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Ready to Start Your Learning Journey?
@@ -1350,9 +1513,15 @@ const ContactForm = () => {
                 Submit Enquiry
               </Link>
             </form>
-          </div>
+          </motion.div>
 
-          <div className="text-white space-y-8">
+          <motion.div
+            className="text-white space-y-8"
+            initial={{ x: 100, opacity: 0 }}
+            animate={contactInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
+          >
             <div>
               <h3 className="text-2xl font-bold mb-4">Get in Touch</h3>
               <p className="text-blue-100 text-lg leading-relaxed">
@@ -1391,7 +1560,7 @@ const ContactForm = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -190,7 +190,8 @@ const AssignmentsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 -z-10 w-full h-full bg-slate-900"></div>
       {/* Header */}
       <motion.div 
         initial={{ y: -20, opacity: 0 }}

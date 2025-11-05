@@ -430,14 +430,14 @@ html {
 /* --- Compact, viewport-fit overrides (parent dashboard only) --- */
 .parent-dashboard .scroll-container { padding-top: 70px; }
 .parent-dashboard .dashboard-section {
-  min-height: calc(95vh - 70px);
-  max-height: calc(95vh - 70px);
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  min-height: auto !important;
+  max-height: none !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 .parent-dashboard .dashboard-section > .w-full { max-width: 95vw; margin-left: auto; margin-right: auto; }
-.parent-dashboard .dashboard-card { max-height: 80vh; overflow: auto; }
-.parent-dashboard .dashboard-grid, .parent-dashboard .grid { gap: 0.5rem !important; }
+.parent-dashboard .dashboard-card { max-height: none; overflow: visible; }
+.parent-dashboard .dashboard-grid, .parent-dashboard .grid { gap: 0.75rem !important; }
 
 @media (max-width: 1280px) {
   .parent-dashboard .dashboard-section { min-height: calc(94vh - 70px); max-height: calc(94vh - 70px); }
