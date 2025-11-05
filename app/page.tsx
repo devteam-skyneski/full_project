@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
 import CountUp from 'react-countup';
@@ -72,6 +71,33 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
   const hasShadow = useScrollShadow();
   const [activeHash, setActiveHash] = useState<string>('');
 
+  // Reliable smooth scroll helper with retry and navbar offset handling
+  const smoothScrollToSelector = (selector: string, options?: { offset?: number; retries?: number; delayMs?: number }) => {
+    const offset = options?.offset ?? 100;
+    const maxRetries = options?.retries ?? 4;
+    const retryDelay = options?.delayMs ?? 80;
+
+    let attempts = 0;
+
+    const attemptScroll = () => {
+      const target = document.querySelector(selector);
+      if (target) {
+        const top = (target as HTMLElement).getBoundingClientRect().top + window.pageYOffset - offset;
+        requestAnimationFrame(() => {
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+        return;
+      }
+
+      if (attempts < maxRetries) {
+        attempts += 1;
+        setTimeout(attemptScroll, retryDelay);
+      }
+    };
+
+    attemptScroll();
+  };
+
   // Framer Motion variants for staggered pop-up reveal
   const parentVariants = {
     show: {
@@ -111,18 +137,46 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
       const hash = window.location.hash;
       setActiveHash(hash || '');
     };
+    
+    // Update on scroll to highlight active section
+    const handleScroll = () => {
+      const sections = ['#courses', '#universities', '#how-it-works', '#about', '#contact'];
+      const scrollPosition = window.scrollY + 100;
+      
+      for (const section of sections) {
+        const element = document.querySelector(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element as HTMLElement;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveHash(section);
+            return;
+          }
+        }
+      }
+      // If scrolled to top, clear active hash
+      if (window.scrollY < 100) {
+        setActiveHash('');
+      }
+    };
+    
     update();
     window.addEventListener('hashchange', update);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     // Clear hash on page load to prevent constant active state
     if (window.location.hash) {
       const hash = window.location.hash;
       // Only set if it's a valid section
-      const validSections = ['#courses', '#universities', '#how-it-works', '#about'];
+      const validSections = ['#courses', '#universities', '#how-it-works', '#about', '#contact'];
       if (!validSections.includes(hash)) {
         setActiveHash('');
       }
     }
-    return () => window.removeEventListener('hashchange', update);
+    
+    return () => {
+      window.removeEventListener('hashchange', update);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -160,7 +214,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#courses' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#courses' ? 'after:scale-x-100' : ''
                   }`}
@@ -179,7 +233,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#universities' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#universities' ? 'after:scale-x-100' : ''
                   }`}
@@ -198,7 +252,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#how-it-works' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#how-it-works' ? 'after:scale-x-100' : ''
                   }`}
@@ -213,11 +267,16 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                     e.preventDefault();
                     const element = document.querySelector('#about');
                     if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      const offset = 100;
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                      window.scrollTo({
+                        top: elementPosition - offset,
+                        behavior: 'smooth'
+                      });
                     }
                   }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
+                    activeHash === '#about' ? 'text-white' : 'text-white hover:text-blue-300'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
                     activeHash === '#about' ? 'after:scale-x-100' : ''
                   }`}
@@ -227,8 +286,16 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={itemVariants}>
                 <Link
-                  href={"/contact" as Route}
-                  className="group relative text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left"
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    smoothScrollToSelector('#contact');
+                  }}
+                  className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    activeHash === '#contact' ? 'text-white' : 'text-white hover:text-blue-300'
+                  } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
+                    activeHash === '#contact' ? 'after:scale-x-100' : ''
+                  }`}
                 >
                   Contact
                 </Link>
@@ -240,7 +307,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
             <motion.div variants={itemVariants}>
               <Link
                 href={"/auth" as Route}
-                className="text-gray-700 hover:text-gray-900 px-4 py-2 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-gray-300 hover:border-gray-400 bg-white/60"
+                className="text-white hover:text-white px-4 py-2 text-base font-medium rounded-lg transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-white/60 hover:border-white bg-white/0 backdrop-blur-md shadow-lg hover:shadow-xl hover:bg-white/20"
               >
                 Login
               </Link>
@@ -284,27 +351,52 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </div>
               <motion.nav variants={parentVariants} initial="hidden" animate="show" className="space-y-1">
                 <motion.div variants={itemVariants}>
-                  <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#courses" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     Courses
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#universities" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     Universities
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50">
                     How it Works
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="#about" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link 
+                    href="#about" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      const element = document.querySelector('#about');
+                      if (element) {
+                        const offset = 100;
+                        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                        window.scrollTo({
+                          top: elementPosition - offset,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }} 
+                    className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50"
+                  >
                     About
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href={"/contact" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link 
+                    href="#contact" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      // Allow the menu close animation to start, then scroll
+                      requestAnimationFrame(() => smoothScrollToSelector('#contact'));
+                    }} 
+                    className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-50 focus:bg-gray-50"
+                  >
                     Contact
                   </Link>
                 </motion.div>
@@ -312,7 +404,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={groupVariants} initial="hidden" animate="show" className="mt-4 border-t pt-4">
                 <div className="flex gap-2">
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
+                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-white/60 hover:border-white px-3 py-2 text-center text-base font-medium text-gray-700 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/10 backdrop-blur-md shadow-lg hover:shadow-xl hover:bg-white/20 transition-all duration-300">
                       Login
                     </Link>
                   </motion.div>
@@ -418,12 +510,19 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
 
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/hero-student.jpg"
-                alt="Student learning with laptop"
-                fill
-                className="object-cover"
-                priority
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/hero2.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                aria-label="Hero background video"
               />
             </div>
           </div>
@@ -557,7 +656,7 @@ const UniversityPrograms = () => {
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
               <video
                 className="absolute inset-0 w-full h-full object-cover"
-                src="/uni2.webm"
+                src="/final.mp4"
                 autoPlay
                 muted
                 loop
@@ -937,7 +1036,7 @@ const FeaturesSection = () => {
   }, []);
 
   return (
-    <section className="relative py-20 bg-slate-900 overflow-hidden">
+    <section id="about" className="relative py-20 bg-slate-900 overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1243,7 +1342,7 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+    <section id="contact" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
       <Boxes />
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
