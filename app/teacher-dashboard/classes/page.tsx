@@ -140,7 +140,7 @@ const ClassesPage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <motion.div 
-        className="bg-white border-b border-gray-200 sticky top-0 z-40"
+        className="bg-white border-b border-jetblack-200 sticky top-0 z-40"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -200,7 +200,7 @@ const ClassesPage = () => {
                 <div>
                   <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
                   <motion.p 
-                    className="text-3xl font-bold text-gray-900"
+                    className="text-3xl font-bold text-jetblack-900"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.35 + (index * 0.15) }}
