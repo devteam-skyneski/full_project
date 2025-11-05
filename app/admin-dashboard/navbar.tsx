@@ -21,11 +21,10 @@ export default function Navbar() {
   const [isProfileView, setIsProfileView] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Mock admin data - in real app, fetch from context/state
   const adminData = {
     name: "Admin User",
     email: "admin@university.edu"
-   
+    
   };
 
   const navItems = [
@@ -44,11 +43,10 @@ export default function Navbar() {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
 
-          // Show navbar when scrolling up or at the top
           if (currentScrollY < lastScrollY || currentScrollY < 10) {
             setIsVisible(true);
           }
-          // Hide navbar when scrolling down past 150px
+
           else if (currentScrollY > lastScrollY && currentScrollY > 150) {
             setIsVisible(false);
           }
@@ -68,12 +66,11 @@ export default function Navbar() {
     };
   }, [lastScrollY]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowProfileDropdown(false);
-        setIsProfileView(false); // Reset view on close
+        setIsProfileView(false);
       }
     };
 
@@ -82,26 +79,24 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    // In real app, clear auth state and redirect
+
     window.location.href = "/auth";
   };
 
   return (
     <nav
       className={`w-full py-3 px-6 flex items-center justify-between fixed top-0 left-0 z-50 
-        backdrop-blur-md bg-white/70 border-b border-gray-200/50 shadow-sm
+        backdrop-blur-md bg-white/20 border-b border-white/20 shadow-lg
         transition-all duration-500 ease-in-out
         ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
     >
-      {/* Left Section - Logo */}
       <div className="flex items-center gap-2">
         <div className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center font-bold text-lg rounded-lg shadow-md">
           A
         </div>
-        <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">Admin Portal</h1>
+        <h1 className="text-xl font-semibold text-white hidden sm:block">Admin Portal</h1>
       </div>
 
-      {/* Right Section - Navigation & Profile */}
       <div className="flex items-center gap-2 sm:gap-6">
         <div className="hidden md:flex">
           <FloatingDock
@@ -111,47 +106,41 @@ export default function Navbar() {
           />
         </div>
 
-        {/* Profile Dropdown */}
+
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => {
-              // This logic resets the inner view if you close the dropdown
+
               const closing = showProfileDropdown;
               if (closing) {
                 setIsProfileView(false);
               }
               setShowProfileDropdown(!showProfileDropdown);
             }}
-            className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/20 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
               A
             </div>
-            <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
+            <ChevronDown className="w-4 h-4 text-gray-300 hidden sm:block" />
           </button>
 
-          {/* Dropdown Menu */}
-          {showProfileDropdown && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-              {/* === THIS TOP SECTION IS NOW REMOVED === */}
-              {/* <div className="px-4 py-3 border-b border-gray-200">
-                <p className="text-sm font-semibold text-gray-800">{adminData.name}</p>
-                <p className="text-xs text-gray-600 truncate">{adminData.email}</p>
-              </div> */}
 
-              {/* === MODIFIED DROPDOWN ITEMS === */}
+          {showProfileDropdown && (
+            <div className="absolute right-0 mt-2 w-56 bg-gray-900/70 backdrop-blur-lg border border-white/20 rounded-lg shadow-xl z-50 py-2">
+
               {!isProfileView ? (
                 <>
                   <button
                     onClick={() => setIsProfileView(true)}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 border-b"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/50 flex items-center gap-2 border-b border-white/20"
                   >
                     <User className="w-4 h-4" />
                     Profile
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/50 flex items-center gap-2"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -161,22 +150,21 @@ export default function Navbar() {
                 <>
                   <button
                     onClick={() => setIsProfileView(false)}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 border-b"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/50 flex items-center gap-2 border-b border-white/20"
                   >
                     <ChevronDown className="w-4 h-4 rotate-90" />
                     Back
                   </button>
                   <div className="px-4 py-3 space-y-2">
-                    <p className="text-xs text-gray-500">Full Name</p>
-                    <p className="text-sm font-semibold text-gray-800">{adminData.name}</p>
+                    <p className="text-xs text-gray-400">Full Name</p>
+                    <p className="text-sm font-semibold text-white">{adminData.name}</p>
                     
-                    <p className="text-xs text-gray-500">Email Address</p>
-                    <p className="text-sm font-semibold text-gray-800">{adminData.email}</p>
+                    <p className="text-xs text-gray-400">Email Address</p>
+                    <p className="text-sm font-semibold text-white">{adminData.email}</p>
                   
                   </div>
                 </>
               )}
-              {/* === END OF MODIFICATIONS === */}
             </div>
           )}
         </div>

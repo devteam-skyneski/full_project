@@ -9,21 +9,21 @@ import TeacherSection from './sections/TeacherSection';
 import StudentSection from './sections/StudentSection';
 import AnnouncementSection from './sections/AnnouncementSection';
 import ParentSection from './sections/ParentSection';
+import Lottie from 'lottie-react';
+import adminAnimationData from './admin-animation.json';
 import {
   Phone, Mail, Home, ChevronDown, MoreVertical, Users, Book, Bell, LogOut,
   BookOpen, FileText, ClipboardList, BarChart3, User,
   GraduationCap, Megaphone, ScrollText, CheckSquare, X
 } from 'lucide-react';
-import { Montserrat } from 'next/font/google'; // Added for font
+import { Montserrat } from 'next/font/google';
 import {
   BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer,
   XAxis, YAxis, Tooltip, LabelList,
 } from 'recharts';
 
-// Instantiate the font
 const montserrat = Montserrat({ subsets: ['latin'] });
 
-// --- Reusable Dropdown Component (No changes) ---
 const Dropdown = memo(({ options, onSelect }: { options: string[], onSelect: (option: string) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(options[0]);
@@ -42,21 +42,21 @@ const Dropdown = memo(({ options, onSelect }: { options: string[], onSelect: (op
   return (
     <motion.div className="relative" animate>
       <motion.div
-        className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 cursor-pointer hover:bg-gray-50 transition"
+        className="flex items-center gap-2 bg-white/20 rounded-lg px-3 py-1 cursor-pointer hover:bg-white/30 transition"
         whileTap={{ scale: 0.97 }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="text-gray-700 text-sm">{selected}</span>
+        <span className="text-white text-sm">{selected}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <ChevronDown className="w-4 h-4 text-gray-500" />
+          <ChevronDown className="w-4 h-4 text-gray-300" />
         </motion.div>
       </motion.div>
       
       <motion.div
-        className="absolute top-full right-0 mt-1 w-32 bg-white rounded-lg shadow-xl z-10 overflow-hidden"
+        className="absolute top-full right-0 mt-1 w-32 bg-gray-900/70 backdrop-blur-lg border border-white/20 rounded-lg shadow-xl z-10 overflow-hidden"
         variants={dropdownVariants}
         initial="closed"
         animate={isOpen ? "open" : "closed"}
@@ -65,7 +65,7 @@ const Dropdown = memo(({ options, onSelect }: { options: string[], onSelect: (op
         {options.map((option) => (
           <div
             key={option}
-            className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            className="px-3 py-2 text-sm text-gray-200 hover:bg-blue-600/50 cursor-pointer"
             onClick={() => handleSelect(option)}
           >
             {option}
@@ -76,7 +76,7 @@ const Dropdown = memo(({ options, onSelect }: { options: string[], onSelect: (op
   );
 });
 
-// --- DonutChart Component (No changes) ---
+
 const DonutChart = memo(({ data, percentage }: { data: any; percentage: number }) => {
   return (
     <div className="relative w-24 h-24 flex items-center justify-center">
@@ -96,7 +96,7 @@ const DonutChart = memo(({ data, percentage }: { data: any; percentage: number }
             animationEasing="ease-out"
           >
             <Cell key={`cell-0`} fill={data.fill} />
-            <Cell key={`cell-1`} fill="#E5E7EB" />
+            <Cell key={`cell-1`} fill="#9CA3AF" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
@@ -105,7 +105,7 @@ const DonutChart = memo(({ data, percentage }: { data: any; percentage: number }
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="text-lg font-bold text-gray-700"
+          className="text-lg font-bold text-white"
         >
           {percentage}%
         </motion.span>
@@ -174,19 +174,19 @@ const attendanceDataMap = {
 
 const calendarEventsToday = [
   { title: 'All-Faculty Meeting', location: 'Auditorium', color: 'bg-blue-500' },
-  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-gray-200' },
-  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-gray-200' },
+  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-white/20' },
+  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-white/20' },
 ];
 const calendarEventsYesterday = [
   { title: 'IT Dept. Sync', location: 'Room 102', color: 'bg-green-500' },
-  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-gray-200' },
+  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-white/20' },
 ];
 const calendarEventsPastWeek = [
   { title: 'All-Faculty Meeting', location: 'Auditorium', color: 'bg-blue-500' },
-  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-gray-200' },
-  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-gray-200' },
+  { title: 'Board of Directors Call', location: 'Admin Office', color: 'bg-white/20' },
+  { title: 'Budget Review: Q4', location: 'Conf. Room 3', color: 'bg-white/20' },
   { title: 'IT Dept. Sync', location: 'Room 102', color: 'bg-green-500' },
-  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-gray-200' },
+  { title: 'Parent-Teacher Mtg.', location: 'Gymnasium', color: 'bg-white/20' },
   { title: 'Science Fair Planning', location: 'Lab 3', color: 'bg-purple-500' },
 ];
 const calendarDataMap = {
@@ -223,7 +223,6 @@ const taskItemVariants: Variants = {
   visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 100 } },
 };
 
-// --- Task Modal (keeps animated vibe) ---
 function TasksModal({
   tasks,
   onClose,
@@ -243,7 +242,7 @@ function TasksModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        {/* backdrop */}
+        
         <motion.div
           className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           onClick={() => !selectedTask && onClose()}
@@ -253,25 +252,25 @@ function TasksModal({
         />
 
         <motion.div
-          className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-2xl bg-white/50 backdrop-blur-lg border border-white/20 rounded-xl shadow-2xl overflow-hidden"
           initial={{ scale: 0.95, y: 20, opacity: 0 }}
           animate={{ scale: 1, y: 0, opacity: 1 }}
           exit={{ scale: 0.95, y: 20, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 24 }}
         >
-          <div className="flex items-center justify-between px-5 py-4 border-b">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-white/30">
             <div>
               <h3 className="text-lg font-semibold text-gray-800">All Pending Tasks</h3>
-              <p className="text-sm text-gray-500 mt-0.5">{tasks.length} tasks</p>
+              <p className="text-sm text-gray-700 mt-0.5">{tasks.length} tasks</p>
             </div>
             <div className="flex items-center gap-3">
               <button
-                className="text-sm text-gray-600 hover:text-gray-800"
+                className="text-sm text-gray-600 hover:text-gray-900"
                 onClick={() => onClose()}
               >
                 Close
               </button>
-              <X className="w-5 h-5 text-gray-500 cursor-pointer" onClick={() => onClose()} />
+              <X className="w-5 h-5 text-gray-700 cursor-pointer" onClick={() => onClose()} />
             </div>
           </div>
 
@@ -285,7 +284,7 @@ function TasksModal({
               {tasks.map((t, idx) => (
                 <motion.div
                   key={t.id}
-                  className="bg-gray-50 rounded-lg p-3 flex items-start justify-between gap-3 shadow-sm"
+                  className="bg-white/30 rounded-lg p-3 flex items-start justify-between gap-3 shadow-sm"
                   variants={taskItemVariants}
                   whileHover={{ scale: 1.02 }}
                 >
@@ -293,12 +292,12 @@ function TasksModal({
                     className="flex items-start gap-3 flex-1 cursor-pointer"
                     onClick={() => setSelectedTask(t)}
                   >
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white/40 flex items-center justify-center text-xl flex-shrink-0">
                       {t.icon}
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-semibold text-gray-800 text-sm truncate">{t.title}</h4>
-                      <p className="text-xs text-gray-600">{t.date}</p>
+                      <p className="text-xs text-gray-700">{t.date}</p>
                     </div>
                   </div>
 
@@ -309,24 +308,24 @@ function TasksModal({
                       className="cursor-pointer"
                       title="Mark as done"
                     >
-                      <CheckSquare className="w-6 h-6 text-green-500 hover:text-green-700 transition" />
+                      <CheckSquare className="w-6 h-6 text-green-600 hover:text-green-700 transition" />
                     </motion.div>
                   </div>
                 </motion.div>
               ))}
               {tasks.length === 0 && (
-                <motion.div className="text-center text-sm text-gray-500 py-8">
+                <motion.div className="text-center text-sm text-gray-700 py-8">
                   No pending tasks. Nice work!
                 </motion.div>
               )}
             </motion.div>
           </div>
 
-          {/* task detail overlay inside modal */}
+          
           <AnimatePresence>
             {selectedTask && (
               <motion.div
-                className="absolute inset-0 bg-white/95 p-6 flex flex-col justify-between"
+                className="absolute inset-0 bg-white/80 backdrop-blur-md p-6 flex flex-col justify-between"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
@@ -334,7 +333,7 @@ function TasksModal({
                 <div>
                   <h4 className="text-xl font-semibold text-gray-800 mb-2">{selectedTask.title}</h4>
                   <p className="text-sm text-gray-700 mb-4">{selectedTask.desc}</p>
-                  <p className="text-xs text-gray-500">{selectedTask.date}</p>
+                  <p className="text-xs text-gray-600">{selectedTask.date}</p>
                 </div>
                 <div className="flex justify-end gap-3">
                   <button
@@ -364,10 +363,9 @@ function TasksModal({
   );
 }
 
-// --- REVERTED: Back to simple upcomingTasks array is now initialUpcomingTasks; component-level state will be used ---
 
 export default function AdminDashboard() {
-  // State for Student Performance
+
   const [selectedClass, setSelectedClass] = useState('All Classes');
   const [performanceData, setPerformanceData] = useState(performanceDataMap['All Classes']);
 
@@ -376,7 +374,7 @@ export default function AdminDashboard() {
     setPerformanceData(performanceDataMap[option] || allClassesData);
   }, []);
 
-  // State for Calendar
+
   const [calendarPeriod, setCalendarPeriod] = useState('Today');
   const [currentCalendarEvents, setCurrentCalendarEvents] = useState(calendarDataMap['Today']);
   
@@ -385,7 +383,7 @@ export default function AdminDashboard() {
     setCurrentCalendarEvents(calendarDataMap[option as keyof typeof calendarDataMap] || calendarEventsToday);
   }, []);
 
-  // State for Attendance
+
   const [attendancePeriod, setAttendancePeriod] = useState('Today');
   const [currentAttendanceData, setCurrentAttendanceData] = useState(attendanceDataMap['Today']);
 
@@ -394,16 +392,15 @@ export default function AdminDashboard() {
     setCurrentAttendanceData(attendanceDataMap[option as keyof typeof attendanceDataMap] || attendanceDataToday);
   }, []);
 
-  // --- Tasks State (NEW) ---
+
   const [tasks, setTasks] = useState(initialUpcomingTasks);
   const [showTasksModal, setShowTasksModal] = useState(false);
 
   const markTaskDone = (id: number) => {
-    // remove with smooth state update
     setTasks(prev => prev.filter(t => t.id !== id));
   };
 
-  // Dropdown options
+
   const classOptions = ['All Classes', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   const timeOptions = ['Today', 'Yesterday', 'Past Week'];
 
@@ -428,63 +425,63 @@ export default function AdminDashboard() {
             initial="hidden"
             animate="visible"
           >
-            
-            {/* === Left Column === */}
+          
             <motion.div
               className="space-y-4 flex flex-col"
               variants={columnLeftVariants}
               style={{ perspective: 1000 }}
             >
               
-              {/* Admin Welcome / Overview */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-4 shadow-sm"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20"
                 whileHover={{ scale: 1.03, rotateY: 10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Admin Overview</h2>
-                    <p className="text-gray-600 mb-2 text-sm">
+                    <h2 className="text-2xl font-bold text-white mb-2">Hey Admin!!</h2>
+                    <p className="text-gray-200 mb-2 text-sm">
                       Key metrics for the institution.</p>
-                       <p className="text-gray-600 mb-2 text-sm">
+                      <p className="text-gray-200 mb-2 text-sm">
                       You have {tasks.length} pending tasks.
                     </p>
                     <motion.a
                       href="#teachers"
-                      className="text-blue-600 hover:underline font-medium text-sm"
+                      className="text-blue-300 hover:text-white font-medium text-sm"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Review Tasks
                     </motion.a>
                   </div>
+                  
+                  
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
                     style={{ originX: 0.5, originY: 0.5 }}
-                    className="w-28 h-28 bg-blue-100 rounded-lg flex items-center justify-center ml-2"
+                    className="w-28 h-28 bg-white/20 rounded-lg flex items-center justify-center ml-2 overflow-hidden" // Added overflow-hidden
                   >
-                    <motion.div
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-5xl"
-                    >
-                      📊
-                    </motion.div>
+                    
+                    <Lottie 
+                      animationData={adminAnimationData} 
+                      loop={true} 
+                      className="w-full h-full scale-150" 
+                    />
                   </motion.div>
+                  
+
                 </div>
               </motion.div>
 
-              {/* Student Performance Section */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
-                whileHover={{ scale: 1.03, rotateY: 10 }} // Tilt
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
+                whileHover={{ scale: 1.03, rotateY: 10 }} 
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-gray-800">Student Performance</h3>
+                  <h3 className="text-lg font-semibold text-white">Student Performance</h3>
                   <div className="flex items-center gap-3">
                     <Dropdown options={classOptions} onSelect={handleClassChange} />
                   </div>
@@ -504,7 +501,7 @@ export default function AdminDashboard() {
                         type="category"
                         width={80}
                         fontSize={14}
-                        tick={{ fill: '#6B7280' }}
+                        tick={{ fill: '#E5E7EB' }}
                         tickLine={false}
                         axisLine={false}
                       />
@@ -520,7 +517,7 @@ export default function AdminDashboard() {
                         <LabelList
                           dataKey="score"
                           position="right"
-                          style={{ fill: '#374151', fontSize: '11px', fontWeight: 'bold' }}
+                          style={{ fill: '#FFFFFF', fontSize: '11px', fontWeight: 'bold' }}
                         />
                         {performanceData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill="#3B82F6" />
@@ -532,20 +529,19 @@ export default function AdminDashboard() {
               </motion.div>
             </motion.div>
 
-            {/* === Middle Column === */}
             <motion.div
               className="space-y-4 flex flex-col"
               variants={columnMiddleVariants}
               style={{ perspective: 1000 }}
             >
-              {/* Overall Attendance Section */}
+
               <motion.div
-                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateX: 5 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">School Attendance</h3>
+                  <h3 className="text-lg font-semibold text-white">School Attendance</h3>
                   <Dropdown options={timeOptions} onSelect={handleAttendanceChange} />
                 </div>
                 
@@ -565,7 +561,7 @@ export default function AdminDashboard() {
                         <DonutChart data={item} percentage={item.value} />
                       </div>
                       <motion.p
-                        className="text-sm font-medium text-gray-700 leading-tight"
+                        className="text-sm font-medium text-gray-200 leading-tight"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 + 1.2 }}
@@ -578,28 +574,26 @@ export default function AdminDashboard() {
               </motion.div>
             </motion.div>
 
-            {/* === Right Column === */}
             <motion.div
               className="space-y-4 flex flex-col"
               variants={columnRightVariants}
               style={{ perspective: 1000 }}
             >
-              
-              {/* School Calendar Section */}
+
               <motion.div
-                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">School Calendar</h3>
-                    <p className="text-sm text-gray-600 mt-1">{currentCalendarEvents.length} major events</p>
+                    <h3 className="text-lg font-semibold text-white">School Calendar</h3>
+                    <p className="text-sm text-gray-200 mt-1">{currentCalendarEvents.length} major events</p>
                   </div>
                   <Dropdown options={timeOptions} onSelect={handleCalendarChange} />
                 </div>
                 <div className="relative mt-4 pl-6 flex-1">
-                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-white/30"></div>
                   <motion.div
                     key={calendarPeriod}
                     className="space-y-3"
@@ -615,7 +609,7 @@ export default function AdminDashboard() {
                         whileHover={{ scale: 1.03 }}
                       >
                         <div
-                          className={`${event.color} ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'} rounded-lg p-3 flex-1 shadow-sm`}
+                          className={`${event.color} ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-white'} rounded-lg p-3 flex-1 shadow-sm`}
                         >
                           <div className="flex items-center gap-2 mb-1">
                             {event.title === 'All-Faculty Meeting' ? (
@@ -623,11 +617,11 @@ export default function AdminDashboard() {
                             ) : (
                               <div className="w-4 h-4 rounded-full bg-gray-400"></div>
                             )}
-                            <h4 className={`font-semibold text-sm ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-gray-800'}`}>
+                            <h4 className={`font-semibold text-sm ${event.title === 'All-Faculty Meeting' ? 'text-white' : 'text-white'}`}>
                               {event.title}
                             </h4>
                           </div>
-                          <p className={`text-xs ${event.title === 'All-Faculty Meeting' ? 'text-white/90' : 'text-gray-600'}`}>
+                          <p className={`text-xs ${event.title === 'All-Faculty Meeting' ? 'text-white/90' : 'text-gray-200'}`}>
                             {event.location}
                           </p>
                         </div>
@@ -637,18 +631,17 @@ export default function AdminDashboard() {
                 </div>
               </motion.div>
 
-              {/* Pending Tasks Section */}
               <motion.div
-                className="bg-gray-100 rounded-xl p-4 shadow-sm flex-1 flex flex-col"
+                className="bg-white/20 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 flex-1 flex flex-col"
                 whileHover={{ scale: 1.03, rotateY: -10 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Pending Tasks</h3>
+                  <h3 className="text-lg font-semibold text-white">Pending Tasks</h3>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="text-sm text-blue-600 hover:underline font-medium"
+                    className="text-sm text-blue-300 hover:text-white font-medium"
                     onClick={() => setShowTasksModal(true)}
                   >
                     See All
@@ -663,62 +656,72 @@ export default function AdminDashboard() {
                   {tasks.slice(0, 2).map((event, index) => (
                     <motion.div
                       key={event.id}
-                      className="bg-white rounded-lg p-3 flex items-start gap-3"
+                      className="bg-white/20 rounded-lg p-3 flex items-start gap-3"
                       variants={taskItemVariants}
                       whileHover={{ scale: 1.03 }}
                     >
                       <motion.div
-                        className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl flex-shrink-0"
+                        className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center text-xl flex-shrink-0"
                         animate={{ rotate: [0, 5, -5, 0] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }}
                       >
                         {event.icon}
                       </motion.div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-800 mb-1 text-sm">{event.title}</h4>
-                        <p className="text-xs text-gray-600">{event.date}</p>
+                        <h4 className="font-semibold text-white mb-1 text-sm">{event.title}</h4>
+                        <p className="text-xs text-gray-200">{event.date}</p>
                       </div>
                       <motion.div
                         whileHover={{ scale: 1.2, rotate: 90 }}
                         className="flex-shrink-0"
                       >
-                        <MoreVertical className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600 transition" />
+                        <MoreVertical className="w-5 h-5 text-gray-300 cursor-pointer hover:text-white transition" />
                       </motion.div>
                     </motion.div>
                   ))}
                   {tasks.length === 0 && (
-                    <div className="text-sm text-gray-500">No pending tasks. 🎉</div>
+                    <div className="text-sm text-gray-300">No pending tasks. 🎉</div>
                   )}
                 </motion.div>
               </motion.div>
             </motion.div>
           </motion.div>
         </div>
-
-
-        {/* === START OF SCROLLING SECTIONS WITH PARALLAX ANIMATION === */}
         
-        <ScrollAnimator className="w-full">
-          <TeacherSection />
-        </ScrollAnimator>
+       {/* === START OF SCROLLING SECTIONS WITH PARALLAX ANIMATION === */}
+       {/* === START OF SCROLLING SECTIONS === */}
+{/* === START OF SCROLLING SECTIONS === */}
+      {/* === START OF SCROLLING SECTIONS === */}
+      
+      {/* We apply z-10 to stay on top of particles.
+        We apply min-h-screen to make sure the page has scroll-depth.
+      */}
+
+      <div className="relative z-10 min-h-screen w-full">
+        <TeacherSection />
+      </div>
+      
+      <div className="relative z-10 min-h-screen w-full">
+        <StudentSection />
+      </div>
+
+      <div className="relative z-10 min-h-screen w-full">
+        <AnnouncementSection />
+      </div>
+
+      <div className="relative z-10 min-h-screen w-full">
+        <ParentSection />
+      </div>
         
-        <ScrollAnimator className="w-full">
-          <StudentSection />
-        </ScrollAnimator>
-
-        <ScrollAnimator className="w-full">
-          <AnnouncementSection />
-        </ScrollAnimator>
-
-        <ScrollAnimator className="w-full">
-          <ParentSection />
-        </ScrollAnimator>
+    {/* === END OF SCROLLING SECTIONS === */}
+      </div>
+        
         
         {/* === END OF SCROLLING SECTIONS === */}
 
       </div>
 
-      {/* Tasks Modal */}
+  );{/* Tasks Modal */}
       <AnimatePresence>
         {showTasksModal && (
           <TasksModal
@@ -730,6 +733,6 @@ export default function AdminDashboard() {
           />
         )}
       </AnimatePresence>
-    </div>
-  );
+    
+  
 }

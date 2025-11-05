@@ -3,19 +3,21 @@ import {
   UserCheck,
   FileText,
   Clock,
-  Check, // This is the "tick mark" icon
+  Check,
   X,
   Bell,
   Eye,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion"; // <-- 1. IMPORT MOTION
 
 export default function TeacherSection() {
   const [activeTab, setActiveTab] = useState<"requests" | "teachers">(
     "requests",
   );
   const [requests, setRequests] = useState([
+    // ... all your requests data ...
     {
       id: "1",
       teacher: "Dr. Sarah Johnson",
@@ -138,8 +140,9 @@ export default function TeacherSection() {
     },
   ]);
 
-  // This list now represents PENDING teacher approvals
+  //PENDING teacher approvals
   const [teachers, setTeachers] = useState([
+    // ... all your teachers data ...
     {
       id: "1",
       name: "Dr. Sarah Johnson",
@@ -263,17 +266,14 @@ export default function TeacherSection() {
     );
   };
 
-  // This function now simulates approval by removing the teacher from the pending list
   const handleApproveTeacher = (id: string) => {
     if (confirm("Are you sure you want to approve this teacher?")) {
-      // In a real app, this would send an API request to set the teacher's status to 'approved'.
-      // For this UI demo, we'll just remove them from the pending list.
+
       console.log("Approve teacher:", id);
       setTeachers(teachers.filter((t) => t.id !== id));
     }
   };
 
-  // Renamed this function for clarity
   const handleRejectTeacher = (id: string) => {
     if (
       confirm(
@@ -290,27 +290,36 @@ export default function TeacherSection() {
   const rejectedRequests = requests.filter((r) => r.status === "rejected");
 
   return (
-    <section id="teachers" className="py-10 sm:py-20 bg-gray-50">
+    // 2. WRAP YOUR WHOLE SECTION in <motion.section>
+    <motion.section
+      id="teachers"
+      className="py-10 sm:py-20"
+      // 3. ADD THESE ANIMATION PROPS
+      initial={{ opacity: 0, y: 50 }} // Start hidden and 50px down
+      whileInView={{ opacity: 1, y: 0 }} // Animate to visible and 0px
+      viewport={{ once: true, amount: 0.2 }} // Trigger once when 20% is visible
+      transition={{ duration: 0.6, ease: "easeOut" }} // Smooth animation
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
               Teacher Management
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+            <p className="text-sm sm:text-base text-gray-300 mt-1 sm:mt-2">
               Manage teachers and review note upload requests
             </p>
           </div>
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2 shadow-sm border border-gray-100 flex-1 sm:flex-none">
+            <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/20 px-3 py-2 sm:px-4 sm:py-2 flex-1 sm:flex-none">
               <div className="flex items-center gap-2">
-                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-orange-300" />
                 <div>
-                  <p className="text-xs text-gray-600 hidden sm:block">
+                  <p className="text-xs text-gray-300 hidden sm:block">
                     Pending Requests
                   </p>
-                  <p className="text-sm sm:text-xl font-bold text-gray-800">
+                  <p className="text-sm sm:text-xl font-bold text-white">
                     {pendingRequests.length}
                   </p>
                 </div>
@@ -319,14 +328,14 @@ export default function TeacherSection() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="flex border-b border-gray-200">
+        <div className="bg-white/20 backdrop-blur-md rounded-xl shadow-lg border border-white/20 overflow-hidden">
+          <div className="flex border-b border-white/20">
             <button
               onClick={() => setActiveTab("requests")}
               className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "requests"
-                  ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "text-blue-300 border-b-2 border-blue-300 bg-blue-500/20"
+                  : "text-gray-300 hover:bg-white/20"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -344,15 +353,14 @@ export default function TeacherSection() {
               onClick={() => setActiveTab("teachers")}
               className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 font-semibold text-xs sm:text-sm transition-colors ${
                 activeTab === "teachers"
-                  ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "text-blue-300 border-b-2 border-blue-300 bg-blue-500/20"
+                  : "text-gray-300 hover:bg-white/20"
               }`}
             >
               <div className="flex items-center justify-center gap-2">
                 <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline">Teacher Approvals</span>
                 <span className="sm:hidden">Approvals</span>
-                {/* Show pending teacher count if any */}
                 {teachers.length > 0 && (
                   <span className="bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 sm:px-2 rounded-full">
                     {teachers.length}
@@ -370,57 +378,57 @@ export default function TeacherSection() {
                 {pendingRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
-                      <Clock className="w-5 h-5 text-orange-500" />
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <Clock className="w-5 h-5 text-orange-300" />
+                      <h3 className="text-lg sm:text-xl font-bold text-white">
                         Pending Requests
                       </h3>
-                      <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded-full">
+                      <span className="bg-orange-500/30 text-orange-200 text-xs font-semibold px-2 py-1 rounded-full">
                         {pendingRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
-                          <thead className="sticky top-0 bg-gray-50 border-b border-gray-200 z-10">
+                          <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
                             <tr>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Note Title
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Teacher
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Subject
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Date
                               </th>
-                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Actions
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200">
+                          <tbody className="divide-y divide-white/20">
                             {pendingRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-gray-50 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                    <span className="font-medium text-gray-800">
+                                    <FileText className="w-4 h-4 text-blue-300 flex-shrink-0" />
+                                    <span className="font-medium text-white">
                                       {request.title}
                                     </span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-700">
+                                <td className="px-6 py-4 text-sm text-gray-200">
                                   {request.teacher}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-600">
+                                <td className="px-6 py-4 text-sm text-gray-300">
                                   {request.subject}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-6 py-4 text-sm text-gray-400">
                                   {request.date}
                                 </td>
                                 <td className="px-6 py-4">
@@ -429,24 +437,24 @@ export default function TeacherSection() {
                                       onClick={() =>
                                         alert("View note details")
                                       }
-                                      className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                      className="p-2 hover:bg-blue-500/30 rounded-lg transition-colors"
                                       title="View"
                                     >
-                                      <Eye className="w-4 h-4 text-blue-600" />
+                                      <Eye className="w-4 h-4 text-blue-300" />
                                     </button>
                                     <button
                                       onClick={() => handleApprove(request.id)}
-                                      className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                                      className="p-2 hover:bg-green-500/30 rounded-lg transition-colors"
                                       title="Approve"
                                     >
-                                      <Check className="w-4 h-4 text-green-600" />
+                                      <Check className="w-4 h-4 text-green-400" />
                                     </button>
                                     <button
                                       onClick={() => handleReject(request.id)}
-                                      className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                      className="p-2 hover:bg-red-500/30 rounded-lg transition-colors"
                                       title="Reject"
                                     >
-                                      <X className="w-4 h-4 text-red-600" />
+                                      <X className="w-4 h-4 text-red-400" />
                                     </button>
                                   </div>
                                 </td>
@@ -463,62 +471,62 @@ export default function TeacherSection() {
                 {approvedRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
-                      <Check className="w-5 h-5 text-green-500" />
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <Check className="w-5 h-5 text-green-400" />
+                      <h3 className="text-lg sm:text-xl font-bold text-white">
                         Approved Requests
                       </h3>
-                      <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+                      <span className="bg-green-500/30 text-green-200 text-xs font-semibold px-2 py-1 rounded-full">
                         {approvedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
-                          <thead className="sticky top-0 bg-gray-50 border-b border-gray-200 z-10">
+                          <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
                             <tr>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Note Title
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Teacher
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Subject
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Date
                               </th>
-                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Status
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200">
+                          <tbody className="divide-y divide-white/20">
                             {approvedRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-gray-50 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                    <span className="font-medium text-gray-800">
+                                    <FileText className="w-4 h-4 text-blue-300 flex-shrink-0" />
+                                    <span className="font-medium text-white">
                                       {request.title}
                                     </span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-700">
+                                <td className="px-6 py-4 text-sm text-gray-200">
                                   {request.teacher}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-600">
+                                <td className="px-6 py-4 text-sm text-gray-300">
                                   {request.subject}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-6 py-4 text-sm text-gray-400">
                                   {request.date}
                                 </td>
                                 <td className="px-6 py-4">
                                   <div className="flex justify-center">
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                                    <span className="px-3 py-1 bg-green-500/30 text-green-200 rounded-full text-xs font-semibold flex items-center gap-1">
                                       <Check className="w-3 h-3" />
                                       Approved
                                     </span>
@@ -537,62 +545,62 @@ export default function TeacherSection() {
                 {rejectedRequests.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-4">
-                      <X className="w-5 h-5 text-red-500" />
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <X className="w-5 h-5 text-red-400" />
+                      <h3 className="text-lg sm:text-xl font-bold text-white">
                         Rejected Requests
                       </h3>
-                      <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
+                      <span className="bg-red-500/30 text-red-200 text-xs font-semibold px-2 py-1 rounded-full">
                         {rejectedRequests.length}
                       </span>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                       <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
                         <table className="w-full">
-                          <thead className="sticky top-0 bg-gray-50 border-b border-gray-200 z-10">
+                          <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
                             <tr>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Note Title
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Teacher
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Subject
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Date
                               </th>
-                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                 Status
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-200">
+                          <tbody className="divide-y divide-white/20">
                             {rejectedRequests.map((request) => (
                               <tr
                                 key={request.id}
-                                className="hover:bg-gray-50 transition-colors"
+                                className="hover:bg-white/20 transition-colors"
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                                    <span className="font-medium text-gray-800">
+                                    <FileText className="w-4 h-4 text-blue-300 flex-shrink-0" />
+                                    <span className="font-medium text-white">
                                       {request.title}
                                     </span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-700">
+                                <td className="px-6 py-4 text-sm text-gray-200">
                                   {request.teacher}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-600">
+                                <td className="px-6 py-4 text-sm text-gray-300">
                                   {request.subject}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-6 py-4 text-sm text-gray-400">
                                   {request.date}
                                 </td>
                                 <td className="px-6 py-4">
                                   <div className="flex justify-center">
-                                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                                    <span className="px-3 py-1 bg-red-500/30 text-red-200 rounded-full text-xs font-semibold flex items-center gap-1">
                                       <X className="w-3 h-3" />
                                       Rejected
                                     </span>
@@ -608,45 +616,44 @@ export default function TeacherSection() {
                 )}
               </div>
             )}
-            {/* END: REQUESTS TAB CONTENT */}
 
-            {/* START: TEACHERS TAB CONTENT */}
+            {/* TEACHERS TAB CONTENT */}
             {activeTab === "teachers" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                  <h3 className="text-lg sm:text-xl font-bold text-white">
                     Pending Teacher Approvals ({teachers.length})
                   </h3>
                 </div>
 
                 {/* Pending Teacher Approvals Table */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-white/20 border border-white/20 rounded-lg overflow-hidden">
                   <div className="max-h-[600px] overflow-y-auto overflow-x-auto">
                     <table className="w-full">
-                      <thead className="sticky top-0 bg-gray-50 border-b border-gray-200 z-10">
+                      <thead className="sticky top-0 bg-white/20 backdrop-blur-sm border-b border-white/20 z-10">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                             Name
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                             Subject
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                             Email
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider">
                             Phone
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                             Actions
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-white/20">
                         {teachers.map((teacher) => (
                           <tr
                             key={teacher.id}
-                            className="hover:bg-gray-50 transition-colors"
+                            className="hover:bg-white/20 transition-colors"
                           >
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
@@ -656,41 +663,41 @@ export default function TeacherSection() {
                                     .map((n) => n[0])
                                     .join("")}
                                 </div>
-                                <span className="font-medium text-gray-800">
+                                <span className="font-medium text-white">
                                   {teacher.name}
                                 </span>
                               </div>
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">
+                            <td className="px-6 py-4 text-sm text-gray-200">
                               {teacher.subject}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
+                            <td className="px-6 py-4 text-sm text-gray-300">
                               {teacher.email}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
+                            <td className="px-6 py-4 text-sm text-gray-300">
                               {teacher.phone}
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center justify-center gap-2">
-                                {/* This is the "Approve" button */}
+                                
                                 <button
                                   onClick={() =>
                                     handleApproveTeacher(teacher.id)
                                   }
-                                  className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-green-500/30 rounded-lg transition-colors"
                                   title="Approve"
                                 >
-                                  <Check className="w-4 h-4 text-green-600" />
+                                  <Check className="w-4 h-4 text-green-400" />
                                 </button>
-                                {/* This is the "Reject" button */}
+                                
                                 <button
                                   onClick={() =>
                                     handleRejectTeacher(teacher.id)
                                   }
-                                  className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-red-500/30 rounded-lg transition-colors"
                                   title="Reject"
                                 >
-                                  <Trash2 className="w-4 h-4 text-red-600" />
+                                  <Trash2 className="w-4 h-4 text-red-400" />
                                 </button>
                               </div>
                             </td>
@@ -702,10 +709,10 @@ export default function TeacherSection() {
                 </div>
               </div>
             )}
-            {/* END: TEACHERS TAB CONTENT */}
+            
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
-}  
+}

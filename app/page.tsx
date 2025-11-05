@@ -3,16 +3,57 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Route } from 'next';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 import { AnimatePresence, motion } from 'framer-motion';
 import LoadingScreen from '@/app/components/LoadingScreen';
+import { ThreeDMarquee } from '@/components/ui/3d-marquee';
+import { cn } from '@/lib/utils';
+import { Boxes } from '@/components/ui/background-boxes';
+import Chatbot from '@/components/ui/chatbot';
+import { MaskContainer } from '@/components/ui/svg-mask-effect';
 import {
   Code, Briefcase, Brain, TrendingUp, Palette, Book,
   UserPlus, Search, BookOpen, Award, CheckCircle, GraduationCap, Users,
   Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowUp,
   Menu, X
 } from 'lucide-react';
+
+// Shared marquee images for background animation
+const MARQUEE_IMAGES = [
+  'https://assets.aceternity.com/cloudinary_bkp/3d-card.png',
+  'https://assets.aceternity.com/animated-modal.png',
+  'https://assets.aceternity.com/animated-testimonials.webp',
+  'https://assets.aceternity.com/cloudinary_bkp/Tooltip_luwy44.png',
+  'https://assets.aceternity.com/github-globe.png',
+  'https://assets.aceternity.com/glare-card.png',
+  'https://assets.aceternity.com/layout-grid.png',
+  'https://assets.aceternity.com/flip-text.png',
+  'https://assets.aceternity.com/hero-highlight.png',
+  'https://assets.aceternity.com/carousel.webp',
+  'https://assets.aceternity.com/placeholders-and-vanish-input.png',
+  'https://assets.aceternity.com/shooting-stars-and-stars-background.png',
+  'https://assets.aceternity.com/signup-form.png',
+  'https://assets.aceternity.com/cloudinary_bkp/stars_sxle3d.png',
+  'https://assets.aceternity.com/spotlight-new.webp',
+  'https://assets.aceternity.com/cloudinary_bkp/Spotlight_ar5jpr.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Parallax_Scroll_pzlatw_anfkh7.png',
+  'https://assets.aceternity.com/tabs.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Tracing_Beam_npujte.png',
+  'https://assets.aceternity.com/cloudinary_bkp/typewriter-effect.png',
+  'https://assets.aceternity.com/glowing-effect.webp',
+  'https://assets.aceternity.com/hover-border-gradient.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Infinite_Moving_Cards_evhzur.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Lamp_hlq3ln.png',
+  'https://assets.aceternity.com/macbook-scroll.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Meteors_fye3ys.png',
+  'https://assets.aceternity.com/cloudinary_bkp/Moving_Border_yn78lv.png',
+  'https://assets.aceternity.com/multi-step-loader.png',
+  'https://assets.aceternity.com/vortex.png',
+  'https://assets.aceternity.com/wobble-card.png',
+  'https://assets.aceternity.com/world-map.webp',
+];
 
 // Simplified hooks
 const useScrollShadow = () => {
@@ -65,9 +106,22 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const update = () => setActiveHash(window.location.hash || '');
+    const update = () => {
+      // Only set activeHash if we have a valid hash in the URL
+      const hash = window.location.hash;
+      setActiveHash(hash || '');
+    };
     update();
     window.addEventListener('hashchange', update);
+    // Clear hash on page load to prevent constant active state
+    if (window.location.hash) {
+      const hash = window.location.hash;
+      // Only set if it's a valid section
+      const validSections = ['#courses', '#universities', '#how-it-works', '#about'];
+      if (!validSections.includes(hash)) {
+        setActiveHash('');
+      }
+    }
     return () => window.removeEventListener('hashchange', update);
   }, []);
 
@@ -98,6 +152,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#courses"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#courses');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#courses' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -110,6 +171,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#universities"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#universities');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#universities' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -122,6 +190,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#how-it-works"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#how-it-works');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#how-it-works' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -134,6 +209,13 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={itemVariants}>
                 <Link
                   href="#about"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector('#about');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className={`group relative px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     activeHash === '#about' ? 'text-blue-700' : 'text-gray-700 hover:text-blue-600'
                   } after:content-[""] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left ${
@@ -145,7 +227,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={itemVariants}>
                 <Link
-                  href="/contact"
+                  href={"/contact" as Route}
                   className="group relative text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-blue-600 after:rounded-full after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:origin-left"
                 >
                   Contact
@@ -157,7 +239,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
           <motion.div variants={groupVariants} className="hidden md:flex items-center space-x-4">
             <motion.div variants={itemVariants}>
               <Link
-                href="/auth"
+                href={"/auth" as Route}
                 className="text-gray-700 hover:text-gray-900 px-4 py-2 text-base font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 border border-gray-300 hover:border-gray-400 bg-white/60"
               >
                 Login
@@ -165,7 +247,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
             </motion.div>
             <motion.div variants={itemVariants}>
               <Link
-                href="/auth?mode=signup"
+                href={{ pathname: "/auth", query: { mode: "signup" } }}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm hover:shadow"
               >
                 Sign Up
@@ -222,7 +304,7 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
+                  <Link href={"/contact" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50">
                     Contact
                   </Link>
                 </motion.div>
@@ -230,12 +312,12 @@ const LandingNavbar = ({ reveal = false }: { reveal?: boolean }) => {
               <motion.div variants={groupVariants} initial="hidden" animate="show" className="mt-4 border-t pt-4">
                 <div className="flex gap-2">
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href="/auth" onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
+                    <Link href={"/auth" as Route} onClick={() => setIsMenuOpen(false)} className="block rounded-md border border-gray-300 px-3 py-2 text-center text-base font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 bg-white/70">
                       Login
                     </Link>
                   </motion.div>
                   <motion.div variants={itemVariants} className="flex-1">
-                    <Link href="/auth?mode=signup" onClick={() => setIsMenuOpen(false)} className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm">
+                    <Link href={{ pathname: "/auth", query: { mode: "signup" } }} onClick={() => setIsMenuOpen(false)} className="block rounded-md bg-blue-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-sm">
                       Sign Up
                     </Link>
                   </motion.div>
@@ -279,22 +361,24 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
   } as const;
 
   return (
-    <section className="bg-gradient-to-br from-blue-50 to-blue-200 py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative bg-slate-900 py-20 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div variants={heroParent} initial="hidden" animate={reveal ? 'show' : 'hidden'} className="space-y-8">
-            <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <motion.h1 variants={heroItem} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
               Transform Your Future with World-Class Education
             </motion.h1>
 
-            <motion.p variants={heroItem} className="text-lg md:text-xl text-gray-600 leading-relaxed">
+            <motion.p variants={heroItem} className="text-lg md:text-xl text-neutral-300 leading-relaxed">
               Access premium courses from top universities worldwide. Learn at your own pace or pursue university registration for recognized degrees.
             </motion.p>
 
             <motion.div variants={heroGroup} className="flex flex-col sm:flex-row gap-4">
               <motion.div variants={heroItem}>
                 <Link
-                  href="/admin"
+                  href={"/auth" as Route}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Get Started
@@ -302,8 +386,8 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
               </motion.div>
               <motion.div variants={heroItem}>
                 <Link
-                  href="https://listofcourses.netlify.app/"
-                  className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
+                  href={"/auth" as Route}
+                  className="border-2 border-white hover:border-blue-600 text-white hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-lg transition-colors text-center"
                 >
                   Explore Courses
                 </Link>
@@ -312,22 +396,22 @@ const HeroSection = ({ reveal = false }: { reveal?: boolean }) => {
 
             <motion.div ref={ref} variants={heroGroup} className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8">
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={5000} duration={2} separator="," />}+
                 </div>
-                <div className="text-gray-600">Active Students</div>
+                <div className="text-neutral-300">Active Students</div>
               </motion.div>
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={300} duration={2} />}+
                 </div>
-                <div className="text-gray-600">Courses</div>
+                <div className="text-neutral-300">Courses</div>
               </motion.div>
               <motion.div variants={heroItem} className="text-center sm:text-left">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-3xl font-bold text-white">
                   {start && <CountUp end={100} duration={2} />}+
                 </div>
-                <div className="text-gray-600">Universities</div>
+                <div className="text-neutral-300">Universities</div>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -389,13 +473,15 @@ const UniversityPartners = () => {
   }, [hasAnimated]);
 
   return (
-    <section ref={sectionRef} className="py-16 bg-gradient-to-br from-blue-50 to-blue-200 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="relative py-16 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center mb-12">
-          <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-gray-900 mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
+          <h2 className={`section-title universities-heading text-3xl md:text-4xl font-bold text-white mb-4 ${hasAnimated ? 'animate-universities-zoom' : ''}`}>
             Top Universities We Partner With
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Learn from the world&apos;s leading institutions and earn recognized credentials.
           </p>
         </div>
@@ -405,13 +491,13 @@ const UniversityPartners = () => {
             {scrollingList.map((university, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-48 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+                className="flex-shrink-0 w-48 bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
               >
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-white/30">
                     <GraduationCap className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-sm font-medium text-gray-900 leading-tight">
+                  <h3 className="text-sm font-medium text-white leading-tight">
                     {university}
                   </h3>
                 </div>
@@ -462,56 +548,66 @@ const UniversityPartners = () => {
 // University Programs Component
 const UniversityPrograms = () => {
   return (
-    <section id="universities" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="universities" className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/university-building.jpg"
-                alt="University building"
-                fill
-                className="object-cover"
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/uni2.webm"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                aria-label="University registration video"
               />
             </div>
           </div>
 
           <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               University Registration & Accredited Degrees
             </h2>
             
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-lg text-neutral-300 leading-relaxed">
               Take your education to the next level with our university registration program. Earn fully accredited degrees from renowned institutions without relocating or giving up your current commitments.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-md">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <GraduationCap className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Accredited Degrees
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-neutral-200">
                       Bachelor's and Master's programs recognized globally
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-md">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/80 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0 border border-blue-400/30">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       Live Classes
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-neutral-200">
                       Interactive sessions with professors and classmates
                     </p>
                   </div>
@@ -520,9 +616,27 @@ const UniversityPrograms = () => {
             </div>
 
             <div className="pt-4">
-              <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold rounded-lg transition-colors">
+              <Link
+                href={"/auth" as Route}
+                className="bg-blue-600/80 text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 inline-block"
+                style={{
+                  boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(59, 130, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(59, 130, 246, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+                }}
+              >
                 Explore Degree Programs
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -543,13 +657,16 @@ const CourseCategories = () => {
   ];
 
   return (
-    <section id="courses" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="courses" className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">
+        <div className="relative z-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Explore Our Course Categories
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Choose from a wide range of subjects designed to help you achieve your learning goals
           </p>
         </div>
@@ -560,38 +677,37 @@ const CourseCategories = () => {
             return (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-white/30"
               >
                 <div className="flex flex-col h-full">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                    <IconComponent className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 bg-blue-600/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-6 border border-blue-400/30">
+                    <IconComponent className="w-8 h-8 text-white" />
                   </div>
                   
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-xl font-semibold text-white mb-3">
                     {category.title}
                   </h3>
                   
-                  <p className="text-gray-600 mb-6 flex-grow">
+                  <p className="text-neutral-200 mb-6 flex-grow">
                     {category.description}
                   </p>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-neutral-300">
                       {category.courseCount}
                     </span>
-                    <a
-                      href="https://listofcourses.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                    <Link
+                      href={"/auth" as Route}
+                      className="inline-block bg-blue-600/80 backdrop-blur-sm text-white px-4 py-2 rounded-md hover:bg-blue-600 border border-blue-400/30 transition-all"
                     >
                       Explore →
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </section>
@@ -600,54 +716,198 @@ const CourseCategories = () => {
 
 // How It Works Component
 const HowItWorks = () => {
+  const { ref, inView } = useInView({
+    threshold: 0.2,
+    triggerOnce: false,
+  });
+
   const steps = [
-    { icon: UserPlus, title: 'Create Your Account', description: 'Sign up in minutes and set up your personalized learning profile.' },
-    { icon: Search, title: 'Choose Your Path', description: 'Browse courses or select a university program that matches your goals.' },
-    { icon: BookOpen, title: 'Start Learning', description: 'Access course materials, attend live sessions, or learn at your own pace.' },
-    { icon: Award, title: 'Earn Credentials', description: 'Complete courses to earn certificates or degrees from top universities.' }
+    { 
+      icon: UserPlus, 
+      title: 'Create Your Account', 
+      description: 'Sign up in minutes with just your email and set up your personalized learning profile. Choose your interests and learning goals to get tailored course recommendations.'
+    },
+    { 
+      icon: Search, 
+      title: 'Choose Your Path', 
+      description: 'Browse through thousands of courses or explore university programs that match your career goals. Use our smart filters to find exactly what you need.'
+    },
+    { 
+      icon: BookOpen, 
+      title: 'Start Learning', 
+      description: 'Access comprehensive course materials, join live interactive sessions, or learn at your own pace. Track your progress with our intuitive dashboard.'
+    },
+    { 
+      icon: Award, 
+      title: 'Earn Credentials', 
+      description: 'Complete courses and assessments to earn industry-recognized certificates or accredited degrees from top universities worldwide.'
+    }
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            How It Works
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Get started with your learning journey in 4 simple steps
-          </p>
-        </div>
+    <section id="how-it-works" className="relative py-24 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+        <motion.div 
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
+        >
+          <motion.div
+            initial={{ scale: 0.9 }}
+            animate={inView ? { scale: 1 } : { scale: 0.9 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+              How It Works
+            </h2>
+            <p className="text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
+              Transform your career with our streamlined learning platform. Get started in just 4 simple steps.
+            </p>
+          </motion.div>
+        </motion.div>
 
         <div className="relative">
-          <div className="hidden lg:block absolute top-16 left-0 right-0 h-0.5 bg-gray-200">
-            <div className="absolute top-0 left-1/4 w-1/2 h-0.5 bg-blue-600"></div>
+          {/* Animated connecting line */}
+          <div className="hidden lg:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gray-700 to-transparent opacity-30">
+            <motion.div 
+              className="absolute top-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"
+              initial={{ width: '0%' }}
+              animate={inView ? { width: '100%' } : { width: '0%' }}
+              transition={{ duration: 1.5, delay: 0.3, ease: 'easeInOut' }}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+          {/* Step indicators on the line */}
+          <div className="hidden lg:block absolute top-20 left-0 right-0">
+            {steps.map((_, index) => (
+              <motion.div
+                key={index}
+                className="absolute w-4 h-4 bg-blue-600 rounded-full -top-1.5 border-4 border-slate-900 shadow-lg"
+                style={{ left: `${(index * 33.33) + 0}%` }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.5 + (index * 0.2),
+                  type: 'spring',
+                  stiffness: 200
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
             {steps.map((step, index) => {
               const IconComponent = step.icon;
+              const { ref: stepRef, inView: stepInView } = useInView({
+                threshold: 0.3,
+                triggerOnce: false,
+              });
+
               return (
-                <div key={index} className="relative">
+                <motion.div
+                  key={index}
+                  ref={stepRef}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={stepInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.15,
+                    type: 'spring',
+                    stiffness: 100
+                  }}
+                  className="relative group"
+                >
                   <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="text-blue-600 font-semibold text-sm mb-2">
-                      Step {index + 1}
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {/* Animated icon container */}
+                    <motion.div
+                      className="w-20 h-20 bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 relative z-10 shadow-lg group-hover:shadow-xl transition-all duration-300"
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotate: [0, -5, 5, -5, 0],
+                        transition: { duration: 0.5 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <IconComponent className="w-10 h-10 text-white" />
+                      {/* Glow effect */}
+                      <div className="absolute inset-0 bg-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300" />
+                    </motion.div>
+
+                    {/* Step number badge */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={stepInView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ 
+                        duration: 0.4, 
+                        delay: 0.3 + (index * 0.15),
+                        type: 'spring',
+                        stiffness: 200
+                      }}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600/20 text-blue-400 font-bold text-sm mb-3 border border-blue-500/30"
+                    >
+                      {index + 1}
+                    </motion.div>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
+
+                    {/* Description */}
+                    <p className="text-neutral-400 text-sm leading-relaxed px-2 group-hover:text-neutral-300 transition-colors duration-300">
                       {step.description}
                     </p>
                   </div>
-                </div>
+
+                  {/* Hover effect background */}
+                  <div className="absolute inset-0 -z-10 rounded-2xl bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                </motion.div>
               );
             })}
           </div>
         </div>
+
+        {/* Call to action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-16"
+        >
+          <Link
+            href={{ pathname: "/auth", query: { mode: "signup" } }}
+            className="inline-flex items-center px-8 py-4 bg-slate-800/60 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            style={{
+              boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.boxShadow = '12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+            }}
+          >
+            Get Started Today
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+              className="ml-2"
+            >
+              →
+            </motion.span>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
@@ -660,39 +920,137 @@ const FeaturesSection = () => {
     'Customize your study plan based on your goals and availability',
     'Get help from instructors and peers through our community forums'
   ];
+  // images moved to top-level MARQUEE_IMAGES
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      const el = videoRef.current;
+      if (!el) return;
+      if (document.visibilityState === 'visible') {
+        try { el.play(); } catch {}
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Self-Paced Learning for Modern Learners
-            </h2>
-            
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Our self-paced learning platform empowers you to study on your own schedule, from anywhere in the world. Whether you're a working professional, a parent, or simply someone with a busy lifestyle, we've designed our courses to fit seamlessly into your life.
-            </p>
+    <section className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+          <div className="relative w-full min-h-[32rem] overflow-hidden">
+            <MaskContainer
+              revealText={
+                <div className="w-full space-y-8 text-left">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">
+                    Self‑Paced Learning, Built for Modern Life
+                  </h2>
+                  
+                  <p className="text-lg text-neutral-300 leading-relaxed">
+                    Learn on your terms with flexible courses you can start anytime. Study from anywhere, pick up where you left off on any device, and move at a pace that fits your goals—not the other way around.
+                  </p>
 
-            <div className="space-y-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  <div className="space-y-4">
+                    {features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        </div>
+                        <p className="text-neutral-200">
+                          {index === 0 && 'Learn anytime, on any device—your progress syncs automatically.'}
+                          {index === 1 && 'Create a schedule that adapts to your goals and availability.'}
+                          {index === 2 && 'Get timely support from instructors and peers in our community.'}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-gray-700">{feature}</p>
                 </div>
-              ))}
-            </div>
+              }
+              className="h-full w-full"
+            >
+              <div className="w-full space-y-8 text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+                  Learn Without Limits, Wherever You Are
+                </h2>
+                
+                <p className="text-lg text-slate-700 leading-relaxed">
+                  Experience freedom in learning with courses designed to fit your lifestyle. Study at your own rhythm, access materials from any device, and keep your progress in sync as you grow at your pace.
+                </p>
+
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-800">
+                      Access lessons anytime, anywhere—your progress stays updated.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-800">
+                      Study flexibly to match your personal and professional goals.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-slate-800">
+                      Get guidance and motivation from expert mentors and peers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </MaskContainer>
           </div>
 
           <div className="relative">
-            <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden">
-              <Image
-                src="/learning-woman.jpg"
-                alt="Student learning with laptop"
-                fill
-                className="object-cover"
+            <div className="relative w-full h-full min-h-[24rem] rounded-2xl overflow-hidden">
+              <video
+                ref={videoRef}
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/self.webm"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                controls={false}
+                controlsList="nodownload nofullscreen noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                onLoadedMetadata={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onLoadedData={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onCanPlay={(e) => {
+                  try { if (e.currentTarget.paused) e.currentTarget.play(); } catch {}
+                }}
+                onStalled={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onWaiting={(e) => {
+                  try { e.currentTarget.play(); } catch {}
+                }}
+                onTimeUpdate={(e) => {
+                  const el = e.currentTarget;
+                  if (el.duration && el.duration - el.currentTime < 0.05) {
+                    try { el.currentTime = 0; el.play(); } catch {}
+                  }
+                }}
+                onEnded={(e) => {
+                  try { e.currentTarget.currentTime = 0; e.currentTarget.play(); } catch {}
+                }}
+                aria-label="Self study video"
               />
             </div>
           </div>
@@ -756,13 +1114,16 @@ const LearningStyles = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 bg-slate-900 overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Classes Available for Every Learning Style
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-300 max-w-3xl mx-auto">
             Choose the learning format that best fits your schedule and goals
           </p>
         </div>
@@ -771,56 +1132,86 @@ const LearningStyles = () => {
           {programs.map((program, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow duration-300 ${
-                program.popular ? 'border-2 border-blue-600' : 'border border-gray-200'
-              }`}
+              className={cn(
+                "group w-full cursor-pointer overflow-visible relative card rounded-2xl shadow-lg hover:shadow-xl flex flex-col transition-all duration-500",
+                program.popular ? 'border-2 border-blue-400/50' : 'border border-white/20',
+                "bg-white/10 backdrop-blur-md hover:border-white/30"
+              )}
             >
               {program.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap">
+                  <span className="bg-blue-600/80 backdrop-blur-sm text-white px-4 py-1 rounded-full text-sm font-medium relative z-50 border border-blue-400/30">
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <div 
+                className="overflow-hidden rounded-2xl relative p-8 flex flex-col"
+                onMouseEnter={(e) => {
+                  const bgLayer = e.currentTarget.querySelector('.card-bg-layer') as HTMLElement;
+                  if (bgLayer) {
+                    bgLayer.style.backgroundImage = 'url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  const bgLayer = e.currentTarget.querySelector('.card-bg-layer') as HTMLElement;
+                  if (bgLayer) {
+                    bgLayer.style.backgroundImage = 'none';
+                  }
+                }}
+              >
+                {/* Background layer that covers the entire card */}
+                <div
+                  className="card-bg-layer absolute inset-0 rounded-2xl z-0 transition-all duration-500 opacity-30"
+                  style={{
+                    backgroundImage: 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                />
+                {/* Dark overlay on hover */}
+                <div className="absolute inset-0 rounded-2xl bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-500 z-10 pointer-events-none" />
+              <div className="relative z-20">
+              <div className="text-center mb-6 relative z-50">
+                <h3 className="text-xl font-semibold text-white mb-2 relative z-50">
                   {program.title}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-neutral-200 mb-4 relative z-50">
                   {program.description}
                 </p>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-neutral-300 relative z-50">
                   {program.duration}
                 </div>
               </div>
 
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3 mb-6 relative z-50">
                 {program.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                  <div key={featureIndex} className="flex items-start space-x-3 relative z-50">
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5 relative z-50" />
+                    <span className="text-sm text-neutral-200 relative z-50">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="bg-blue-50 rounded-lg p-3 mb-6">
-                <div className="text-center text-sm text-blue-800 font-medium">
+              <div className="bg-blue-600/20 backdrop-blur-sm rounded-lg p-3 mb-6 relative z-50 border border-blue-400/30">
+                <div className="text-center text-sm text-white font-medium relative z-50">
                   {program.availability}
                 </div>
               </div>
 
-              <button
-                className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                  program.buttonStyle === 'primary'
-                    ? 'bg-gray-900 hover:bg-gray-800 text-white'
-                    : 'border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600'
-                }`}
+              <Link
+                href={"/auth" as Route}
+                className="w-full py-3 px-6 rounded-lg font-medium transition-all relative z-50 border-2 border-white/30 hover:border-blue-400/50 text-white hover:text-blue-300 bg-white/10 backdrop-blur-sm hover:bg-white/20 inline-block text-center"
               >
                 {program.buttonText}
-              </button>
+              </Link>
+              </div>
+              </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </section>
@@ -852,15 +1243,17 @@ const ContactForm = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 landing-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 bg-slate-900 landing-dark overflow-hidden">
+      <Boxes />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="bg-white rounded-2xl p-8 shadow-xl">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20 hover:border-white/30 transition-all duration-300">
             <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
                 Ready to Start Your Learning Journey?
               </h2>
-              <p className="text-gray-600">
+              <p className="text-neutral-200">
                 Fill out the form below and our team will contact you within 24 hours
               </p>
             </div>
@@ -868,7 +1261,7 @@ const ContactForm = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="fullName" className="block text-sm font-medium text-white mb-2">
                     Full Name *
                   </label>
                   <input
@@ -879,12 +1272,12 @@ const ContactForm = () => {
                     value={formData.fullName}
                     onChange={handleInputChange}
                     placeholder="Name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                     Email Address *
                   </label>
                   <input
@@ -895,12 +1288,12 @@ const ContactForm = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="email@example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
                     Phone Number
                   </label>
                   <input
@@ -910,12 +1303,12 @@ const ContactForm = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+91 1111122222"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="interest" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="interest" className="block text-sm font-medium text-white mb-2">
                     I'm Interested In *
                   </label>
                   <select
@@ -924,19 +1317,19 @@ const ContactForm = () => {
                     required
                     value={formData.interest}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white transition-all"
                   >
-                    <option value="">Select an option</option>
-                    <option value="individual-courses">Individual Courses</option>
-                    <option value="bootcamp-programs">Bootcamp Programs</option>
-                    <option value="university-degrees">University Degrees</option>
-                    <option value="certifications">Certifications</option>
+                    <option value="" className="bg-slate-900 text-white">Select an option</option>
+                    <option value="individual-courses" className="bg-slate-900 text-white">Individual Courses</option>
+                    <option value="bootcamp-programs" className="bg-slate-900 text-white">Bootcamp Programs</option>
+                    <option value="university-degrees" className="bg-slate-900 text-white">University Degrees</option>
+                    <option value="certifications" className="bg-slate-900 text-white">Certifications</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
                   Message
                 </label>
                 <textarea
@@ -946,16 +1339,16 @@ const ContactForm = () => {
                   value={formData.message}
                   onChange={handleInputChange}
                   placeholder="Tell us about your learning goals and any questions you have..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 text-white placeholder-neutral-400 transition-all resize-none"
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 px-6 rounded-lg font-semibold transition-colors"
+              <Link
+                href={"/auth" as Route}
+                className="w-full bg-blue-600/80 backdrop-blur-sm hover:bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold transition-all inline-block text-center border border-blue-400/30 hover:border-blue-400/50"
               >
                 Submit Enquiry
-              </button>
+              </Link>
             </form>
           </div>
 
@@ -1089,7 +1482,7 @@ const LandingFooter = () => {
                 </a>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
+                <Link href={"/contact" as Route} className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
                   Contact
                 </Link>
               </li>
@@ -1202,8 +1595,9 @@ export default function Page() {
           }
         }}
         style={{ willChange: 'transform, opacity' }}
-        className="min-h-screen overflow-x-hidden bg-gradient-to-br from-blue-50 to-blue-200 landing-root"
+        className="min-h-screen overflow-x-hidden bg-slate-900 landing-root relative overflow-hidden"
       >
+        {/* Removed redundant background animations - using Boxes component in sections instead */}
         <LandingNavbar reveal={hasLandingRevealed} />
         <main>
           <HeroSection reveal={hasLandingRevealed} />
@@ -1216,15 +1610,16 @@ export default function Page() {
           <ContactForm />
         </main>
         <LandingFooter />
+        <Chatbot />
         <style jsx global>{`
-          /* Default: all headings in landing use jet black */
+          /* Default: all headings in landing use white for dark theme */
           .landing-root h1,
           .landing-root h2,
           .landing-root h3,
           .landing-root h4,
           .landing-root h5,
           .landing-root h6 {
-            color: #000 !important;
+            color: #fff !important;
           }
 
           /* Headings inside dark-colored areas should be white */

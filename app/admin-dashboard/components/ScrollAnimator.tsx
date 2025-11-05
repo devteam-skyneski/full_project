@@ -1,46 +1,49 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
-import { useRef } from "react";
+// Notice the import is "framer-motion"
+import { motion, Variants } from "framer-motion"; 
+import React from "react";
 
 interface ScrollAnimatorProps {
   children: React.ReactNode;
   className?: string;
 }
 
+// Define our COOLER animations
+const scrollVariants: Variants = {
+  // Start hidden, rotated, and small
+  hidden: { 
+    opacity: 0, 
+    y: 75,
+    scale: 0.9,
+    rotateX: 10 
+  },
+  // Animate to visible, flat, and full-size
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    rotateX: 0,
+    transition: { 
+      duration: 0.8, 
+      ease: [0.6, 0.01, -0.05, 0.95], // A nice ease-out curve
+      delay: 0.1
+    }
+  }
+};
+
 export const ScrollAnimator: React.FC<ScrollAnimatorProps> = ({ children, className }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  
-  // Track scroll progress of this specific element
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 0.9", "start 0.1"], // Starts animation earlier, more visible range
-  });
-
-  // Create smooth spring animations with more bounce
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 20,
-    restDelta: 0.001
-  });
-
-  // More dramatic transformations
-  const y = useTransform(smoothProgress, [0, 1], [150, 0]); // Starts 150px below
-  const opacity = useTransform(smoothProgress, [0, 0.3, 1], [0, 0.5, 1]); // Gradual fade
-  const scale = useTransform(smoothProgress, [0, 1], [0.85, 1]); // More noticeable scale
-  const rotateX = useTransform(smoothProgress, [0, 1], [15, 0]); // 3D tilt effect
-
   return (
     <motion.div
-      ref={ref}
       className={className}
-      style={{
-        y,
-        opacity,
-        scale,
-        rotateX,
-        transformPerspective: 1200, // Adds 3D depth
-      }}
+      style={{ transformPerspective: 1200 }} // This enables the 3D rotateX
+      variants={scrollVariants}
+      initial="hidden"
+      whileInView="visible"
+      // This is the magic:
+      // once: true -> Only animate it in one time
+      // amount: 0.2 -> Trigger the animation when 20% of the section is visible
+      viewport={{ once: true, amount: 0.2 }}
     >
       {children}
     </motion.div>

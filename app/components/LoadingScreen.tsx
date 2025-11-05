@@ -20,16 +20,16 @@ interface Particle {
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
 
-  // Initialize particles only once
+  // Initialize particles only once - reduced from 15 to 6 for better performance
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const newParticles: Particle[] = Array.from({ length: 15 }, (_, i) => ({
+      const newParticles: Particle[] = Array.from({ length: 6 }, (_, i) => ({
         id: i,
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
         targetX: Math.random() * window.innerWidth,
         targetY: Math.random() * window.innerHeight,
-        duration: 3 + Math.random() * 2,
+        duration: 4 + Math.random() * 2, // Slightly slower for smoother animation
       }));
       setParticles(newParticles);
     }
@@ -97,20 +97,25 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pointer-events-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900 pointer-events-auto"
       aria-label="Loading eduLearn"
+      style={{ willChange: 'opacity' }}
     >
       {/* Animated background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/90 to-blue-800/90">
+      <div className="absolute inset-0 bg-slate-900">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
       </div>
 
-      {/* Subtle particle effect */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Subtle particle effect - optimized with CSS transforms */}
+      <div className="absolute inset-0 overflow-hidden" style={{ willChange: 'transform' }}>
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
             className="absolute w-1 h-1 bg-white/30 rounded-full"
+            style={{ 
+              willChange: 'transform',
+              transform: 'translateZ(0)', // Force GPU acceleration
+            }}
             initial={{
               x: particle.x,
               y: particle.y,
@@ -139,18 +144,24 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             initial="initial"
             animate="animate"
             className="relative"
+            style={{ willChange: 'transform' }}
           >
-            <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150" />
+            <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150" style={{ willChange: 'auto' }} />
             <motion.div
               animate={{
-                scale: [1, 1.06, 1],
-                rotate: [0, -6, 0, 6, 0],
+                scale: [1, 1.05, 1], // Reduced scale change for smoother animation
+                rotate: [0, -4, 0, 4, 0], // Reduced rotation for better performance
               }}
               transition={{
-                duration: 2.2,
+                duration: 2.5, // Slightly slower for smoother animation
                 repeat: Infinity,
+                ease: 'easeInOut', // Smoother easing
               }}
-              className="relative bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border border-white/20 will-change-transform"
+              className="relative bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl border border-white/20"
+              style={{ 
+                willChange: 'transform',
+                transform: 'translateZ(0)', // Force GPU acceleration
+              }}
             >
               <GraduationCap
                 className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 text-white"
@@ -168,6 +179,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             style={{
               // Use clamp for responsive size while keeping balance
               fontSize: 'clamp(36px, 6vw, 72px)',
+              willChange: 'transform',
             }}
           >
             {letters.map((letter, index) => (
@@ -178,7 +190,11 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 initial="initial"
                 animate="animate"
                 className="font-bold text-white tracking-tight"
-                style={{ textShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)', // Force GPU acceleration
+                }}
               >
                 {letter === ' ' ? '\u00A0' : letter}
               </motion.span>
@@ -192,12 +208,17 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           animate={{ opacity: 1, width: '200px' }}
           transition={{ delay: 1.2, duration: 0.5 }}
           className="h-1 w-[200px] max-w-[80vw] bg-white/20 rounded-full overflow-hidden"
+          style={{ willChange: 'width, opacity' }}
         >
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
             transition={{ delay: 1.2, duration: 1.3, ease: 'easeInOut' }}
             className="h-full bg-white rounded-full shadow-lg"
+            style={{ 
+              willChange: 'width',
+              transform: 'translateZ(0)', // Force GPU acceleration
+            }}
           />
         </motion.div>
       </div>

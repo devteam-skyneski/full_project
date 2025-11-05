@@ -91,7 +91,7 @@ export default function StudentDashboard() {
   ];
 
   return (
-    <div className="relative min-h-screen font-sans" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
+    <div className="relative min-h-screen font-sans overflow-x-hidden">
       {/* Blue Gradient Background */}
       <div className="fixed inset-0 -z-10 w-full h-full bg-gradient-to-br from-blue-900 via-blue-900 to-blue-900"></div>
       
@@ -102,30 +102,31 @@ export default function StudentDashboard() {
       <Navbar />
 
       {/* Dashboard Content Wrapper */}
-      <div className="pt-24 relative z-0">
+      <div className="pt-20 sm:pt-24 relative z-0 overflow-x-hidden">
         
-        {/* === START OF EXISTING LAYOUT === */}
-        <div className="section-inner">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* === START OF HOME SECTION === */}
+        <section className="py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             
             {/* Left Column - Spans 2 columns */}
-            <div className="lg:col-span-2 space-y-6 flex flex-col">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6 flex flex-col">
               
               {/* Hello Grace Section - SLIDES FROM LEFT */}
               <SlideIn direction="left" delay={0}>
-                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 shadow-lg border border-white/30">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <h2 className="text-2xl font-bold text-white mb-1">Hello Grace!</h2>
-                      <p className="text-white mb-1 text-sm">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 sm:p-6 shadow-lg border border-white/30">
+                  <div className="flex items-start justify-between mb-2 gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Hello Grace!</h2>
+                      <p className="text-white mb-1 text-xs sm:text-sm">
                         You have 3 new tasks. It is a lot of work for today! So let's start!
                       </p>
-                      <a href="#" className="text-white hover:underline font-medium text-sm">
+                      <a href="#" className="text-white hover:underline font-medium text-xs sm:text-sm">
                         Review it
                       </a>
                     </div>
-                    <div className="w-24 h-24 backdrop-blur-md bg-blue-500/20 rounded-lg flex items-center justify-center ml-4 border border-blue-400/30">
-                      <div className="text-5xl">👨‍💻</div>
+                    <div className="w-16 h-16 sm:w-24 sm:h-24 backdrop-blur-md bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 border border-blue-400/30">
+                      <div className="text-3xl sm:text-5xl">👨‍💻</div>
                     </div>
                   </div>
                 </div>
@@ -133,26 +134,26 @@ export default function StudentDashboard() {
 
               {/* Performance Section - SLIDES FROM LEFT */}
               <SlideIn direction="left" delay={100}>
-                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 shadow-lg border border-white/30 flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Performance</h3>
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 sm:p-6 shadow-lg border border-white/30 flex-1">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                    <h3 className="text-base sm:text-lg font-semibold text-white">Performance</h3>
                     <div className="flex items-center gap-2 backdrop-blur-md bg-white/0 rounded-lg px-3 py-1 cursor-pointer hover:bg-white/10 transition border border-white/20">
-                      <span className="text-white text-sm">October</span>
+                      <span className="text-white text-xs sm:text-sm">October</span>
                       <ChevronDown className="w-4 h-4 text-white" />
                     </div>
                   </div>
                   <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-3">
                       <div>
-                        <span className="text-3xl font-bold text-white">95.4</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-white">95.4</span>
                         <p className="text-white text-xs mt-1">Introduction to programming</p>
                       </div>
-                      <button className="bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition text-xs font-medium">
+                      <button className="bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition text-xs font-medium whitespace-nowrap">
                         All lessons
                       </button>
                     </div>
                   </div>
-                  <div className="h-56">
+                  <div className="h-48 sm:h-56">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={performanceData.map(item => ({
@@ -228,20 +229,20 @@ export default function StudentDashboard() {
             </div>
 
             {/* Right Column - Single column */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               
               {/* Calendar Section - SLIDES FROM RIGHT */}
               <SlideIn direction="right" delay={0}>
-                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <h3 className="text-xl font-semibold text-white">Calendar</h3>
-                    <div className="flex items-center gap-2">
-                      <label htmlFor="calendarDay" className="text-white text-xs">Day</label>
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 sm:p-6 shadow-lg border border-white/30">
+                  <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <h3 className="text-lg sm:text-xl font-semibold text-white">Calendar</h3>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <label htmlFor="calendarDay" className="text-white text-xs whitespace-nowrap">Day</label>
                       <select
                         id="calendarDay"
                         value={selectedDay}
                         onChange={(e) => setSelectedDay(e.target.value as 'Today' | 'Tomorrow' | 'In two days')}
-                        className="text-sm text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1.5 focus:outline-none hover:bg-white/20 cursor-pointer"
+                        className="text-xs sm:text-sm text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1.5 focus:outline-none hover:bg-white/20 cursor-pointer flex-1 sm:flex-none"
                       >
                         <option value="Today" className="bg-blue-900">Today</option>
                         <option value="Tomorrow" className="bg-blue-900">Tomorrow</option>
@@ -250,25 +251,25 @@ export default function StudentDashboard() {
                     </div>
                   </div>
                   {/* Timeline */}
-                  <div className="relative mt-6 pl-20">
-                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-300"></div>
-                    <div className="space-y-6">
+                  <div className="relative mt-4 sm:mt-6 pl-12 sm:pl-20">
+                    <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                    <div className="space-y-4 sm:space-y-6">
                       {filteredCalendarEvents.map((event, index) => (
-                        <div key={index} className="flex items-start gap-4 relative">
+                        <div key={index} className="flex items-start gap-3 sm:gap-4 relative">
                           <div
                             className={`${event.color} backdrop-blur-md ${
                               event.isActive ? 'bg-blue-500/60 text-white border border-blue-400/40' : 'bg-gray-200/10 text-white border border-gray-300/40'
-                            } rounded-lg p-3 flex-1 shadow-md`}
+                            } rounded-lg p-2 sm:p-3 flex-1 shadow-md`}
                           >
                             <div className="flex items-center gap-2 mb-1">
                               {event.isActive ? (
-                                <Home className="w-4 h-4" />
+                                <Home className="w-3 h-3 sm:w-4 sm:h-4" />
                               ) : (
-                                <div className="w-4 h-4 rounded-full bg-gray-400"></div>
+                                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-gray-400"></div>
                               )}
-                              <h4 className="font-semibold text-white">{event.subject}</h4>
+                              <h4 className="font-semibold text-white text-xs sm:text-sm">{event.subject}</h4>
                             </div>
-                            <p className="text-xs text-white mb-1">{event.title}</p>
+                            <p className="text-xs text-white mb-1 line-clamp-2">{event.title}</p>
                             <p className="text-xs text-white">{event.duration}</p>
                           </div>
                         </div>
@@ -280,10 +281,10 @@ export default function StudentDashboard() {
 
               {/* Upcoming Events Section - SLIDES FROM RIGHT */}
               <SlideIn direction="right" delay={100}>
-                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-6 shadow-lg border border-white/30">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-semibold text-white">Upcoming events</h3>
-                    <a href="#" className="text-white hover:underline text-sm font-medium">
+                <div className="backdrop-blur-xl bg-white/10 rounded-xl p-4 sm:p-6 shadow-lg border border-white/30">
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 className="text-lg sm:text-xl font-semibold text-white">Upcoming events</h3>
+                    <a href="#" className="text-white hover:underline text-xs sm:text-sm font-medium whitespace-nowrap">
                       See all
                     </a>
                   </div>
@@ -306,7 +307,8 @@ export default function StudentDashboard() {
 
             </div>
           </div>
-        </div> 
+        </div>
+        </section>
           <Subjects />
           <Assignments />
           <Exams />
